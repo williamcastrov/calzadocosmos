@@ -9,7 +9,7 @@ function classNames(...classes) {
 }
 
 function TabCostosVentas(props) {
-    const { tipo, setTipo, datosCostos, ventasDiariasMes, } = props;
+    const { tipo, setTipo, datosCostos, ventasDiariasMes, listaPresupuestos } = props;
     const [entMargenCentro, setEntMargenCentro] = useState(true);
     const [entMargenSubcategoria, setEntMargenSubcategoria] = useState(false);
     const [entMargenProveedor, setEntMargenProveedor] = useState(false);
@@ -129,6 +129,24 @@ function TabCostosVentas(props) {
         if (filtroAno && filtroMes) {
             if (opcion == 0) {
                 let newDetVtas = [];
+                let newDetPpto = [];
+
+                listaPresupuestos.pptovtacentro &&
+                    listaPresupuestos.pptovtacentro.map((ppto, index) => {
+
+                        if (ppto.periodo == periodo) {
+                            let vta = {
+                                costopromedppto: ppto.costopromedio,
+                                nombrebodega: ppto.nombrebodega,
+                                periodo: ppto.periodo,
+                                pptovalor: ppto.pptovalor,
+                                pptound: ppto.pptound,
+                            };
+                            newDetPpto.push(vta);
+                        }
+                    });
+
+
                 datosCostos.costosvtacentro &&
                     datosCostos.costosvtacentro.map((vtas, index) => {
 
@@ -144,10 +162,12 @@ function TabCostosVentas(props) {
                     });
 
                 let newDetVtasAcum = [];
+
                 centrosoperacion &&
                     centrosoperacion.map((centros, index) => {
                         let costo = 0;
                         let venta = 0;
+                        let valppto = 0;
                         datosCostos.costosvtacentro &&
                             datosCostos.costosvtacentro.map((vtas, index) => {
                                 if (vtas.ano == filtroAno && vtas.mes <= filtroMes
@@ -156,11 +176,21 @@ function TabCostosVentas(props) {
                                     venta = venta + vtas.Vlr_Neto;
                                 }
                             });
+
+                        newDetPpto &&
+                            newDetPpto.map((ppto, index) => {
+                                if (ppto.nombrebodega == centros.Centros_Operacion) {
+                                    valppto = valppto + ppto.pptovalor;
+                                }
+                            });
+
+
                         let vta = {
                             Descripcion: centros.Centros_Operacion,
                             Periodo: periodo,
                             Vlr_CostoAcum: costo,
-                            Vlr_NetoAcum: venta
+                            Vlr_NetoAcum: venta,
+                            Vlr_Ppto: valppto
                         };
                         newDetVtasAcum.push(vta);
                     });
@@ -170,11 +200,14 @@ function TabCostosVentas(props) {
                     newDetVtas.map((vtasmes, index) => {
                         let costo = 0;
                         let venta = 0;
+                        let ppto = 0;
+
                         newDetVtasAcum &&
                             newDetVtasAcum.map((vtasacum, index) => {
                                 if (vtasmes.Descripcion == vtasacum.Descripcion) {
                                     costo = vtasacum.Vlr_CostoAcum;
                                     venta = vtasacum.Vlr_NetoAcum;
+                                    ppto = vtasacum.Vlr_Ppto;
                                 }
                             });
                         let vta = {
@@ -183,7 +216,8 @@ function TabCostosVentas(props) {
                             Vlr_Costo: vtasmes.Vlr_Costo,
                             Vlr_Neto: vtasmes.Vlr_Neto,
                             Vlr_CostoAcum: costo,
-                            Vlr_NetoAcum: venta
+                            Vlr_NetoAcum: venta,
+                            Vlr_Ppto: ppto,
                         };
                         newDetVtasTot.push(vta);
                     });
@@ -192,6 +226,7 @@ function TabCostosVentas(props) {
                 let totalventames = 0;
                 let totalcosto = 0;
                 let totalventa = 0;
+                let totalppto = 0;
 
                 let Descripcion = "";
 
@@ -201,6 +236,7 @@ function TabCostosVentas(props) {
                         totalventames = totalventames + tot.Vlr_Neto;
                         totalcosto = totalcosto + tot.Vlr_CostoAcum;
                         totalventa = totalventa + tot.Vlr_NetoAcum;
+                        totalppto = totalppto + tot.Vlr_Ppto;
                         Descripcion = tot.Descripcion;
 
                     });
@@ -211,7 +247,8 @@ function TabCostosVentas(props) {
                     Vlr_Costo: totalcostomes,
                     Vlr_Neto: totalventames,
                     Vlr_CostoAcum: totalcosto,
-                    Vlr_NetoAcum: totalventa
+                    Vlr_NetoAcum: totalventa,
+                    Vlr_Ppto: totalppto
                 }
 
                 newDetVtasTot.push(acum);
@@ -224,6 +261,23 @@ function TabCostosVentas(props) {
             } else
                 if (opcion == 1) {
                     let newDetVtas = [];
+                    let newDetPpto = [];
+
+                    listaPresupuestos.pptovtasublinea &&
+                        listaPresupuestos.pptovtasublinea.map((ppto, index) => {
+
+                            if (ppto.periodo == periodo) {
+                                let vta = {
+                                    costopromedppto: ppto.costopromedio,
+                                    nombrebodega: ppto.nombreconcepto,
+                                    periodo: ppto.periodo,
+                                    pptovalor: ppto.pptovalor,
+                                    pptound: ppto.pptound,
+                                };
+                                newDetPpto.push(vta);
+                            }
+                        });
+
                     datosCostos.costosvtasubcategoria &&
                         datosCostos.costosvtasubcategoria.map((vtas, index) => {
 
@@ -244,6 +298,7 @@ function TabCostosVentas(props) {
                         subcategorias.map((centros, index) => {
                             let costo = 0;
                             let venta = 0;
+                            let valppto = 0;
                             datosCostos.costosvtasubcategoria &&
                                 datosCostos.costosvtasubcategoria.map((vtas, index) => {
                                     if (vtas.ano == filtroAno && vtas.mes <= filtroMes
@@ -252,25 +307,39 @@ function TabCostosVentas(props) {
                                         venta = venta + vtas.Vlr_Neto;
                                     }
                                 });
+
+                            newDetPpto &&
+                                newDetPpto.map((ppto, index) => {
+                                    if (ppto.nombrebodega == centros.Subcategorias) {
+                                        valppto = valppto + ppto.pptovalor;
+                                    }
+                                });
+
+
                             let vta = {
                                 Descripcion: centros.Subcategorias,
                                 Periodo: periodo,
                                 Vlr_CostoAcum: costo,
-                                Vlr_NetoAcum: venta
+                                Vlr_NetoAcum: venta,
+                                Vlr_Ppto: valppto,
                             };
                             newDetVtasAcum.push(vta);
                         });
 
                     let newDetVtasTot = [];
+
                     newDetVtas &&
                         newDetVtas.map((vtasmes, index) => {
                             let costo = 0;
                             let venta = 0;
+                            let ppto = 0;
+
                             newDetVtasAcum &&
                                 newDetVtasAcum.map((vtasacum, index) => {
                                     if (vtasmes.Descripcion == vtasacum.Descripcion) {
                                         costo = vtasacum.Vlr_CostoAcum;
                                         venta = vtasacum.Vlr_NetoAcum;
+                                        ppto = vtasacum.Vlr_Ppto;
                                     }
                                 });
                             let vta = {
@@ -279,16 +348,17 @@ function TabCostosVentas(props) {
                                 Vlr_Costo: vtasmes.Vlr_Costo,
                                 Vlr_Neto: vtasmes.Vlr_Neto,
                                 Vlr_CostoAcum: costo,
-                                Vlr_NetoAcum: venta
+                                Vlr_NetoAcum: venta,
+                                Vlr_Ppto: ppto,
                             };
                             newDetVtasTot.push(vta);
                         });
-
 
                     let totalcostomes = 0;
                     let totalventames = 0;
                     let totalcosto = 0;
                     let totalventa = 0;
+                    let totalppto = 0;
 
                     let Descripcion = "";
 
@@ -298,6 +368,7 @@ function TabCostosVentas(props) {
                             totalventames = totalventames + tot.Vlr_Neto;
                             totalcosto = totalcosto + tot.Vlr_CostoAcum;
                             totalventa = totalventa + tot.Vlr_NetoAcum;
+                            totalppto = totalppto + tot.Vlr_Ppto;
                             Descripcion = tot.Descripcion;
 
                         });
@@ -308,11 +379,12 @@ function TabCostosVentas(props) {
                         Vlr_Costo: totalcostomes,
                         Vlr_Neto: totalventames,
                         Vlr_CostoAcum: totalcosto,
-                        Vlr_NetoAcum: totalventa
+                        Vlr_NetoAcum: totalventa,
+                        Vlr_Ppto: totalppto
                     }
 
                     newDetVtasTot.push(acum);
-
+                    //console.log("PPTO  : ",newDetVtasTot)
                     setDetalleCostos(newDetVtasTot);
                 } else
                     setDetalleCostos([])
@@ -409,35 +481,35 @@ function TabCostosVentas(props) {
                                 };
                                 newDetVtasAcum.push(vta);
                             });
-                        
-                            let totalcostomes = 0;
-                            let totalventames = 0;
-                            let totalcosto = 0;
-                            let totalventa = 0;
-        
-                            let Descripcion = "";
-        
-                            newDetVtasAcum &&
-                                newDetVtasAcum.map((tot, index) => {
-                                    totalcostomes = totalcostomes + tot.Vlr_Costo;
-                                    totalventames = totalventames + tot.Vlr_Neto;
-                                    totalcosto = totalcosto + tot.Vlr_CostoAcum;
-                                    totalventa = totalventa + tot.Vlr_NetoAcum;
-                                    Descripcion = tot.Descripcion;
-        
-                                });
-        
-                            let acum = {
-                                Descripcion: "TOTAL",
-                                Periodo: periodo,
-                                Vlr_Costo: totalcostomes,
-                                Vlr_Neto: totalventames,
-                                Vlr_CostoAcum: totalcosto,
-                                Vlr_NetoAcum: totalventa
-                            }
-        
-                            newDetVtasAcum.push(acum);
-        
+
+                        let totalcostomes = 0;
+                        let totalventames = 0;
+                        let totalcosto = 0;
+                        let totalventa = 0;
+
+                        let Descripcion = "";
+
+                        newDetVtasAcum &&
+                            newDetVtasAcum.map((tot, index) => {
+                                totalcostomes = totalcostomes + tot.Vlr_Costo;
+                                totalventames = totalventames + tot.Vlr_Neto;
+                                totalcosto = totalcosto + tot.Vlr_CostoAcum;
+                                totalventa = totalventa + tot.Vlr_NetoAcum;
+                                Descripcion = tot.Descripcion;
+
+                            });
+
+                        let acum = {
+                            Descripcion: "TOTAL",
+                            Periodo: periodo,
+                            Vlr_Costo: totalcostomes,
+                            Vlr_Neto: totalventames,
+                            Vlr_CostoAcum: totalcosto,
+                            Vlr_NetoAcum: totalventa
+                        }
+
+                        newDetVtasAcum.push(acum);
+
 
                         //console.log("VENTAS ANÑO : ", newDetVtasAcum)
                         setDetalleCostos(newDetVtasAcum);
@@ -627,7 +699,6 @@ function TabCostosVentas(props) {
                                         <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
                                             <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
                                                 <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-
                                                     <table className="min-w-full divide-y divide-gray-300">
                                                         <thead className="bg-gray-50">
 
@@ -643,6 +714,12 @@ function TabCostosVentas(props) {
                                                                 </th>
                                                                 <th scope="col" className="px-2 py-3.5 text-right text-sm font-semibold text-gray-900">
                                                                     Vtas tot mes
+                                                                </th>
+                                                                <th scope="col" className="px-2 py-3.5 text-right text-sm font-semibold text-gray-900">
+                                                                    Ppto mes
+                                                                </th>
+                                                                <th scope="col" className="px-2 py-3.5 text-right text-sm font-semibold text-gray-900">
+                                                                    Faltante ppto
                                                                 </th>
                                                                 <th scope="col" className="px-6 py-3.5 text-right text-sm font-semibold text-gray-900">
                                                                     Margen mes
@@ -684,6 +761,17 @@ function TabCostosVentas(props) {
                                                                                 myNumber(1, compras.Vlr_Neto)
                                                                             }
                                                                         </td>
+                                                                        <td className="whitespace-nowrap px-2 py-4 text-right text-sm text-gray-500">
+                                                                            {
+                                                                                myNumber(1, compras.Vlr_Ppto)
+                                                                            }
+                                                                        </td>
+                                                                        <td className="whitespace-nowrap px-2 py-4 text-right text-sm text-gray-500">
+                                                                            {
+                                                                                myNumber(1, compras.Vlr_Ppto - compras.Vlr_Neto)
+                                                                            }
+                                                                        </td>
+
                                                                         <td className="whitespace-nowrap px-6 py-4 text-right text-sm text-gray-500">
                                                                             {
                                                                                 compras.Vlr_Costo == 0 ?

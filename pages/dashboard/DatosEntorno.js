@@ -24,6 +24,7 @@ function DatosEntorno(props) {
   const [vtasProductos, setVtasProductos] = useState(null)
   const [detalleVtas, setDetalleVtas] = useState(null)
   const [listaPrecios, setListaPrecios] = useState(null)
+  const [listaPresupuestos, setListaPresupuestos] = useState(null)
   let tipousuario = 4;
 
   const totalventas = useSelector((state) => state.datosdashboard.datosdashboard.ventas_periodo);
@@ -211,7 +212,6 @@ function DatosEntorno(props) {
             if (res) {
               setListaPrecios(res.data);
               //localStorage.setItem('detalledatosvtas', JSON.stringify(datos));
-              setIsLoading(false);
               cargaOpcion(tipousuario)
             } else {
               console.log("RETORNA PRECIOS X LISTA: ", "ERROR")
@@ -225,8 +225,34 @@ function DatosEntorno(props) {
           alert("Error Inesperado 4")
         )
 
-    } else
-    {
+      // Datos Presupuestos
+      axios({
+        method: "post",
+        url: `${URL_SERVICE}/18`,
+        headers: {
+          "Content-type": "application/json",
+        },
+      })
+        .then((res) => {
+          if (res.status == 200) {
+            //console.log("RETORNA VENTAS RESUMEN: ", res.data)
+            if (res) {
+              setListaPresupuestos(res.data);
+              //localStorage.setItem('detalledatosvtas', JSON.stringify(datos));
+              setIsLoading(false);
+            } else {
+              console.log("RETORNA DATOS PRESUPUESTOS: ", "ERROR")
+            }
+
+          } else {
+            console.log("RETORNA DATOS PRESUPUESTOS: ", "ERROR")
+          }
+        })
+        .catch((error) =>
+          alert("Error Inesperado 4")
+        )
+
+    } else {
       alert("ENTRE")
       router.push("/");
     }
@@ -250,10 +276,12 @@ function DatosEntorno(props) {
                     ventasDiariasMes ?
                       ventasDiariasMesSubcategoria ?
                         listaPrecios ?
-                          <HomeVentas datos={datos} datosCostos={datosCostos} vtasProductos={vtasProductos}
-                            detalleVtas={detalleVtas} ventasDiariasMes={ventasDiariasMes}
-                            ventasDiariasMesSubcategoria={ventasDiariasMesSubcategoria} 
-                            listaPrecios={listaPrecios}/>
+                          listaPresupuestos ?
+                            <HomeVentas datos={datos} datosCostos={datosCostos} vtasProductos={vtasProductos}
+                              detalleVtas={detalleVtas} ventasDiariasMes={ventasDiariasMes}
+                              ventasDiariasMesSubcategoria={ventasDiariasMesSubcategoria}
+                              listaPrecios={listaPrecios} listaPresupuestos={listaPresupuestos} />
+                            : <Loading />
                           : <Loading />
                         : <Loading />
                       : <Loading />

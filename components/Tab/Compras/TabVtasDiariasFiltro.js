@@ -1,8 +1,8 @@
 import { Fragment, useState, useEffect } from "react";
-import { myNumber, nameMonth } from "../../utils/ArrayFunctions";
+import { myNumber, nameMonth } from "../../../utils/ArrayFunctions";
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { ChevronDownIcon, FunnelIcon, } from "@heroicons/react/solid";
-import Loading from "../../components/Loading";
+import Loading from "../../../components/Loading";
 import axios from "axios";
 const URL_SERVICE = "https://api.aal-cloud.com/api/cosmos";
 import moment from "moment";

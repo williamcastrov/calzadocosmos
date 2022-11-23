@@ -7,6 +7,7 @@ import { Table, Tag, Typography } from 'antd';
 import Loading from "../../../components/Loading";
 import { BeakerIcon, ArrowDownIcon, ArrowUpIcon } from "@heroicons/react/solid";
 import Spinner from "../../Spinner/Spinner";
+import ReactHTMLTableToExcel from "react-html-table-to-excel";
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
@@ -2320,8 +2321,11 @@ if ((selectedAno.length > 0 && selectedMes.length > 0 && selectedGrupo.length > 
                         <div className="mt-8 flex flex-col">
                             <div className="-my-2 -mx-4 sm:-mx-6 lg:-mx-8">
                                 <div className=" min-w-full py-0 align-middle md:px-6 lg:px-1">
-                                    <div className="shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-                                        <Table columns={header_test} dataSource={movimientos} pagination={false}
+                                    <div  className="shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                                        <Table
+                                            columns={header_test} 
+                                            dataSource={movimientos} 
+                                            pagination={false}
                                             scroll={{
                                                 x: 1300,
                                                 y: 600,

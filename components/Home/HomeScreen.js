@@ -14,9 +14,10 @@ const URL_SERVICE = "https://api.aal-cloud.com/api/cosmos";
 //import { setTipoUsuario } from "../../components/store/slices/tipousuario";
 
 //Componentes detalle movimientos
-import TabDetalle from "../Tab/TabDetalle";
-import TabProveedores from "../Tab/TabProveedores";
-import TabCostos from "../Tab/TabCostos";
+import TabDetalle from "../Tab/Compras/TabDetalle";
+import TabProveedores from "../Tab/Compras/TabProveedores";
+import TabCostos from "../Tab/Compras/TabCostos";
+import TabPresupuesto from "../Tab/Compras/TabPresupuesto";
 
 //Anibal
 import TileIcon from "../TileIcon";
@@ -73,9 +74,13 @@ export default function HomeScreen(props) {
     const [tipo, setTipo] = useState(1);
     const [detalleCostos, setDetalleCostos] = useState([]);
     const [detalleCompras, setDetalleCompras] = useState([]);
+    const [listaPresupuestos, setListaPresupuestos] = useState(null)
+
     const [tabIngresoslinea, setTabIngresoslinea] = useState(true);
     const [tabCostosingreso, setTabCostosingreso] = useState(false);
     const [tabIngresoProveedor, setTabIngresoProveedor] = useState(false);
+    const [tabPresupuestos, setTabPresupuestos] = useState(false);
+
     const [tabPendienteslinea, setTabPendienteslinea] = useState(false);
     const [tabPendientesProveedor, setTabPendientesProveedor] = useState(false);
     const [tabMargen, setTabMargen] = useState(false);
@@ -90,13 +95,13 @@ export default function HomeScreen(props) {
     const [costoPromAnt, setCostoPromAnt] = useState(0);
     const [costoPromActMes, setCostoPromActMes] = useState(0);
     const [costoPromAntMes, setCostoPromAntMes] = useState(0);
-
+/*
     const totalventas = useSelector((state) => state.datosdashboard.datosdashboard.ventas_periodo);
     const totalcompras = useSelector((state) => state.datosdashboard.datosdashboard.compras_periodo);
     const detallecompras = useSelector((state) => state.datosdashboard.datosdashboard.compras_periodo_detalle);
     const totalinventarios = useSelector((state) => state.datosdashboard.datosdashboard.inventarios_periodo);
     const detalleinventarios = useSelector((state) => state.datosdashboard.datosdashboard.inventarios_periodo_detalle);
-
+*/
     let filtrosVentas = null;
     filtrosVentas = useSelector((state) => state.datosfiltros.datosfiltros);
 
@@ -104,6 +109,7 @@ export default function HomeScreen(props) {
         { name: 'Ingresos x linea', href: '#', current: tabIngresoslinea },
         { name: 'Variación', href: '#', current: tabCostosingreso },
         { name: 'Ingresos Proveedor', href: '#', current: tabIngresoProveedor },
+        { name: 'Presupuestos', href: '#', current: tabPresupuestos },
     ]
 
     const salirApp = () => {
@@ -205,6 +211,34 @@ export default function HomeScreen(props) {
             .catch((error) =>
                 alert("Error Inesperado")
             )
+
+            // Datos Presupuestos
+      axios({
+        method: "post",
+        url: `${URL_SERVICE}/18`,
+        headers: {
+          "Content-type": "application/json",
+        },
+      })
+        .then((res) => {
+          if (res.status == 200) {
+            //console.log("RETORNA VENTAS RESUMEN: ", res.data)
+            if (res) {
+              setListaPresupuestos(res.data);
+              //localStorage.setItem('detalledatosvtas', JSON.stringify(datos));
+              //setIsLoading(false);
+            } else {
+              console.log("RETORNA DATOS PRESUPUESTOS: ", "ERROR")
+            }
+
+          } else {
+            console.log("RETORNA DATOS PRESUPUESTOS: ", "ERROR")
+          }
+        })
+        .catch((error) =>
+          alert("Error Inesperado 4")
+        )
+
     }, []);
 
     const verDetalle = (seleccion) => {
@@ -239,8 +273,9 @@ export default function HomeScreen(props) {
                         setTabCostosingreso(false);
                         setTabIngresoProveedor(false);
                         setTabPendienteslinea(false);
+                        setTabPresupuestos(true);
                         setTabPendientesProveedor(false);
-                        setTabMargen(true);
+                       
                     }
                     else {
                         setTabIngresoslinea(true);
@@ -664,6 +699,12 @@ export default function HomeScreen(props) {
                                                                 presupuestosxlinea={movimientoscompras.presupuestosxlinea}
                                                                 lineasproductos={movimientoscompras.lineasproductos}
                                                                 proveedorescompras={movimientoscompras.proveedorescompras}
+                                                            />
+                                                        ) :
+                                                        tabPresupuestos ?
+                                                        (
+                                                            <TabPresupuesto tipo={tipo} setTipo={setTipo}
+                                                                listaPresupuestos={listaPresupuestos}                                                            
                                                             />
                                                         ) :
                                                         null

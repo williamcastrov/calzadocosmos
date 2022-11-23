@@ -4,6 +4,7 @@ import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { ChevronDownIcon, FunnelIcon, } from "@heroicons/react/solid";
 import swal from 'sweetalert';
 import { MultiSelect } from "react-multi-select-component";
+import ReactHTMLTableToExcel from "react-html-table-to-excel";
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
@@ -443,55 +444,55 @@ function TabListasPrecios(props) {
             if (selectedAno.length == 1 && selectedMes.length == 1) {
 
                 let longitud = selectedAno.length;
-                    let newDet = [];
+                let newDet = [];
 
-                    let nommesuno = "";
-                    let nommesdos = "";
+                let nommesuno = "";
+                let nommesdos = "";
 
-                    if(selectedMes[0].value < 10){
-                        let mes = "0"+selectedMes[0].value;
-                        nommesuno = nameMonth(mes);
-                    }else{
-                        let mes = ""+selectedMes[0].value;
-                        nommesuno = nameMonth(mes);
-                    }
+                if (selectedMes[0].value < 10) {
+                    let mes = "0" + selectedMes[0].value;
+                    nommesuno = nameMonth(mes);
+                } else {
+                    let mes = "" + selectedMes[0].value;
+                    nommesuno = nameMonth(mes);
+                }
 
-                    if(selectedMes[0].value < 10){
-                        let mes = "0"+selectedMes[0].value;
-                        nommesdos = nameMonth(mes);
-                    }else{
-                        let mes = ""+selectedMes[0].value;
-                        nommesdos = nameMonth(mes);
-                    }
+                if (selectedMes[0].value < 10) {
+                    let mes = "0" + selectedMes[0].value;
+                    nommesdos = nameMonth(mes);
+                } else {
+                    let mes = "" + selectedMes[0].value;
+                    nommesdos = nameMonth(mes);
+                }
 
-                    if (longitud == 1) {
-                        let vta = {
+                if (longitud == 1) {
+                    let vta = {
+                        nombre: { tituloTipo },
+                        nombre1: "Valor neto" + nommesuno + selectedAno[0].value,
+                        nombre2: "Costo" + nommesuno + selectedAno[0].value,
+                        variacion: "Margen"
+                    };
+                    newDet.push(vta);
+                } else
+                    if (longitud == 2) {
+                        let vta;
+                        vta = {
                             nombre: { tituloTipo },
-                            nombre1: "Valor neto" +nommesuno+selectedAno[0].value,
-                            nombre2: "Costo" + nommesuno+selectedAno[0].value,
+                            nombre1: "Valor neto" + nommesuno + selectedAno[0].value,
+                            nombre2: "Costo" + nommesuno + selectedAno[1].value,
                             variacion: "Margen"
                         };
                         newDet.push(vta);
-                    } else
-                        if (longitud == 2) {
-                            let vta;
-                            vta = {
-                                nombre: { tituloTipo },
-                                nombre1: "Valor neto" + nommesuno+selectedAno[0].value,
-                                nombre2: "Costo" + nommesuno+selectedAno[1].value,
-                                variacion: "Margen"
-                            };
-                            newDet.push(vta);
-                        } else {
-                            swal({
-                                title: "Tablero Cosmos",
-                                text: "Seleccionar maximo dos años!",
-                                icon: "warning",
-                            });
-                            return
-                        }
+                    } else {
+                        swal({
+                            title: "Tablero Cosmos",
+                            text: "Seleccionar maximo dos años!",
+                            icon: "warning",
+                        });
+                        return
+                    }
 
-                    setLabelcostos(newDet);
+                setLabelcostos(newDet);
 
                 if (opcion == 0) {
 
@@ -507,7 +508,7 @@ function TabListasPrecios(props) {
                         listaPrecios.listaprecioconsolidada && listaPrecios.listaprecioconsolidada.map((items) => {
                             if (items.ano == selectedAno[0].value && prov.IdListaPrecio == items.Id_Lista_Precio &&
                                 items.mes == selectedMes[0].value
-                                ) {
+                            ) {
                                 valorneto = valorneto + items.Vlr_Neto;
                                 costo = costo + items.Vlr_Costo;
                             }
@@ -761,6 +762,16 @@ function TabListasPrecios(props) {
                                         Consultar
                                     </button>
                                 </div>
+                                <div className="ml-5 mx-auto flex max-w-4xl h-10 space-x-6 divide-x bg-green rounded divide-gray-200 px-4 text-sm sm:px-6 lg:px-8">
+                                    <button>
+                                        <ReactHTMLTableToExcel
+                                            table="precioslinea"
+                                            filename="Preciosxlinea"
+                                            sheet="Sheet"
+                                            buttonText="Exportar a Excel"
+                                        />
+                                    </button>
+                                </div>
                                 <div className="ml-2 mx-auto flex max-w-4xl h-10 space-x-6 divide-x bg-cosmocolor rounded divide-gray-200 px-4 text-sm sm:px-6 lg:px-8">
                                     <div >
                                         <button
@@ -823,7 +834,7 @@ function TabListasPrecios(props) {
                                         <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
                                             <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
                                                 <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-                                                    <table className="min-w-full divide-y divide-gray-300">
+                                                    <table id="precioslinea" className="min-w-full divide-y divide-gray-300">
                                                         <thead className="bg-gray-50">
                                                             {labelcostos && labelcostos.map((dias, index) => (
                                                                 <tr>
@@ -890,7 +901,7 @@ function TabListasPrecios(props) {
                                             <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
                                                 <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
                                                     <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-                                                        <table className="min-w-full divide-y divide-gray-300">
+                                                        <table id="precioslinea" className="min-w-full divide-y divide-gray-300">
                                                             <thead className="bg-gray-50">
                                                                 {labelcostos && labelcostos.map((dias, index) => (
                                                                     <tr>

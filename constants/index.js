@@ -38,21 +38,9 @@ export const opcionesmenu = [
     current: false,
   },
   {
-    name: "Planeación",
-    href: "#",
-    icon: "ClockIcon",
-    current: false,
-  },
-  {
     name: "Compras",
     href: "/",
     icon: "ScaleIcon",
-    current: false,
-  },
-  {
-    name: "Inventarios",
-    href: "#",
-    icon: "CreditCardIcon",
     current: false,
   },
   {
@@ -74,12 +62,6 @@ export const opcionesmenu = [
     current: false,
   },
   {
-    name: "Logistica",
-    href: "#",
-    icon: "DocumentReportIcon",
-    current: false,
-  },
-  {
     name: "Informes de cierre",
     href: "/dashboard/InformesCierre",
     icon: "DocumentReportIcon",
@@ -97,6 +79,12 @@ export const opcionesmenudos = [
   {
     name: "Cargar imagenes",
     href: "/LoadImage/LoadReference",
+    icon: "ClockIcon",
+    current: false,
+  },
+  {
+    name: "Importar archivos",
+    href: "/ImportarArchivos/RegistrarPresupuesto",
     icon: "ClockIcon",
     current: false,
   },

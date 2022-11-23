@@ -25,6 +25,7 @@ import TabCostosVentas from "../../components/Tab/Ventas/TabCostosVentas";
 import TabParticipacion from "../../components/Tab/Ventas/TabParticipacion";
 import TabVariacion from "../../components/Tab/Ventas/TabVariacion";
 import TabListasPrecios from "../../components/Tab/Ventas/TabListasPrecios";
+import ConsultarPresupuesto from "../ImportarArchivos/ConsultarPresupuesto";
 
 //Anibal
 import TileIcon from "../../components/TileIcon";
@@ -65,7 +66,8 @@ function classNames(...classes) {
 }
 
 export default function HomeVentas(props) {
-    const { datos, datosCostos, detalleVtas, ventasDiariasMes, ventasDiariasMesSubcategoria, listaPrecios } = props;
+    const { datos, datosCostos, detalleVtas, ventasDiariasMes, ventasDiariasMesSubcategoria,
+        listaPrecios, listaPresupuestos } = props;
     const router = useRouter();
     //console.log("VENTAS DIARIAS MES: ", ventasDiariasMes.sublineas);
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -80,6 +82,8 @@ export default function HomeVentas(props) {
     const [tabParticipacionVtas, setTabParticipacionVtas] = useState(false);
     const [tabVariacionVtas, setTabVariacionVtas] = useState(false);
     const [tabListasPrecios, setTabListasPrecios] = useState(false);
+    const [tabPptoVentas, setTabPttoVentas] = useState(false);
+
     const [tabPendientesProveedor, setTabPendientesProveedor] = useState(false);
     const [tabMargen, setTabMargen] = useState(false);
 
@@ -108,6 +112,7 @@ export default function HomeVentas(props) {
         { name: 'Participación', href: '#', current: tabParticipacionVtas },
         { name: 'Variación', href: '#', current: tabVariacionVtas },
         { name: 'Listas de precio', href: '#', current: tabListasPrecios },
+        { name: 'Presupuestos de vtas', href: '#', current: tabPptoVentas },
     ]
 
     const salirApp = () => {
@@ -124,6 +129,7 @@ export default function HomeVentas(props) {
             setTabVariacionVtas(false);
             setTabListasPrecios(false);
             setTabFiltros(false);
+            setTabPttoVentas(false);
             setTabMargen(false);
         } else
             if (seleccion == 1) {
@@ -133,6 +139,7 @@ export default function HomeVentas(props) {
                 setTabVariacionVtas(false);
                 setTabListasPrecios(false);
                 setTabFiltros(false);
+                setTabPttoVentas(false);
                 setTabMargen(false);
             }
             else
@@ -143,6 +150,7 @@ export default function HomeVentas(props) {
                     setTabVariacionVtas(false);
                     setTabListasPrecios(false);
                     setTabFiltros(false);
+                    setTabPttoVentas(false);
                     setTabMargen(false);
                 }
                 else
@@ -153,6 +161,7 @@ export default function HomeVentas(props) {
                         setTabVariacionVtas(true);
                         setTabListasPrecios(false);
                         setTabFiltros(false);
+                        setTabPttoVentas(false);
                         setTabMargen(false);
                     }
                     else
@@ -163,16 +172,18 @@ export default function HomeVentas(props) {
                             setTabVariacionVtas(false);
                             setTabListasPrecios(true);
                             setTabFiltros(false);
+                            setTabPttoVentas(false);
                             setTabMargen(false);
                         }
                         else
-                            if (seleccion == 3) {
+                            if (seleccion == 5) {
                                 setTabVtasLinea(false);
                                 setTabCostosVtas(false);
                                 setTabParticipacionVtas(false);
                                 setTabVariacionVtas(false);
                                 setTabListasPrecios(false);
                                 setTabFiltros(false);
+                                setTabPttoVentas(true);
                                 setTabMargen(false);
                             }
                             else {
@@ -571,7 +582,7 @@ export default function HomeVentas(props) {
                                                 ) : tabCostosVtas ?
                                                     (
                                                         <TabCostosVentas tipo={tipo} setTipo={setTipo} datosCostos={datosCostos}
-                                                            ventasDiariasMes={ventasDiariasMes}
+                                                            ventasDiariasMes={ventasDiariasMes} listaPresupuestos={listaPresupuestos}
                                                         />
                                                     ) : tabParticipacionVtas ?
                                                         (
@@ -591,7 +602,13 @@ export default function HomeVentas(props) {
                                                                         sublineas={ventasDiariasMes.sublineas}
                                                                     />
                                                                 ) :
-                                                                null
+                                                                tabPptoVentas ?
+                                                                    (
+                                                                        <ConsultarPresupuesto tipo={tipo} ventasDiariasMes={ventasDiariasMes}
+                                                                            setTipo={setTipo} listaPresupuestos={listaPresupuestos}
+                                                                        />
+                                                                    ) :
+                                                                    null
                                         }
                                     </div>
                                 </h2>
