@@ -164,10 +164,6 @@ function TabListasPrecios(props) {
             });
             return
         }
-
-
-
-
         consolidar();
         //setConsultarAno(true)
     }

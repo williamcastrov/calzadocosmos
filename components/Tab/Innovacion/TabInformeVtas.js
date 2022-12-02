@@ -3,7 +3,7 @@ import { myNumber, nameMonth } from "../../../utils/ArrayFunctions";
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { MultiSelect } from "react-multi-select-component";
 import swal from 'sweetalert';
-import { Table, Tag, Typography } from 'antd';
+import { Table, Tag, Typography, Button } from 'antd';
 import Loading from "../../../components/Loading";
 import { BeakerIcon, ArrowDownIcon, ArrowUpIcon } from "@heroicons/react/solid";
 import Spinner from "../../Spinner/Spinner";
@@ -55,7 +55,15 @@ function TabInformeVtas(props) {
     const [ordenaGrupo, setOrdenaGrupo] = useState(true);
     const [ordenaColor, setOrdenaColor] = useState(true);
 
-    //console.log("VENTAS DIARIAS MES XXX: ", ventasDiariasMes);
+    const [tipoConsulta, setTipoConsulta] = useState([]);
+
+    let registros = [
+        { label: "100 Primeros", value: 1 },
+        { label: "Todos los registros", value: 2 }
+    ];
+
+
+    console.log("CUANTOS: ", registros);
     //console.log("LABEL DIAS: ", labelVentas);
     const tabsdos = [
         { name: 'Referencia', href: '#', current: entMes }
@@ -128,7 +136,6 @@ function TabInformeVtas(props) {
     }
 
     const generarConsulta = () => {
-        setIsLoading(true);
         if (selectedAno.length == 0 || selectedMes.length == 0) {
             swal({
                 title: "Tablero Cosmos",
@@ -142,9 +149,14 @@ function TabInformeVtas(props) {
         setConsultar(true)
     }
 
+    useEffect(() => {
+        setIsLoading(true);
+    }, [consultar]);
+
     const GenerarDatos = () => {
+
         //if (selectedAno.length > 0) {
-        setConsultar(false)
+
         let periodo = "";
 
         if (selectedMes[0].value < 10)
@@ -152,15 +164,6 @@ function TabInformeVtas(props) {
         else
             periodo = "" + selectedAno[0].value + selectedMes[0].value;
 
-        /*
-if ((selectedAno.length > 0 && selectedMes.length > 0 && selectedGrupo.length > 0 &&
-    selectedSublinea.length > 0) ||
-    (selectedAno.length > 0 && selectedMes.length > 0 && selectedGrupo.length > 0 &&
-        selectedMarca.length > 0) ||
-    (selectedAno.length > 0 && selectedMes.length > 0 && selectedSublinea.length > 0 &&
-        selectedMarca.length > 0)
-)
-        */
         if (selectedAno.length > 1 && selectedMes.length > 1) {
             swal({
                 title: "Tablero Cosmos",
@@ -189,6 +192,20 @@ if ((selectedAno.length > 0 && selectedMes.length > 0 && selectedGrupo.length > 
 
         //console.log("VENTAS DIAS : ", referenciacolorvta)
         //return
+        if (tipoConsulta.length == 0) {
+            swal({
+                title: "Tablero Cosmos",
+                text: "Selecciona tipo de consulta!",
+                icon: "warning",
+            });
+            return
+        }
+
+        let cantidad = 0;
+        if (tipoConsulta[0].value == 1)
+            cantidad = 500;
+        else
+            cantidad = 10000;
 
         if (selectedAno.length > 0 && selectedMes.length > 0 && selectedGrupo.length == 0 &&
             selectedSublinea.length == 0 && selectedMarca.length == 0) {
@@ -206,7 +223,14 @@ if ((selectedAno.length > 0 && selectedMes.length > 0 && selectedGrupo.length > 
                         let talla = "";
 
                         contador = contador + 1;
-                        if (contador < 500) {
+
+                        if (contador > cantidad) {
+                            setConsultar(true)
+                            setConsultar(false);
+                        }
+
+
+                        if (contador < cantidad) {
 
                             vtasperiodo &&
                                 vtasperiodo.map((vta, index) => {
@@ -372,9 +396,9 @@ if ((selectedAno.length > 0 && selectedMes.length > 0 && selectedGrupo.length > 
                     //}
                     //refe = vta.Referencia;
                     //colo = vta.Color;
-                    setIsLoading(false);
+
                 });
-            //console.log("REFERENCIAS : ", vtasreferencia)
+            console.log("REFERENCIAS : ", vtasreferencia)
             setmovimientos(vtasreferencia);
         } else
             if (selectedAno.length > 0 && selectedMes.length > 0 && selectedGrupo.length > 0 &&
@@ -571,7 +595,7 @@ if ((selectedAno.length > 0 && selectedMes.length > 0 && selectedGrupo.length > 
                             vtasreferencia.push(item);
                         }
                         refe = vta.Referencia;
-                        setIsLoading(false);
+                        //setIsLoading(false);
                     });
                 //console.log("REFERENCIAS : ", vtasreferencia)
                 setmovimientos(vtasreferencia);
@@ -714,7 +738,7 @@ if ((selectedAno.length > 0 && selectedMes.length > 0 && selectedGrupo.length > 
                             text: "No hay productos por ese criterio de selección!",
                             icon: "warning",
                         });
-                        setIsLoading(false);
+                        //setIsLoading(false);
                         return
                     }
 
@@ -765,7 +789,7 @@ if ((selectedAno.length > 0 && selectedMes.length > 0 && selectedGrupo.length > 
                                 vtasreferencia.push(item);
                             }
                             refe = vta.Referencia;
-                            setIsLoading(false);
+                            //setIsLoading(false);
                         });
                     //console.log("REFERENCIAS : ", vtasreferencia)
                     setmovimientos(vtasreferencia);
@@ -965,7 +989,7 @@ if ((selectedAno.length > 0 && selectedMes.length > 0 && selectedGrupo.length > 
                                         imageSrc: imagencosmos
                                     }
                                     vtasreferencia.push(item);
-                                    setIsLoading(false);
+                                    //setIsLoading(false);
                                 }
                                 refe = vta.Referencia;
 
@@ -1196,7 +1220,7 @@ if ((selectedAno.length > 0 && selectedMes.length > 0 && selectedGrupo.length > 
                                         vtasreferencia.push(item);
                                     }
                                     refe = vta.Referencia;
-                                    setIsLoading(false);
+                                    //setIsLoading(false);
                                 });
                             //console.log("REFERENCIAS : ", vtasreferencia)
                             setmovimientos(vtasreferencia);
@@ -1431,7 +1455,7 @@ if ((selectedAno.length > 0 && selectedMes.length > 0 && selectedGrupo.length > 
                                             vtasreferencia.push(item);
                                         }
                                         refe = vta.Referencia;
-                                        setIsLoading(false);
+                                        //(false);
                                     });
                                 //console.log("REFERENCIAS : ", vtasreferencia)
                                 setmovimientos(vtasreferencia);
@@ -1661,7 +1685,7 @@ if ((selectedAno.length > 0 && selectedMes.length > 0 && selectedGrupo.length > 
                                                 vtasreferencia.push(item);
                                             }
                                             refe = vta.Referencia;
-                                            setIsLoading(false);
+                                            //setIsLoading(false);
                                         });
                                     //console.log("REFERENCIAS : ", vtasreferencia)
                                     setmovimientos(vtasreferencia);
@@ -1924,12 +1948,12 @@ if ((selectedAno.length > 0 && selectedMes.length > 0 && selectedGrupo.length > 
                                                     vtasreferencia.push(item);
                                                 }
                                                 refe = vta.Referencia;
-                                                setIsLoading(false);
+                                                //setIsLoading(false);
                                             });
                                         //console.log("REFERENCIAS : ", vtasreferencia)
                                         setmovimientos(vtasreferencia);
                                     }
-        setConsultar(false);
+        //setConsultar(false);
     }
 
     useEffect(() => {
@@ -2090,23 +2114,29 @@ if ((selectedAno.length > 0 && selectedMes.length > 0 && selectedGrupo.length > 
 
     return (
         <div className="mlanegativo">
-            {
-                console.log(isLoading)
-            }
-            {
-                isLoading ?
-                    <Spinner />
-                    :
-                    null
-            }
             <h2 className="mx-auto mt-1 px-4 text-lg leading-6 font-medium text-gray-900 sm:px-6 lg:px-8">
                 <div className="col-start-1 row-start-1 py-3">
-
-                    <div className="ml-80 mb-5">
-
-                    </div>
-                    <div className="ml-10 mx-auto flex max-w-7xl justify-center px-4 sm:px-6 lg:px-8">
+                    <div className="ml-30 mx-auto flex max-w-7xl justify-center px-4 sm:px-6 lg:px-8">
                         {/* justify-end */}
+                        <div className="flex">
+                            <Menu as="div" className="relative inline-block">
+                                <MultiSelect
+                                    options={registros}
+                                    value={tipoConsulta}
+                                    onChange={setTipoConsulta}
+                                    disableSearch="false"
+                                    labelledBy="Registros"
+                                    className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                    overrideStrings={{
+                                        search: "Buscar",
+                                        selectSomeItems: "Tipo consulta.",
+                                        allItemsAreSelected:
+                                            "Todos los años",
+                                        selectAll: "Todos"
+                                    }}
+                                />
+                            </Menu>
+                        </div>
                         <div className="flex">
                             <Menu as="div" className="relative inline-block">
                                 <MultiSelect
@@ -2296,6 +2326,7 @@ if ((selectedAno.length > 0 && selectedMes.length > 0 && selectedGrupo.length > 
                     </select>
                 </div>
                 <div className="-mt-4 hidden sm:block ml-12">
+
                     <div className="border-b border-gray-200">
                         <nav className="ml-1 -mb-px flex space-x-8" aria-label="Tabs">
                             {tabsdos.map((tab, index) => (
@@ -2321,10 +2352,10 @@ if ((selectedAno.length > 0 && selectedMes.length > 0 && selectedGrupo.length > 
                         <div className="mt-8 flex flex-col">
                             <div className="-my-2 -mx-4 sm:-mx-6 lg:-mx-8">
                                 <div className=" min-w-full py-0 align-middle md:px-6 lg:px-1">
-                                    <div  className="shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                                    <div className="shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
                                         <Table
-                                            columns={header_test} 
-                                            dataSource={movimientos} 
+                                            columns={header_test}
+                                            dataSource={movimientos}
                                             pagination={false}
                                             scroll={{
                                                 x: 1300,

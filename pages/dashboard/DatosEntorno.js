@@ -14,17 +14,18 @@ import HomeVentas from './HomeVentas';
 function DatosEntorno(props) {
   const router = useRouter();
   const { datUsuario } = props;
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
-  const [opcion, setOpcion] = useState(0)
-  const [datos, setDatos] = useState(0)
-  const [datosCostos, setDatosCostos] = useState(null)
-  const [ventasDiariasMes, setVentasDiariasMes] = useState(null)
-  const [ventasDiariasMesSubcategoria, setVentasDiariasMesSubcategoria] = useState(null)
-  const [vtasProductos, setVtasProductos] = useState(null)
-  const [detalleVtas, setDetalleVtas] = useState(null)
-  const [listaPrecios, setListaPrecios] = useState(null)
-  const [listaPresupuestos, setListaPresupuestos] = useState(null)
+  const [opcion, setOpcion] = useState(0);
+  const [datos, setDatos] = useState(0);
+  const [datosCostos, setDatosCostos] = useState(null);
+  const [ventasDiariasMes, setVentasDiariasMes] = useState(null);
+  const [ventasDiariasMesSubcategoria, setVentasDiariasMesSubcategoria] = useState(null);
+  const [vtasProductos, setVtasProductos] = useState(null);
+  const [detalleVtas, setDetalleVtas] = useState(null);
+  const [listaPrecios, setListaPrecios] = useState(null);
+  const [listaPresupuestos, setListaPresupuestos] = useState(null);
+  const [listaMaterialEmpaque, setListaMaterialEmpaque] = useState(null);
   let tipousuario = 4;
 
   const totalventas = useSelector((state) => state.datosdashboard.datosdashboard.ventas_periodo);
@@ -239,13 +240,39 @@ function DatosEntorno(props) {
             if (res) {
               setListaPresupuestos(res.data);
               //localStorage.setItem('detalledatosvtas', JSON.stringify(datos));
-              setIsLoading(false);
             } else {
               console.log("RETORNA DATOS PRESUPUESTOS: ", "ERROR")
             }
 
           } else {
             console.log("RETORNA DATOS PRESUPUESTOS: ", "ERROR")
+          }
+        })
+        .catch((error) =>
+          alert("Error Inesperado 4")
+        )
+
+      // Datos Presupuestos
+      axios({
+        method: "post",
+        url: `${URL_SERVICE}/19`,
+        headers: {
+          "Content-type": "application/json",
+        },
+      })
+        .then((res) => {
+          if (res.status == 200) {
+            //console.log("RETORNA VENTAS RESUMEN: ", res.data)
+            if (res) {
+              setListaMaterialEmpaque(res.data);
+              //localStorage.setItem('detalledatosvtas', JSON.stringify(datos));
+              setIsLoading(false);
+            } else {
+              console.log("RETORNA DATOS MATERIAL EMPAQUE: ", "ERROR")
+            }
+
+          } else {
+            console.log("RETORNA DATOS MATERIAL EMPAQUE: ", "ERROR")
           }
         })
         .catch((error) =>
@@ -277,10 +304,14 @@ function DatosEntorno(props) {
                       ventasDiariasMesSubcategoria ?
                         listaPrecios ?
                           listaPresupuestos ?
-                            <HomeVentas datos={datos} datosCostos={datosCostos} vtasProductos={vtasProductos}
-                              detalleVtas={detalleVtas} ventasDiariasMes={ventasDiariasMes}
-                              ventasDiariasMesSubcategoria={ventasDiariasMesSubcategoria}
-                              listaPrecios={listaPrecios} listaPresupuestos={listaPresupuestos} />
+                            listaMaterialEmpaque ?
+                              <HomeVentas datos={datos} datosCostos={datosCostos} vtasProductos={vtasProductos}
+                                detalleVtas={detalleVtas} ventasDiariasMes={ventasDiariasMes}
+                                ventasDiariasMesSubcategoria={ventasDiariasMesSubcategoria}
+                                listaPrecios={listaPrecios} listaPresupuestos={listaPresupuestos} 
+                                listaMaterialEmpaque={listaMaterialEmpaque} 
+                                />
+                              : <Loading />
                             : <Loading />
                           : <Loading />
                         : <Loading />

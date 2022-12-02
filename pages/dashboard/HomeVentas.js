@@ -26,6 +26,7 @@ import TabParticipacion from "../../components/Tab/Ventas/TabParticipacion";
 import TabVariacion from "../../components/Tab/Ventas/TabVariacion";
 import TabListasPrecios from "../../components/Tab/Ventas/TabListasPrecios";
 import ConsultarPresupuesto from "../ImportarArchivos/ConsultarPresupuesto";
+import TabMaterialEmpaque from "../../components/Tab/Ventas/TabMaterialEmpaque";
 
 //Anibal
 import TileIcon from "../../components/TileIcon";
@@ -67,7 +68,7 @@ function classNames(...classes) {
 
 export default function HomeVentas(props) {
     const { datos, datosCostos, detalleVtas, ventasDiariasMes, ventasDiariasMesSubcategoria,
-        listaPrecios, listaPresupuestos } = props;
+        listaPrecios, listaPresupuestos, listaMaterialEmpaque } = props;
     const router = useRouter();
     //console.log("VENTAS DIARIAS MES: ", ventasDiariasMes.sublineas);
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -83,6 +84,7 @@ export default function HomeVentas(props) {
     const [tabVariacionVtas, setTabVariacionVtas] = useState(false);
     const [tabListasPrecios, setTabListasPrecios] = useState(false);
     const [tabPptoVentas, setTabPttoVentas] = useState(false);
+    const [tabMaterialEmpaque, setTabMaterialEmpaque] = useState(false);
 
     const [tabPendientesProveedor, setTabPendientesProveedor] = useState(false);
     const [tabMargen, setTabMargen] = useState(false);
@@ -113,6 +115,7 @@ export default function HomeVentas(props) {
         { name: 'Variación', href: '#', current: tabVariacionVtas },
         { name: 'Listas de precio', href: '#', current: tabListasPrecios },
         { name: 'Presupuestos de vtas', href: '#', current: tabPptoVentas },
+        { name: 'Material empaque', href: '#', current: tabMaterialEmpaque },
     ]
 
     const salirApp = () => {
@@ -130,6 +133,7 @@ export default function HomeVentas(props) {
             setTabListasPrecios(false);
             setTabFiltros(false);
             setTabPttoVentas(false);
+            setTabMaterialEmpaque(false);
             setTabMargen(false);
         } else
             if (seleccion == 1) {
@@ -140,6 +144,7 @@ export default function HomeVentas(props) {
                 setTabListasPrecios(false);
                 setTabFiltros(false);
                 setTabPttoVentas(false);
+                setTabMaterialEmpaque(false);
                 setTabMargen(false);
             }
             else
@@ -151,6 +156,7 @@ export default function HomeVentas(props) {
                     setTabListasPrecios(false);
                     setTabFiltros(false);
                     setTabPttoVentas(false);
+                    setTabMaterialEmpaque(false);
                     setTabMargen(false);
                 }
                 else
@@ -162,9 +168,9 @@ export default function HomeVentas(props) {
                         setTabListasPrecios(false);
                         setTabFiltros(false);
                         setTabPttoVentas(false);
+                        setTabMaterialEmpaque(false);
                         setTabMargen(false);
-                    }
-                    else
+                    } else
                         if (seleccion == 4) {
                             setTabVtasLinea(false);
                             setTabCostosVtas(false);
@@ -173,6 +179,7 @@ export default function HomeVentas(props) {
                             setTabListasPrecios(true);
                             setTabFiltros(false);
                             setTabPttoVentas(false);
+                            setTabMaterialEmpaque(false);
                             setTabMargen(false);
                         }
                         else
@@ -184,6 +191,18 @@ export default function HomeVentas(props) {
                                 setTabListasPrecios(false);
                                 setTabFiltros(false);
                                 setTabPttoVentas(true);
+                                setTabMaterialEmpaque(false);
+                                setTabMargen(false);
+                            }else
+                            if (seleccion == 6) {
+                                setTabVtasLinea(false);
+                                setTabCostosVtas(false);
+                                setTabParticipacionVtas(false);
+                                setTabVariacionVtas(false);
+                                setTabListasPrecios(false);
+                                setTabFiltros(false);
+                                setTabPttoVentas(false);
+                                setTabMaterialEmpaque(true);
                                 setTabMargen(false);
                             }
                             else {
@@ -606,6 +625,12 @@ export default function HomeVentas(props) {
                                                                     (
                                                                         <ConsultarPresupuesto tipo={tipo} ventasDiariasMes={ventasDiariasMes}
                                                                             setTipo={setTipo} listaPresupuestos={listaPresupuestos}
+                                                                        />
+                                                                    ) :
+                                                                    tabMaterialEmpaque ?
+                                                                    (
+                                                                        <TabMaterialEmpaque tipo={tipo} ventasDiariasMes={ventasDiariasMes}
+                                                                            setTipo={setTipo} listaMaterialEmpaque={listaMaterialEmpaque}
                                                                         />
                                                                     ) :
                                                                     null

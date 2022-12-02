@@ -1,7 +1,8 @@
 import { Fragment, useState, useEffect } from "react";
 import { myNumber, nameMonth } from "../../../utils/ArrayFunctions";
 import { Disclosure, Menu, Transition } from '@headlessui/react';
-import { Table, Tag, Typography } from 'antd';
+import { ChevronDownIcon, FunnelIcon, } from "@heroicons/react/solid";
+import { useDispatch, useSelector } from "react-redux";
 import { MultiSelect } from "react-multi-select-component";
 import Select from 'react-select';
 import swal from 'sweetalert';
@@ -11,7 +12,6 @@ function classNames(...classes) {
 }
 
 function TabDetalle(props) {
-    const { Title } = Typography;
     const { tipo, setTipo, ingresosxlinea, ingreosxproveedor, presupuestosxlinea, lineasproductos,
         filtrosVentas, proveedorescompras } = props;
     const [entMes, setEntMes] = useState(true);
@@ -288,7 +288,7 @@ function TabDetalle(props) {
                     };
                     newDetComprasVsPst.push(mvto);
                 });
-            console.log("DATOS : ", newDetComprasVsPstMes)
+
             setmovimientosMes(newDetComprasVsPstMes);
             setmovimientos(newDetComprasVsPst);
         } else
@@ -465,7 +465,7 @@ function TabDetalle(props) {
                 }
                 //setmovimientos(newDetComprasVsPst);
             } else
-                if (selectedAno.length > 0 && selectedMes.length === 0 && selectedSemestre.length === 0
+                if (selectedAno.length > 0 && selectedMes.length === 0 && selectedSemestre.length === 0 
                     && selectedTrimestre.length > 0) {
 
                     let newDetCompras = [];
@@ -638,7 +638,7 @@ function TabDetalle(props) {
                         setmovimientos(newDetComprasVsPstMes);
                     }
                 } else
-                    if (selectedAno.length > 0 && selectedMes.length === 0 && selectedSemestre.length === 0 &&
+                    if (selectedAno.length > 0 && selectedMes.length === 0 && selectedSemestre.length === 0 && 
                         selectedTrimestre.length === 0) {
                         //console.log("INGRESOS LINEAS : ", ingresosxlinea)
 
@@ -733,119 +733,10 @@ function TabDetalle(props) {
                                 newDetComprasVsPst.push(mvto);
                             });
 
-                        let undpst = 0;
-                        let valpst = 0;
-                        let unding = 0;
-                        let valing = 0;
-
-                        newDetComprasVsPstMes &&
-                            newDetComprasVsPstMes.map((ing, index) => {
-
-                                undpst = parseInt(undpst) + parseInt(ing.UndPst);
-                                valpst = parseInt(undpst) + parseInt(ing.ValPst);
-                                unding = parseInt(unding) + parseInt(ing.UndIngreso);
-                                valing = parseInt(valing) + parseInt(ing.ValIngreso);
-
-                            });
-
-                        let mvto = {
-                            Descripcion: "TOTAL",
-                            UndIngreso: unding,
-                            ValIngreso: valing,
-                            UndPst: undpst,
-                            ValPst: valpst
-                        };
-                        newDetComprasVsPstMes.push(mvto);
-
                         setmovimientosMes(newDetComprasVsPstMes);
                         setmovimientos(newDetComprasVsPst);
                     }
     }
-
-
-    const header_test = [
-        { title: "LINEA", dataIndex: "Descripcion", key: "Descripcion", width: 200, fixed: true },
-        {
-            title: "UND MES ACTUAL", dataIndex: "UndIngreso", key: "UndIngreso", width: 150, align: "right",
-            sortDirections: ['descend', 'ascend'],
-            //sorter: (a, b) => a.unidades4_ - b.unidades4_,
-            render: (text, row, index) => {
-                return (
-                    <Title level={4} style={{ fontSize: 15, zIndex: 0 }}>
-                        {myNumber(1, row.UndIngreso, 2)}
-                    </Title>
-
-                );
-            }
-        },
-        {
-            title: "UNIDADES PRESUPUESTO", dataIndex: "UndPst", key: "UndPst", width: 150, align: "right",
-            sortDirections: ['descend', 'ascend'],
-            sorter: (a, b) => a.UndPst - b.UndPst,
-            render: (text, row, index) => {
-                return (
-                    <Title level={4} style={{ fontSize: 15, }}>
-                        {myNumber(1, row.UndPst, 2)}
-                    </Title>
-
-                );
-            }
-        },
-        {
-            title: "%", dataIndex: "presupuesto", key: "presupuesto", width: 150, align: "right",
-            render: (text, row, index) => {
-                return (
-                    <Title level={4} style={{ fontSize: 15, }}>
-                        {isNaN(parseInt(((row.UndIngreso / row.UndPst) * 100).toFixed(2))) ?
-                            0
-                            :
-                            myNumber(1, (((row.UndIngreso / row.UndPst)) * 100).toFixed(2))
-                        }
-                    </Title>
-
-                );
-            }
-        },
-        {
-            title: "VALOR MES ACTUAL", dataIndex: "ValIngreso", key: "ValIngreso", width: 150, align: "right",
-            sorter: (a, b) => a.ValIngreso - b.ValIngreso,
-            render: (text, row, index) => {
-                return (
-                    <Title level={4} style={{ fontSize: 15, }}>
-                        {myNumber(1, row.ValIngreso, 2)}
-                    </Title>
-
-                );
-            }
-        },
-        {
-            title: "VALOR PRESUPUESTO", dataIndex: "ValPst", key: "ValPst", width: 150, align: "right",
-            sorter: (a, b) => a.ValPst - b.ValPst,
-            render: (text, row, index) => {
-                return (
-                    <Title level={4} style={{ fontSize: 15, }}>
-                        {myNumber(1, row.ValPst, 2)}
-                    </Title>
-
-                );
-            }
-        },
-        {
-            title: "%", dataIndex: "valppto", key: "valppto", width: 150, align: "right",
-            render: (text, row, index) => {
-                return (
-                    <Title level={4} style={{ fontSize: 15, }}>
-                        {isNaN(parseInt(((row.ValIngreso / row.ValPst) * 100).toFixed(2))) ?
-                            0
-                            :
-                            myNumber(1, (((row.ValIngreso / row.ValPst) - 1) * 100).toFixed(2))
-                        }
-                    </Title>
-
-                );
-            }
-        }
-    ]
 
     return (
         <div className="mlanegativo">
@@ -887,7 +778,7 @@ function TabDetalle(props) {
                             ))}
                         </nav>
                     </div>
-                    <div className="ml-60 mt-4 hidden sm:block">
+                    <div className="mt-4 hidden sm:block ml-12">
                         <nav className="ml-1 -mb-px flex space-x-0" aria-label="Tabs">
                             <div className="mt-1 flex" onClick={datosFiltros} >
                                 <Menu as="div" className="relative inline-block" >
@@ -897,7 +788,7 @@ function TabDetalle(props) {
                                         onChange={setSelectedAno}
                                         disableSearch="false"
                                         labelledBy="Filtrar por año"
-                                        className=" p-0 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                        className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                                         overrideStrings={{
                                             selectSomeItems: "Filtrar por año...",
                                             allItemsAreSelected:
@@ -970,7 +861,7 @@ function TabDetalle(props) {
                                     />
                                 </Menu>
                             </div>
-
+                            
                             <div className="mt-1 flex">
                                 <Menu as="div" className="ml-1 relative inline-block" >
                                     <div className="flex">
@@ -1001,20 +892,70 @@ function TabDetalle(props) {
                     <div className="margenizaquierdanegativo px-4 sm:px-6 lg:px-8">
                         {opcion == 0 && semestre == 0 ?
                             (
-                                <div className="min-w-full  margenizaquierdanegativo px-4 sm:px-6 lg:px-8">
-                                    <div className="min-w-full  mt-8 flex flex-col">
-                                        <div className="min-w-full  -my-2 -mx-4 sm:-mx-6 lg:-mx-8">
-                                            <div className="min-w-full py-2 align-middle md:px-6 lg:px-8">
-                                                <div className="min-w-full shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-                                                    <Table columns={header_test} dataSource={movimientosMes} pagination={false}
-                                                        scroll={{
-                                                            x: 1200,
-                                                            y: 500,
-                                                        }}
-                                                        bordered />
+                                <div className="mt-5 flex flex-col">
+                                    <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                                        <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+                                            <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                                                <table className="min-w-full divide-y divide-gray-300">
+                                                    <thead className="bg-gray-50">
+                                                        <tr>
+                                                            <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
+                                                                Linea
+                                                            </th>
+                                                            <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                                                                Und Mes Actual
+                                                            </th>
+                                                            <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                                                                Und Presupuesto
+                                                            </th>
+                                                            <th scope="col" className="px-8 py-3.5 text-right text-sm font-semibold text-gray-900">
+                                                                %
+                                                            </th>
+                                                            <th scope="col" className="px-7 py-3.5 text-left text-sm font-semibold text-gray-900">
+                                                                Valor Mes Actual
+                                                            </th>
+                                                            <th scope="col" className="px-2 py-3.5 text-left text-sm font-semibold text-gray-900">
+                                                                Valor Presupuesto
+                                                            </th>
+                                                            <th scope="col" className="px-8 py-3.5 text-right text-sm font-semibold text-gray-900">
+                                                                %
+                                                            </th>
+                                                            <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
+                                                                <span className="sr-only">Edit</span>
+                                                            </th>
+                                                        </tr>
+                                                    </thead>{ }
+                                                    <tbody className="bg-white">
+                                                        {movimientosMes && movimientosMes.map((compras, comprasIdx) => (
+                                                            <tr key={compras.nombre} className={comprasIdx % 2 === 0 ? undefined : 'bg-gray-50'}>
+                                                                <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                                                                    {compras.Descripcion}
+                                                                </td>
+                                                                <td className="whitespace-nowrap px-4 py-4 text-sm text-gray-500 text-right">{myNumber(1, compras.UndIngreso)}</td>
+                                                                <td className="whitespace-nowrap px-5 py-4 text-sm text-gray-500 text-right">{myNumber(1, compras.UndPst)}</td>
+                                                                <td className="whitespace-nowrap px-8 py-4 text-sm text-gray-500 text-right">
+                                                                    {isNaN(parseInt(((compras.UndIngreso / compras.UndPst) * 100).toFixed(2))) ?
+                                                                        0
+                                                                        :
+                                                                        myNumber(1, (((compras.UndIngreso / compras.UndPst) - 1) * 100).toFixed(2))
+                                                                    }
+                                                                </td>
 
-
-                                                </div>
+                                                                <td className="whitespace-nowrap px-9 py-4 text-sm text-gray-500 text-right">
+                                                                    {myNumber(1, compras.ValIngreso)}</td>
+                                                                <td className="whitespace-nowrap px-9 py-4 text-sm text-gray-500 text-right">
+                                                                    {myNumber(1, compras.ValPst)}</td>
+                                                                <td className="whitespace-nowrap px-9 py-4 text-sm text-gray-500 text-right">
+                                                                    {isNaN(parseInt(((compras.ValIngreso / compras.ValPst) * 100).toFixed(2))) ?
+                                                                        0
+                                                                        :
+                                                                        myNumber(1, (((compras.ValIngreso / compras.ValPst) - 1) * 100).toFixed(2))
+                                                                    }
+                                                                </td>
+                                                            </tr>
+                                                        ))}
+                                                    </tbody>
+                                                </table>
                                             </div>
                                         </div>
                                     </div>
