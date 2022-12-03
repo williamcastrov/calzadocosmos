@@ -1,7 +1,7 @@
 import { Fragment, useState, useEffect } from "react";
 import { myNumber, nameMonth } from "../../../utils/ArrayFunctions";
 import { Disclosure, Menu, Transition } from '@headlessui/react';
-import { ChevronDownIcon, FunnelIcon, } from "@heroicons/react/solid";
+import { Table, Tag, Typography } from 'antd';
 import { useDispatch, useSelector } from "react-redux";
 import { MultiSelect } from "react-multi-select-component";
 import Select from 'react-select';
@@ -12,7 +12,8 @@ function classNames(...classes) {
 }
 
 function TabProveedores(props) {
-    const { tipo, setTipo, ingresosxlinea, ingreosxproveedor, presupuestosxlinea, lineasproductos, proveedorescompras } = props;
+    const { Title } = Typography;
+    const { tipo, setTipo, ingresosxlinea, ingresosxproveedor, presupuestosxlinea, detalleCompras, proveedorescompras } = props;
     const [entMes, setEntMes] = useState(true);
     const [entAcumuladas, setEntAcumuladas] = useState(false);
     const [movimientos, setmovimientos] = useState(false);
@@ -24,16 +25,20 @@ function TabProveedores(props) {
     let ventasDiariasMes = [];
     ventasDiariasMes = useSelector((state) => state.datosfiltros.datosfiltros);
 
-    const [vtasAno, setVtasAno] = useState(ventasDiariasMes.anos_vtasdiarias);
-    const [vtasMes, setVtasMes] = useState(ventasDiariasMes.meses_vtasdiarias);
-    const [vtasDia, setVtasDia] = useState(ventasDiariasMes.dias_vtas);
+    //const [vtasAno, setVtasAno] = useState(ventasDiariasMes.anos_vtasdiarias);
+    //const [vtasMes, setVtasMes] = useState(ventasDiariasMes.meses_vtasdiarias);
+    //const [vtasDia, setVtasDia] = useState(ventasDiariasMes.dias_vtas);
+    const [vtasAno, setVtasAno] = useState([]);
+    const [vtasMes, setVtasMes] = useState([]);
+    const [vtasDia, setVtasDia] = useState([]);
+
     const [centrosoperacion, setCentrosoperacion] = useState(ventasDiariasMes.centrosoperacion);
     const [subcategorias, setSubcategorias] = useState(ventasDiariasMes.subcategorias);
     const [proveedores, setProveedores] = useState(ventasDiariasMes.proveedores);
 
-    const [selectedAno, setSelectedAno] = useState(null);
-    const [selectedMes, setSelectedMes] = useState(null);
-    const [selectedDia, setSelectedDia] = useState(null);
+    const [selectedAno, setSelectedAno] = useState([]);
+    const [selectedMes, setSelectedMes] = useState([]);
+    const [selectedDia, setSelectedDia] = useState([]);
     const [labelUno, setLabelUno] = useState([]);
     const [labelDos, setLabelDos] = useState([]);
     const [labelTres, setLabelTres] = useState([]);
@@ -99,7 +104,7 @@ function TabProveedores(props) {
             setEntMes(true)
             setEntAcumuladas(false)
             {
-                ingreosxproveedor && ingreosxproveedor.map((items) => {
+                ingresosxproveedor && ingresosxproveedor.map((items) => {
                     det = {
                         nombre: items.SubLinea,
                         undcorr: items.DETUNDMES_ANT,
@@ -118,7 +123,7 @@ function TabProveedores(props) {
                 setEntMes(false)
                 setEntAcumuladas(true)
                 {
-                    ingreosxproveedor && ingreosxproveedor.map((items) => {
+                    ingresosxproveedor && ingresosxproveedor.map((items) => {
                         det = {
                             nombre: items.SubLinea,
                             undcorr: items.DETUND_ANT,
@@ -139,12 +144,10 @@ function TabProveedores(props) {
     }, [opcion]);
 
     const limpiarFiltros = () => {
-        /*
         setFiltroAno([]);
         setFiltroMes([]);
         setFiltroDia([]);
         setdatosVariacion([]);
-        */
     }
 
     const generarConsulta = () => {
@@ -157,6 +160,15 @@ function TabProveedores(props) {
             return
         }
 
+        if (selectedAno.length > 1 || selectedMes.length > 1) {
+            swal({
+                title: "Tablero Cosmos",
+                text: "Solo puedes seleccionar un año y un mes !",
+                icon: "warning",
+            });
+            return
+        }
+
         if (selectedAno) {
             consolidar();
         }
@@ -164,7 +176,7 @@ function TabProveedores(props) {
     }
 
     const consolidar = () => {
-        if (selectedAno && selectedMes) {
+        if (selectedAno.length > 0 && selectedMes.length > 0) {
 
             let newDetCompras = [];
             let newDetComprasMes = [];
@@ -176,17 +188,16 @@ function TabProveedores(props) {
                     let undcomprasmes = 0;
                     let valcomprasmes = 0;
 
-                    ingreosxproveedor &&
-                        ingreosxproveedor.map((ingresos, index) => {
-                            if (ingresos.NombreProveedor == lineas.Proveedor && ingresos.ano == selectedAno.value
-                                && ingresos.mes <= selectedMes.value) {
-                                undcompras = undcompras + ingresos.UND;
-                                valcompras = valcompras + ingresos.MND;
+                    detalleCompras.costoproveedor &&
+                        detalleCompras.costoproveedor.map((ingresos, index) => {
+                            if (ingresos.Nombreproveedor == lineas.Proveedor && ingresos.ano == selectedAno[0].value) {
+                                undcompras = parseInt(undcompras) + parseInt(ingresos.UND);
+                                valcompras = parseInt(valcompras) + parseInt(ingresos.MND);
                             }
-                            if (ingresos.NombreProveedor == lineas.Proveedor && ingresos.ano == selectedAno.value
-                                && ingresos.mes == selectedMes.value) {
-                                undcomprasmes = undcomprasmes + ingresos.UND;
-                                valcomprasmes = valcomprasmes + ingresos.MND;
+                            if (ingresos.Nombreproveedor == lineas.Proveedor && ingresos.ano == selectedAno[0].value
+                                && ingresos.mes == selectedMes[0].value) {
+                                undcomprasmes = parseInt(undcomprasmes) + parseInt(ingresos.UND);
+                                valcomprasmes = parseInt(valcomprasmes) + parseInt(ingresos.MND);
                             }
                         });
 
@@ -217,10 +228,10 @@ function TabProveedores(props) {
                     let valpstmes = 0;
                     presupuestosxlinea &&
                         presupuestosxlinea.map((pst, index) => {
-                            if (ingresos.Descripcion == pst.Sublinea && selectedAno.value == pst.ano
-                                && pst.mes == selectedMes.value) {
-                                undpstmes = undpstmes + pst.UND_PST;
-                                valpstmes = valpstmes + pst.VAL_PST;
+                            if (ingresos.Descripcion == pst.Sublinea && selectedAno[0].value == pst.ano
+                                && pst.mes == selectedMes[0].value) {
+                                undpstmes = parseInt(undpstmes) + parseInt(pst.UND_PST);
+                                valpstmes = parseInt(valpstmes) + parseInt(pst.VAL_PST);
                             }
                         });
 
@@ -242,10 +253,9 @@ function TabProveedores(props) {
                     let valpst = 0;
                     presupuestosxlinea &&
                         presupuestosxlinea.map((pst, index) => {
-                            if (ingresos.Descripcion == pst.Sublinea && selectedAno.value == pst.ano
-                                && pst.mes <= selectedMes.value) {
-                                undpst = undpst + pst.UND_PST;
-                                valpst = valpst + pst.VAL_PST;
+                            if (ingresos.Descripcion == pst.Sublinea && selectedAno[0].value == pst.ano) {
+                                undpst = parseInt(undpst) + parseInt(pst.UND_PST);
+                                valpst = parseInt(valpst) + parseInt(pst.VAL_PST);
                             }
                         });
 
@@ -264,104 +274,132 @@ function TabProveedores(props) {
             setmovimientosMes(newDetComprasVsPstMes);
             setmovimientos(newDetComprasVsPst);
         }
-        else 
-        if (selectedAno && !selectedMes) {
+        else
+            if (selectedAno.length > 0 && selectedMes.length == 0) {
 
-            let newDetCompras = [];
-            let newDetComprasMes = [];
+                let newDetCompras = [];
+                let newDetComprasMes = [];
 
-            proveedorescompras &&
-                proveedorescompras.map((lineas, index) => {
-                    let undcompras = 0;
-                    let valcompras = 0;
-                    let undcomprasmes = 0;
-                    let valcomprasmes = 0;
+                proveedorescompras &&
+                    proveedorescompras.map((lineas, index) => {
+                        let undcompras = 0;
+                        let valcompras = 0;
+                        let undcomprasmes = 0;
+                        let valcomprasmes = 0;
 
-                    ingreosxproveedor &&
-                        ingreosxproveedor.map((ingresos, index) => {
-                            if (ingresos.NombreProveedor == lineas.Proveedor && ingresos.ano == selectedAno.value) {
-                                undcompras = undcompras + ingresos.UND;
-                                valcompras = valcompras + ingresos.MND;
-                            }
-                            if (ingresos.NombreProveedor == lineas.Proveedor && ingresos.ano == selectedAno.value) {
-                                undcomprasmes = undcomprasmes + ingresos.UND;
-                                valcomprasmes = valcomprasmes + ingresos.MND;
-                            }
-                        });
+                        detalleCompras.costoproveedor &&
+                            detalleCompras.costoproveedor.map((ingresos, index) => {
+                                if (ingresos.Nombreproveedor == lineas.Proveedor && ingresos.ano == selectedAno[0].value) {
+                                    undcompras = parseInt(undcompras) + parseInt(ingresos.UND);
+                                    valcompras = parseInt(valcompras) + parseInt(ingresos.MND);
+                                }
+                                /*
+                                if (ingresos.Nombreproveedor == lineas.Proveedor && ingresos.ano == selectedAno[0].value &&
+                                    ingresos.mes == selectedMes[0].value) {
+                                    undcomprasmes = undcomprasmes + ingresos.UND;
+                                    valcomprasmes = valcomprasmes + ingresos.MND;
+                                }*/
+                            });
 
-                    if (undcompras > 0 || undcomprasmes > 0) {
-                        let mvto = {
-                            Descripcion: lineas.Proveedor,
-                            UndIngreso: undcompras,
-                            ValIngreso: valcompras,
-                        };
+                        if (undcompras > 0 || undcomprasmes > 0) {
+                            let mvto = {
+                                Descripcion: lineas.Proveedor,
+                                UndIngreso: undcompras,
+                                ValIngreso: valcompras,
+                            };
 
-                        let mvtomes = {
-                            Descripcion: lineas.Proveedor,
-                            UndIngresoMes: undcomprasmes,
-                            ValIngresoMes: valcomprasmes,
-                        };
+                            let mvtomes = {
+                                Descripcion: lineas.Proveedor,
+                                UndIngresoMes: undcomprasmes,
+                                ValIngresoMes: valcomprasmes,
+                            };
 
-                        newDetCompras.push(mvto);
-                        newDetComprasMes.push(mvtomes);
-                    }
-                });
+                            newDetCompras.push(mvto);
+                            newDetComprasMes.push(mvtomes);
+                        }
+                    });
 
-            let newDetComprasVsPst = [];
-            let newDetComprasVsPstMes = [];
+                let newDetComprasVsPst = [];
+                let newDetComprasVsPstMes = [];
 
-            newDetComprasMes &&
-                newDetComprasMes.map((ingresos, index) => {
-                    let undpstmes = 0;
-                    let valpstmes = 0;
-                    presupuestosxlinea &&
-                        presupuestosxlinea.map((pst, index) => {
-                            if (ingresos.Descripcion == pst.Sublinea && selectedAno.value == pst.ano) {
-                                undpstmes = undpstmes + pst.UND_PST;
-                                valpstmes = valpstmes + pst.VAL_PST;
-                            }
-                        });
+                newDetComprasMes &&
+                    newDetComprasMes.map((ingresos, index) => {
+                        let undpstmes = 0;
+                        let valpstmes = 0;
+                        presupuestosxlinea &&
+                            presupuestosxlinea.map((pst, index) => {
+                                if (ingresos.Descripcion == pst.Sublinea && selectedAno[0].value == pst.ano) {
+                                    undpstmes = parseInt(undpstmes) + parseInt(pst.UND_PST);
+                                    valpstmes = parseInt(valpstmes) + parseInt(pst.VAL_PST);
+                                }
+                            });
 
-                    if (ingresos.ValIngresoMes > 0) {
-                        let mvto = {
-                            Descripcion: ingresos.Descripcion,
-                            UndIngreso: ingresos.UndIngresoMes,
-                            ValIngreso: ingresos.ValIngresoMes,
-                            UndPst: undpstmes,
-                            ValPst: valpstmes
-                        };
-                        newDetComprasVsPstMes.push(mvto);
-                    }
-                });
+                        if (ingresos.ValIngresoMes > 0) {
+                            let mvto = {
+                                Descripcion: ingresos.Descripcion,
+                                UndIngreso: ingresos.UndIngresoMes,
+                                ValIngreso: ingresos.ValIngresoMes,
+                                UndPst: undpstmes,
+                                ValPst: valpstmes
+                            };
+                            newDetComprasVsPstMes.push(mvto);
+                        }
+                    });
 
-            newDetCompras &&
-                newDetCompras.map((ingresos, index) => {
-                    let undpst = 0;
-                    let valpst = 0;
-                    presupuestosxlinea &&
-                        presupuestosxlinea.map((pst, index) => {
-                            if (ingresos.Descripcion == pst.Sublinea && selectedAno.value == pst.ano) {
-                                undpst = undpst + pst.UND_PST;
-                                valpst = valpst + pst.VAL_PST;
-                            }
-                        });
+                newDetCompras &&
+                    newDetCompras.map((ingresos, index) => {
+                        let undpst = 0;
+                        let valpst = 0;
+                        presupuestosxlinea &&
+                            presupuestosxlinea.map((pst, index) => {
+                                if (ingresos.Descripcion == pst.Sublinea && selectedAno[0].value == pst.ano) {
+                                    undpst = parseInt(undpst) + parseInt(pst.UND_PST);
+                                    valpst = parseInt(valpst) + parseInt(pst.VAL_PST);
+                                }
+                            });
 
-                    if (ingresos.UndIngreso > 0) {
-                        let mvto = {
-                            Descripcion: ingresos.Descripcion,
-                            UndIngreso: ingresos.UndIngreso,
-                            ValIngreso: ingresos.ValIngreso,
-                            UndPst: undpst,
-                            ValPst: valpst
-                        };
-                        newDetComprasVsPst.push(mvto);
-                    }
-                });
+                        if (ingresos.UndIngreso > 0) {
+                            let mvto = {
+                                Descripcion: ingresos.Descripcion,
+                                UndIngreso: ingresos.UndIngreso,
+                                ValIngreso: ingresos.ValIngreso,
+                                UndPst: undpst,
+                                ValPst: valpst
+                            };
+                            newDetComprasVsPst.push(mvto);
+                        }
+                    });
 
-            setmovimientosMes(newDetComprasVsPstMes);
-            setmovimientos(newDetComprasVsPst);
-        }
+                setmovimientosMes(newDetComprasVsPstMes);
+                setmovimientos(newDetComprasVsPst);
+            }
     }
+
+    const header_test = [
+        { title: "PROVEEDOR", dataIndex: "Descripcion", key: "Descripcion", width: 80, fixed: true },
+        {
+            title: "UND MES", dataIndex: "UndIngreso", key: "UndIngreso", width: 150, align: "right",
+            sorter: (a, b) => a.UndIngreso - b.UndIngreso,
+            render: (text, row, index) => {
+                return (
+                    <Title level={4} style={{ fontSize: 15, }}>
+                        {myNumber(1, row.UndIngreso, 2)}
+                    </Title>
+                );
+            }
+        },
+        {
+            title: "VALOR MES", dataIndex: "ValIngreso", key: "ValIngreso", width: 150, align: "right",
+            sorter: (a, b) => a.ValIngreso - b.ValIngreso,
+            render: (text, row, index) => {
+                return (
+                    <Title level={4} style={{ fontSize: 15, }}>
+                        {myNumber(1, row.ValIngreso, 2)}
+                    </Title>
+                );
+            }
+        }
+    ]
 
     return (
         <div className="mlanegativo">
@@ -402,25 +440,43 @@ function TabProveedores(props) {
                                 </a>
                             ))}
 
-                            <div className="mt-1 flex">
-                                <Menu as="div" className="ml-10 relative inline-block" >
-                                    <Select
+                            <div className="mt-1 flex" >
+                                <Menu as="div" className="relative inline-block" >
+                                    <MultiSelect
                                         options={vtasAno}
                                         value={selectedAno}
                                         onChange={setSelectedAno}
-                                        className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                                        placeholder="Selec. año"
+                                        disableSearch="false"
+                                        labelledBy="Filtrar por año"
+                                        className=" p-0 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                        overrideStrings={{
+                                            selectSomeItems: "Filtrar por año...",
+                                            allItemsAreSelected:
+                                                "Todos los años",
+                                            search: "Buscar",
+                                            selectAll:
+                                                "Todos"
+                                        }}
                                     />
                                 </Menu>
                             </div>
                             <div className="mt-1 flex">
                                 <Menu as="div" className="relative inline-block" >
-                                    <Select
+                                    <MultiSelect
                                         options={vtasMes}
                                         value={selectedMes}
                                         onChange={setSelectedMes}
+                                        disableSearch="false"
+                                        labelledBy="Filtrar por mes"
                                         className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                                        placeholder="Selec. mes"
+                                        overrideStrings={{
+                                            selectSomeItems: " Filtrar por mes...",
+                                            allItemsAreSelected:
+                                                "Todos los meses",
+                                            search: "Buscar",
+                                            selectAll:
+                                                "Todos"
+                                        }}
                                     />
                                 </Menu>
                             </div>
@@ -468,68 +524,24 @@ function TabProveedores(props) {
                             (
                                 <div className="mt-8 flex flex-col">
                                     <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                                        <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+                                        <div className="ml-10">
                                             <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-                                                <table className="min-w-full divide-y divide-gray-300">
-                                                    <thead className="bg-gray-50">
-                                                        <tr>
-                                                            <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
-                                                                Linea
-                                                            </th>
-                                                            <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                                                Und Mes Actual
-                                                            </th>
-                                                            <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                                                Und Presupuesto
-                                                            </th>
-                                                            <th scope="col" className="px-8 py-3.5 text-right text-sm font-semibold text-gray-900">
-                                                                %
-                                                            </th>
-                                                            <th scope="col" className="px-7 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                                                Valor Mes Actual
-                                                            </th>
-                                                            <th scope="col" className="px-2 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                                                Valor Presupuesto
-                                                            </th>
-                                                            <th scope="col" className="px-8 py-3.5 text-right text-sm font-semibold text-gray-900">
-                                                                %
-                                                            </th>
-                                                            <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
-                                                                <span className="sr-only">Edit</span>
-                                                            </th>
-                                                        </tr>
-                                                    </thead>{ }
-                                                    <tbody className="bg-white">
-                                                        {movimientosMes && movimientosMes.map((compras, comprasIdx) => (
-                                                            <tr key={compras.nombre} className={comprasIdx % 2 === 0 ? undefined : 'bg-gray-50'}>
-                                                                <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                                                                    {compras.Descripcion}
-                                                                </td>
-                                                                <td className="whitespace-nowrap px-4 py-4 text-sm text-gray-500 text-right">{myNumber(1, compras.UndIngreso)}</td>
-                                                                <td className="whitespace-nowrap px-5 py-4 text-sm text-gray-500 text-right">{myNumber(1, compras.UndPst)}</td>
-                                                                <td className="whitespace-nowrap px-8 py-4 text-sm text-gray-500 text-right">
-                                                                    {isNaN(parseInt(((compras.UndIngreso / compras.UndPst) * 100).toFixed(2))) ?
-                                                                        0
-                                                                        :
-                                                                        myNumber(1, (((compras.UndIngreso / compras.UndPst) - 1) * 100).toFixed(2))
-                                                                    }
-                                                                </td>
-
-                                                                <td className="whitespace-nowrap px-9 py-4 text-sm text-gray-500 text-right">
-                                                                    {myNumber(1, compras.ValIngreso)}</td>
-                                                                <td className="whitespace-nowrap px-9 py-4 text-sm text-gray-500 text-right">
-                                                                    {myNumber(1, compras.ValPst)}</td>
-                                                                <td className="whitespace-nowrap px-9 py-4 text-sm text-gray-500 text-right">
-                                                                    {isNaN(parseInt(((compras.ValIngreso / compras.ValPst) * 100).toFixed(2))) ?
-                                                                        0
-                                                                        :
-                                                                        myNumber(1, (((compras.ValIngreso / compras.ValPst) - 1) * 100).toFixed(2))
-                                                                    }
-                                                                </td>
-                                                            </tr>
-                                                        ))}
-                                                    </tbody>
-                                                </table>
+                                                <div className="min-w-full  margenizaquierdanegativo px-4 sm:px-6 lg:px-8">
+                                                    <div className="min-w-full  mt-8 flex flex-col">
+                                                        <div className="min-w-full  -my-2 -mx-4 sm:-mx-6 lg:-mx-8">
+                                                            <div className="min-w-full py-2 align-middle md:px-6 lg:px-8">
+                                                                <div className="min-w-full shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                                                                    <Table columns={header_test} dataSource={movimientosMes} pagination={false}
+                                                                        scroll={{
+                                                                            x: 1200,
+                                                                            y: 500,
+                                                                        }}
+                                                                        bordered />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -542,66 +554,22 @@ function TabProveedores(props) {
                                         <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
                                             <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
                                                 <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-                                                    <table className="min-w-full divide-y divide-gray-300">
-                                                        <thead className="bg-gray-50">
-                                                            <tr>
-                                                                <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
-                                                                    Linea
-                                                                </th>
-                                                                <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                                                    Und Ent Acumuladas
-                                                                </th>
-                                                                <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                                                    Und Pto Acumuladas
-                                                                </th>
-                                                                <th scope="col" className="px-8 py-3.5 text-right text-sm font-semibold text-gray-900">
-                                                                    % Desviación
-                                                                </th>
-                                                                <th scope="col" className="px-7 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                                                    $ Ent Acumuladas
-                                                                </th>
-                                                                <th scope="col" className="px-2 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                                                    $ Pto Acumuladas
-                                                                </th>
-                                                                <th scope="col" className="px-8 py-3.5 text-right text-sm font-semibold text-gray-900">
-                                                                    % Desviación
-                                                                </th>
-                                                                <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
-                                                                    <span className="sr-only">Edit</span>
-                                                                </th>
-                                                            </tr>
-                                                        </thead>{ }
-                                                        <tbody className="bg-white">
-                                                            {movimientos && movimientos.map((compras, comprasIdx) => (
-                                                                <tr key={compras.nombre} className={comprasIdx % 2 === 0 ? undefined : 'bg-gray-50'}>
-                                                                    <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                                                                        {compras.Descripcion}
-                                                                    </td>
-                                                                    <td className="whitespace-nowrap px-4 py-4 text-sm text-gray-500 text-right">{myNumber(1, compras.UndIngreso)}</td>
-                                                                    <td className="whitespace-nowrap px-5 py-4 text-sm text-gray-500 text-right">{myNumber(1, compras.UndPst)}</td>
-                                                                    <td className="whitespace-nowrap px-8 py-4 text-sm text-gray-500 text-right">
-                                                                        {isNaN(parseInt(((compras.UndIngreso / compras.UndPst) * 100).toFixed(2))) ?
-                                                                            0
-                                                                            :
-                                                                            myNumber(1, (((compras.UndIngreso / compras.UndPst) - 1) * 100).toFixed(2))
-                                                                        }
-                                                                    </td>
-
-                                                                    <td className="whitespace-nowrap px-9 py-4 text-sm text-gray-500 text-right">
-                                                                        {myNumber(1, compras.ValIngreso)}</td>
-                                                                    <td className="whitespace-nowrap px-9 py-4 text-sm text-gray-500 text-right">
-                                                                        {myNumber(1, compras.ValPst)}</td>
-                                                                    <td className="whitespace-nowrap px-9 py-4 text-sm text-gray-500 text-right">
-                                                                        {isNaN(parseInt(((compras.ValIngreso / compras.ValPst) * 100).toFixed(2))) ?
-                                                                            0
-                                                                            :
-                                                                            myNumber(1, (((compras.ValIngreso / compras.ValPst) - 1) * 100).toFixed(2))
-                                                                        }
-                                                                    </td>
-                                                                </tr>
-                                                            ))}
-                                                        </tbody>
-                                                    </table>
+                                                    <div className="min-w-full  margenizaquierdanegativo px-4 sm:px-6 lg:px-8">
+                                                        <div className="min-w-full  mt-8 flex flex-col">
+                                                            <div className="min-w-full  -my-2 -mx-4 sm:-mx-6 lg:-mx-8">
+                                                                <div className="min-w-full py-2 align-middle md:px-6 lg:px-8">
+                                                                    <div className="min-w-full shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                                                                        <Table columns={header_test} dataSource={movimientos} pagination={false}
+                                                                            scroll={{
+                                                                                x: 1200,
+                                                                                y: 500,
+                                                                            }}
+                                                                            bordered />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

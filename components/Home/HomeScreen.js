@@ -95,13 +95,13 @@ export default function HomeScreen(props) {
     const [costoPromAnt, setCostoPromAnt] = useState(0);
     const [costoPromActMes, setCostoPromActMes] = useState(0);
     const [costoPromAntMes, setCostoPromAntMes] = useState(0);
-/*
-    const totalventas = useSelector((state) => state.datosdashboard.datosdashboard.ventas_periodo);
-    const totalcompras = useSelector((state) => state.datosdashboard.datosdashboard.compras_periodo);
-    const detallecompras = useSelector((state) => state.datosdashboard.datosdashboard.compras_periodo_detalle);
-    const totalinventarios = useSelector((state) => state.datosdashboard.datosdashboard.inventarios_periodo);
-    const detalleinventarios = useSelector((state) => state.datosdashboard.datosdashboard.inventarios_periodo_detalle);
-*/
+    /*
+        const totalventas = useSelector((state) => state.datosdashboard.datosdashboard.ventas_periodo);
+        const totalcompras = useSelector((state) => state.datosdashboard.datosdashboard.compras_periodo);
+        const detallecompras = useSelector((state) => state.datosdashboard.datosdashboard.compras_periodo_detalle);
+        const totalinventarios = useSelector((state) => state.datosdashboard.datosdashboard.inventarios_periodo);
+        const detalleinventarios = useSelector((state) => state.datosdashboard.datosdashboard.inventarios_periodo_detalle);
+    */
     let filtrosVentas = null;
     filtrosVentas = useSelector((state) => state.datosfiltros.datosfiltros);
 
@@ -118,12 +118,39 @@ export default function HomeScreen(props) {
     }
 
     useEffect(() => {
+       
+        let anoactual = 2022; //detalleCompras.ano_actual;
+        let mesactual = 11; //detalleCompras.mes_actual;
+        let und = 0;
+        let val = 0;
+        let undpst = 0;
+        let valpst = 0;
+        
+        detalleCompras.costoproveedor &&
+            detalleCompras.costoproveedor.map((ingresos, index) => {
+                if (parseInt(ingresos.ano) == parseInt(anoactual) && ingresos.mes == parseInt(mesactual)) {
+                    und = parseInt(und) + parseInt(ingresos.UND)
+                    val = parseInt(val) + parseInt(ingresos.MND)
+                }
+            });
 
-    }, []);
+            movimientoscompras.presupuestosxlinea &&
+            movimientoscompras.presupuestosxlinea.map((ingresos, index) => {
+                if (parseInt(ingresos.ano) == parseInt(anoactual) && ingresos.mes == parseInt(mesactual)) {
+                    undpst = parseInt(undpst) + parseInt(ingresos.UND_PST)
+                    valpst = parseInt(valpst) + parseInt(ingresos.VAL_PST)
+                }
+            });
+            
+            setTotalMesCorrMnd(val);
+            setTotalMesCorrUnd(und);
+            setTotalMesPstMnd(valpst);
+            setTotalMesPstUnd(undpst);
+         
+    }, [detalleCompras]);
 
 
     useEffect(() => {
-
         if (movimientoscompras) {
             setAnoACT(movimientoscompras.ano_actual);
             setAnoANT(movimientoscompras.ano_anterior);
@@ -146,28 +173,6 @@ export default function HomeScreen(props) {
         }
 
     }, [movimientoscompras]);
-
-    useEffect(() => {
-
-        if (movimientoscompras) {
-            if (tipo === 1) {
-                setTotalMesCorrUnd(movimientoscompras.ingresocomprasact[0].UND_ACT);
-                setTotalMesCorrMnd(movimientoscompras.ingresocomprasact[0].MND_ACT);
-                setTotalMesPstUnd(0);
-                setTotalMesPstMnd(0);
-                setTituloIngresolInea("Ingresos/Presupuesto - Mes Cte");
-            } else
-                if (tipo === 2) {
-                    setTotalMesCorrUnd(movimientoscompras.ingresocomprasact[0].UND_ACT);
-                    setTotalMesCorrMnd(movimientoscompras.ingresocomprasact[0].MND_ACT);
-                    setTotalMesPstUnd(0);
-                    setTotalMesPstMnd(0);
-                    setTituloIngresolInea("Ingresos/Presupuesto - Acum.");
-                } else
-                    setTituloIngresolInea("Sin asignar");
-        }
-
-    }, [tipo]);
 
     useEffect(() => {
         axios({
@@ -212,32 +217,32 @@ export default function HomeScreen(props) {
                 alert("Error Inesperado")
             )
 
-            // Datos Presupuestos
-      axios({
-        method: "post",
-        url: `${URL_SERVICE}/18`,
-        headers: {
-          "Content-type": "application/json",
-        },
-      })
-        .then((res) => {
-          if (res.status == 200) {
-            //console.log("RETORNA VENTAS RESUMEN: ", res.data)
-            if (res) {
-              setListaPresupuestos(res.data);
-              //localStorage.setItem('detalledatosvtas', JSON.stringify(datos));
-              //setIsLoading(false);
-            } else {
-              console.log("RETORNA DATOS PRESUPUESTOS: ", "ERROR")
-            }
-
-          } else {
-            console.log("RETORNA DATOS PRESUPUESTOS: ", "ERROR")
-          }
+        // Datos Presupuestos
+        axios({
+            method: "post",
+            url: `${URL_SERVICE}/18`,
+            headers: {
+                "Content-type": "application/json",
+            },
         })
-        .catch((error) =>
-          alert("Error Inesperado 4")
-        )
+            .then((res) => {
+                if (res.status == 200) {
+                    //console.log("RETORNA VENTAS RESUMEN: ", res.data)
+                    if (res) {
+                        setListaPresupuestos(res.data);
+                        //localStorage.setItem('detalledatosvtas', JSON.stringify(datos));
+                        //setIsLoading(false);
+                    } else {
+                        console.log("RETORNA DATOS PRESUPUESTOS: ", "ERROR")
+                    }
+
+                } else {
+                    console.log("RETORNA DATOS PRESUPUESTOS: ", "ERROR")
+                }
+            })
+            .catch((error) =>
+                alert("Error Inesperado 4")
+            )
 
     }, []);
 
@@ -275,7 +280,7 @@ export default function HomeScreen(props) {
                         setTabPendienteslinea(false);
                         setTabPresupuestos(true);
                         setTabPendientesProveedor(false);
-                       
+
                     }
                     else {
                         setTabIngresoslinea(true);
@@ -607,9 +612,9 @@ export default function HomeScreen(props) {
                                                             clrF={CST.cosmosFoo}
                                                             title={tituloIngresoLinea}
                                                             texto={nameMonth(movimientoscompras.mes_actual) + ' - ' + movimientoscompras.ano_actual}
-                                                            subtexto={'Real: ' + myNumber(1, (totalMesCorrUnd / 1000)) + "K Und - " + myNumber(1, (totalMesCorrMnd / 1000000)) + 'MM'}
+                                                            subtexto={'Real: ' + myNumber(1, (totalMesCorrUnd)) + " Und  " + myNumber(1, (totalMesCorrMnd / 1000000)) + 'MM'}
                                                             icono={mdiHumanDolly}
-                                                            pie={'Ppto: ' + myNumber(1, (totalMesPstUnd / 1000)) + "K Und - " + myNumber(1, (totalMesPstMnd / 1000000)) + 'MM'}
+                                                            pie={'Ppto: ' + myNumber(1, (totalMesPstUnd)) + " Und - " + myNumber(1, (totalMesPstMnd / 1000000)) + 'MM'}
                                                             funcion={null}
                                                             opcion={0}
                                                         />
@@ -679,7 +684,7 @@ export default function HomeScreen(props) {
                                                 (
                                                     <TabDetalle tipo={tipo} setTipo={setTipo}
                                                         ingresosxlinea={movimientoscompras.ingresoxlinea}
-                                                        ingreosxproveedor={movimientoscompras.ingresoxproveedor}
+                                                        ingresosxproveedor={movimientoscompras.ingresoxproveedor}
                                                         presupuestosxlinea={movimientoscompras.presupuestosxlinea}
                                                         lineasproductos={movimientoscompras.lineasproductos}
                                                         proveedorescompras={movimientoscompras.proveedorescompras}
@@ -695,19 +700,20 @@ export default function HomeScreen(props) {
                                                         (
                                                             <TabProveedores tipo={tipo} setTipo={setTipo}
                                                                 ingresosxlinea={movimientoscompras.ingresoxlinea}
-                                                                ingreosxproveedor={movimientoscompras.ingresoxproveedor}
+                                                                ingresosxproveedor={movimientoscompras.ingresoxproveedor}
                                                                 presupuestosxlinea={movimientoscompras.presupuestosxlinea}
                                                                 lineasproductos={movimientoscompras.lineasproductos}
                                                                 proveedorescompras={movimientoscompras.proveedorescompras}
+                                                                detalleCompras={detalleCompras}
                                                             />
                                                         ) :
                                                         tabPresupuestos ?
-                                                        (
-                                                            <TabPresupuesto tipo={tipo} setTipo={setTipo}
-                                                                listaPresupuestos={listaPresupuestos}                                                            
-                                                            />
-                                                        ) :
-                                                        null
+                                                            (
+                                                                <TabPresupuesto tipo={tipo} setTipo={setTipo}
+                                                                    listaPresupuestos={listaPresupuestos}
+                                                                />
+                                                            ) :
+                                                            null
                                         }
                                     </div>
                                 </h2>

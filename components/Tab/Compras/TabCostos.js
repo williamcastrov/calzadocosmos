@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { myNumber, nameMonth } from "../../../utils/ArrayFunctions";
 import { useDispatch, useSelector } from "react-redux";
 import { Disclosure, Menu, Transition } from '@headlessui/react';
-import Select from 'react-select';
+import { Table, Tag, Typography } from 'antd';
 import { MultiSelect } from "react-multi-select-component";
 import swal from 'sweetalert';
 
@@ -11,13 +11,14 @@ function classNames(...classes) {
 }
 
 function TabCostos(props) {
+    const { Title } = Typography;
     const { tipo, setTipo, detalleCostos, detalleCompras } = props;
     const [entProveedor, setEntProveedor] = useState(true);
     const [entLinea, setEntLinea] = useState(false);
     const [entFamilia, setEntFamilia] = useState(false);
     const [movimientos, setmovimientos] = useState(false);
     const [opcion, setOpcion] = useState(0);
-    const [tituloTipo, setTituloTipo] = useState("Proveedores");
+    const [tituloTipo, setTituloTipo] = useState("PROVEEDORES");
     const [detalleFamilia, setdetalleFamilia] = useState(detalleCompras.costofamilia)
 
     //console.log("DETALLE COMPRAS : ", detalleCompras.costoproveedor);
@@ -66,19 +67,19 @@ function TabCostos(props) {
             setEntProveedor(true)
             setEntLinea(false)
             setEntFamilia(false)
-            setTituloTipo("Proveedores");
+            setTituloTipo("PROVEEDORES");
         } else
             if (seleccion == 1) {
                 setEntProveedor(false)
                 setEntLinea(true)
                 setEntFamilia(false)
-                setTituloTipo("Lineas de productos");
+                setTituloTipo("LINEAS DE PRODUCTOS");
             } else
                 if (seleccion == 2) {
                     setEntProveedor(false)
                     setEntLinea(false)
                     setEntFamilia(true)
-                    setTituloTipo("Familia");
+                    setTituloTipo("FAMILIA");
                 } else {
                     setEntProveedor(false)
                     setEntLinea(false)
@@ -175,7 +176,7 @@ function TabCostos(props) {
 
         setConsultar(false);
         if (selectedAno.length > 0 && selectedMes.length == 0) {
-    
+
             let longitud = selectedAno.length;
             let newDet = [];
 
@@ -190,10 +191,12 @@ function TabCostos(props) {
                     let vta;
                     vta = {
                         nombre: { tituloTipo },
-                        ano1: "Variación" + selectedAno[0].value,
-                        ano2: "Variación" + selectedAno[1].value,
-                        variacion: "Variación"
+                        ano1: selectedAno[0].value,
+                        ano2: selectedAno[1].value,
+                        variacion: "VARIACIÓN"
                     };
+                    setLabelUno(vta.ano1);
+                    setLabelDos(vta.ano2);
                     newDet.push(vta);
                 } else {
                     swal({
@@ -220,14 +223,14 @@ function TabCostos(props) {
 
                     detalleCompras.costoproveedor && detalleCompras.costoproveedor.map((items) => {
                         if (items.ano == selectedAno[0].value && prov.Nombreproveedor == items.Nombreproveedor) {
-                            valcomprasprov = valcomprasprov + items.MND;
-                            undcomprasprov = undcomprasprov + items.UND;
+                            valcomprasprov = parseInt(valcomprasprov) + parseInt(items.MND);
+                            undcomprasprov = parseInt(undcomprasprov) + parseInt(items.UND);
                         }
 
                         if (longitud == 2) {
                             if (items.ano == selectedAno[1].value && prov.Nombreproveedor == items.Nombreproveedor) {
-                                valcomprasprovdos = valcomprasprovdos + items.MND;
-                                undcomprasprovdos = undcomprasprovdos + items.UND;
+                                valcomprasprovdos = parseInt(valcomprasprovdos) + parseInt(items.MND);
+                                undcomprasprovdos = parseInt(undcomprasprovdos) + parseInt(items.UND);
                             }
                         }
                     })
@@ -250,8 +253,34 @@ function TabCostos(props) {
                     newDetCostos.push(det)
                 })
 
+                let totunduno = 0;
+                let totunddos = 0;
+                let totvaluno = 0;
+                let totvaldos = 0;
+
+                newDetCostos && newDetCostos.map((items) => {
+                    totunduno = parseInt(totunduno) + items.undanouno;
+                    totunddos = parseInt(totunddos) + items.undanodos;
+                    totvaluno = parseInt(totvaluno) + items.valanouno;
+                    totvaldos = parseInt(totvaldos) + items.valanodos;
+                });
+
+                let variacion = 0;
+                variacion = ((1 - (totvaluno / totvaldos)) * 100).toFixed(2);
+
+                let item = {
+                    nombre: "TOTAL",
+                    valanouno: totvaluno,
+                    undanouno: totunduno,
+                    valanodos: totvaldos,
+                    undanodos: totunddos,
+                    variacion: variacion
+                };
+
+                newDetCostos.push(item);
+
                 setmovimientos(newDetCostos);
-                //console.log("COSTOS INGRESOS : ", newDetCostos);
+                console.log("COSTOS INGRESOS : ", newDetCostos);
             } else
                 if (opcion == 1) {
                     let newDetCostos = [];
@@ -267,15 +296,14 @@ function TabCostos(props) {
 
                         detalleCompras.costolinea && detalleCompras.costolinea.map((items) => {
                             if (items.ano == selectedAno[0].value && prov.Sublinea == items.Sublinea) {
-
-                                valcomprasprov = valcomprasprov + items.MND;
-                                undcomprasprov = undcomprasprov + items.UND;
+                                valcomprasprov = parseInt(valcomprasprov) + parseInt(items.MND);
+                                undcomprasprov = parseInt(undcomprasprov) + parseInt(items.UND);
                             }
 
                             if (longitud == 2) {
                                 if (items.ano == selectedAno[1].value && prov.Sublinea == items.Sublinea) {
-                                    valcomprasprovdos = valcomprasprovdos + items.MND;
-                                    undcomprasprovdos = undcomprasprovdos + items.UND;
+                                    valcomprasprovdos = parseInt(valcomprasprovdos) + parseInt(items.MND);
+                                    undcomprasprovdos = parseInt(undcomprasprovdos) + parseInt(items.UND);
                                 }
                             }
                         })
@@ -298,8 +326,34 @@ function TabCostos(props) {
                         newDetCostos.push(det)
                     })
 
+                    let totunduno = 0;
+                    let totunddos = 0;
+                    let totvaluno = 0;
+                    let totvaldos = 0;
+
+                    newDetCostos && newDetCostos.map((items) => {
+                        totunduno = parseInt(totunduno) + parseInt(items.undanouno);
+                        totunddos = parseInt(totunddos) + parseInt(items.undanodos);
+                        totvaluno = parseInt(totvaluno) + parseInt(items.valanouno);
+                        totvaldos = parseInt(totvaldos) + parseInt(items.valanodos);
+                    });
+
+                    let variacion = 0;
+                    variacion = ((1 - (totvaluno / totvaldos)) * 100).toFixed(2);
+
+                    let item = {
+                        nombre: "TOTAL",
+                        valanouno: totvaluno,
+                        undanouno: totunduno,
+                        valanodos: totvaldos,
+                        undanodos: totunddos,
+                        variacion: variacion
+                    };
+
+                    newDetCostos.push(item);
+
                     setmovimientos(newDetCostos);
-                   
+
                 } else
                     if (opcion == 2) {
 
@@ -313,18 +367,18 @@ function TabCostos(props) {
                             let valcomprasprovdos = 0;
                             let undcomprasprovdos = 0;
 
-                             
+
                             detalleCompras.costofamilia && detalleCompras.costofamilia.map((items) => {
                                 if (items.ano == selectedAno[0].value && prov.Familia == items.Grupo) {
 
-                                    valcomprasprov = valcomprasprov + items.MND;
-                                    undcomprasprov = undcomprasprov + items.UND;
+                                    valcomprasprov = parseInt(valcomprasprov) + parseInt(items.MND);
+                                    undcomprasprov = parseInt(undcomprasprov) + parseInt(items.UND);
                                 }
 
                                 if (longitud == 2) {
                                     if (items.ano == selectedAno[1].value && prov.Familia == items.Grupo) {
-                                        valcomprasprovdos = valcomprasprovdos + items.MND;
-                                        undcomprasprovdos = undcomprasprovdos + items.UND;
+                                        valcomprasprovdos = parseInt(valcomprasprovdos) + parseInt(items.MND);
+                                        undcomprasprovdos = parseInt(undcomprasprovdos) + parseInt(items.UND);
                                     }
                                 }
                             })
@@ -347,6 +401,32 @@ function TabCostos(props) {
                             newDetCostos.push(det)
                         })
 
+                        let totunduno = 0;
+                        let totunddos = 0;
+                        let totvaluno = 0;
+                        let totvaldos = 0;
+
+                        newDetCostos && newDetCostos.map((items) => {
+                            totunduno = parseInt(totunduno) + parseInt(items.undanouno);
+                            totunddos = parseInt(totunddos) + parseInt(items.undanodos);
+                            totvaluno = parseInt(totvaluno) + parseInt(items.valanouno);
+                            totvaldos = parseInt(totvaldos) + parseInt(items.valanodos);
+                        });
+
+                        let variacion = 0;
+                        variacion = ((1 - (totvaluno / totvaldos)) * 100).toFixed(2);
+
+                        let item = {
+                            nombre: "TOTAL",
+                            valanouno: totvaluno,
+                            undanouno: totunduno,
+                            valanodos: totvaldos,
+                            undanodos: totunddos,
+                            variacion: variacion
+                        };
+
+                        newDetCostos.push(item);
+
                         setmovimientos(newDetCostos);
                     }
                     else
@@ -364,11 +444,11 @@ function TabCostos(props) {
 
                 let longitud = selectedMes.length;
                 let newDet = [];
-                
+
                 if (longitud == 1) {
                     let vta = {
                         nombre: { tituloTipo },
-                        ano1: "Variación" + selectedAno[0].value + selectedMes[0].value
+                        ano1: "VARIACIÓN" + selectedAno[0].value + selectedMes[0].value
                     };
                     newDet.push(vta);
                 } else
@@ -377,29 +457,31 @@ function TabCostos(props) {
                         let nommesuno = "";
                         let nommesdos = "";
 
-                        if(selectedMes[0].value < 10){
-                            let mes = "0"+selectedMes[0].value;
+                        if (selectedMes[0].value < 10) {
+                            let mes = "0" + selectedMes[0].value;
                             nommesuno = nameMonth(mes);
-                        }else{
-                            let mes = ""+selectedMes[0].value;
-                            nommesuno = nameMonth(selectedMes[0].value);
+                        } else {
+                            let mes = "" + selectedMes[0].value;
+                            nommesuno = nameMonth(mes);
                         }
 
-                        if(selectedMes[1].value < 10){
-                            let mes = "0"+selectedMes[1].value;
+                        if (selectedMes[1].value < 10) {
+                            let mes = "0" + selectedMes[1].value;
                             nommesdos = nameMonth(mes);
-                        }else{
-                            let mes = ""+selectedMes[1].value;
+                        } else {
+                            let mes = "" + selectedMes[1].value;
                             nommesdos = nameMonth(mes);
                         }
-                           
+
                         vta = {
                             nombre: { tituloTipo },
-                            ano1: "Variación" + nommesuno + selectedAno[0].value,
-                            ano2: "Variación" + nommesdos + selectedAno[0].value,
-                            variacion: "Variación"
+                            ano1: nommesuno + "-" + selectedAno[0].value,
+                            ano2: nommesdos + "-" + selectedAno[0].value,
+                            variacion: "VARIACIÓN"
                         };
                         newDet.push(vta);
+                        setLabelUno(vta.ano1);
+                        setLabelDos(vta.ano2);
                     } else {
                         swal({
                             title: "Tablero Cosmos",
@@ -410,7 +492,7 @@ function TabCostos(props) {
                     }
 
                 setLabelcostos(newDet);
-              
+
                 if (opcion == 0) {
                     let newDetCostos = [];
 
@@ -575,6 +657,79 @@ function TabCostos(props) {
 
     }, [consultar]);
 
+    const header_test = [
+        { title: tituloTipo, dataIndex: "nombre", key: "nombre", width: 200 },
+        {
+            title: "VALORES-" + labelUno, dataIndex: "valanouno", key: "valanouno", width: 150, align: "right",
+            sortDirections: ['descend', 'ascend'],
+            sorter: (a, b) => a.valanouno - b.valanouno,
+            render: (text, row, index) => {
+                return (
+                    <Title level={4} style={{ fontSize: 15, }}>
+                        {myNumber(1, row.valanouno, 2)}
+                    </Title>
+
+                );
+            }
+        },
+        {
+            title: "UNIDADES-" + labelUno, dataIndex: "undanouno", key: "undanouno", width: 150, align: "right",
+            sortDirections: ['descend', 'ascend'],
+            sorter: (a, b) => a.undanouno - b.undanouno,
+            render: (text, row, index) => {
+                return (
+                    <Title level={4} style={{ fontSize: 15, }}>
+                        {myNumber(1, row.undanouno, 2)}
+                    </Title>
+
+                );
+            }
+        },
+        {
+            title: "VALORES-" + labelDos, dataIndex: "valanodos", key: "valanodos", width: 150, align: "right",
+            sortDirections: ['descend', 'ascend'],
+            sorter: (a, b) => a.valanodos - b.valanodos,
+            render: (text, row, index) => {
+                return (
+                    <Title level={4} style={{ fontSize: 15, }}>
+                        {myNumber(1, row.valanodos, 2)}
+                    </Title>
+
+                );
+            }
+        },
+        {
+            title: "UNIDADES-" + labelDos, dataIndex: "undanodos", key: "undanodos", width: 150, align: "right",
+            sortDirections: ['descend', 'ascend'],
+            sorter: (a, b) => a.undanodos - b.undanodos,
+            render: (text, row, index) => {
+                return (
+                    <Title level={4} style={{ fontSize: 15, }}>
+                        {myNumber(1, row.undanodos, 2)}
+                    </Title>
+
+                );
+            }
+        },
+        {
+            title: "DIFERENCIA", dataIndex: "variacion", key: "variacion", width: 150, align: "right",
+            sortDirections: ['descend', 'ascend'],
+            //sorter: (a, b) => a.unidades4_ - b.unidades4_,
+            render: (text, row, index) => {
+                return (
+                    <Title level={4} style={{ fontSize: 15, zIndex: 0 }}>
+                        {isNaN(parseInt(row.variacion)) ?
+                            0
+                            :
+                            myNumber(1, row.variacion, 2)
+                        }
+                    </Title>
+
+                );
+            }
+        },
+    ]
+
     return (
         <div className="mlanegativo">
             <h2 className="mx-auto mt-1 px-4 text-lg leading-6 font-medium text-gray-900 sm:px-6 lg:px-8">
@@ -636,7 +791,7 @@ function TabCostos(props) {
                                     />
                                 </Menu>
                             </div>
-                            
+
                             <div className="flex">
                                 <Menu as="div" className="relative inline-block" >
                                     <MultiSelect
@@ -657,7 +812,7 @@ function TabCostos(props) {
                                     />
                                 </Menu>
                             </div>
-                           
+
                             <div className="mt-1 flex">
                                 <Menu as="div" className="ml-1 relative inline-block" >
                                     <div className="flex">
@@ -685,63 +840,18 @@ function TabCostos(props) {
                         </nav>
                     </div>
                     <div className="margenizaquierdanegativo px-4 sm:px-6 lg:px-8">
-                        <div className="mt-4 flex flex-col">
-                            <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                                <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-                                    <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-                                        <table className="min-w-full divide-y divide-gray-300">
-                                            <thead className="bg-gray-50">
-                                                {labelcostos && labelcostos.map((dias, index) => (
-                                                    <tr>
-                                                        <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
-                                                            {tituloTipo}
-                                                        </th>
-                                                        <th scope="col" className="px-5 py-3.5 text-right text-sm font-semibold text-gray-900">
-                                                            {dias.ano1}
-                                                        </th>
-                                                        <th scope="col" className="px-5 py-3.5 text-right text-sm font-semibold text-gray-900">
-                                                            {dias.ano2}
-                                                        </th>
-                                                        <th scope="col" className="px-6 py-3.5 text-right text-sm font-semibold text-gray-900">
-                                                            {dias.variacion}
-                                                        </th>
-                                                        <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
-                                                            <span className="sr-only">Edit</span>
-                                                        </th>
-                                                    </tr>
-                                                ))}
-                                            </thead>{ }
-                                            <tbody className="bg-white">
-                                                {movimientos && movimientos.map((compras, comprasIdx) => (
-                                                    <tr key={compras.nombre} className={comprasIdx % 2 === 0 ? undefined : 'bg-gray-50'}>
-                                                        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                                                            {compras.nombre}
-                                                        </td>
-                                                        <td className="whitespace-nowrap px-6 py-4 text-right text-sm text-gray-500">
-                                                            {isNaN(compras.valanouno) ?
-                                                                0
-                                                                :
-                                                                myNumber(1, compras.valanouno)
-                                                            }
-                                                        </td>
-                                                        <td className="whitespace-nowrap px-6 py-4 text-right text-sm text-gray-500">
-                                                            {isNaN(compras.valanodos) ?
-                                                                0
-                                                                :
-                                                                myNumber(1, compras.valanodos)
-                                                            }
-                                                        </td>
-                                                        <td className="whitespace-nowrap px-6 py-4 text-right text-sm text-gray-500">
-                                                            {isNaN(compras.variacion) ?
-                                                                0
-                                                                :
-                                                                myNumber(1, compras.variacion)
-                                                            }
-                                                        </td>
-                                                    </tr>
-                                                ))}
-                                            </tbody>
-                                        </table>
+                        <div className="min-w-full  margenizaquierdanegativo px-4 sm:px-6 lg:px-8">
+                            <div className="min-w-full  mt-8 flex flex-col">
+                                <div className="min-w-full  -my-2 -mx-4 sm:-mx-6 lg:-mx-8">
+                                    <div className="min-w-full py-2 align-middle md:px-6 lg:px-8">
+                                        <div className="min-w-full shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                                            <Table columns={header_test} dataSource={movimientos} pagination={false}
+                                                scroll={{
+                                                    x: 1200,
+                                                    y: 500,
+                                                }}
+                                                bordered />
+                                        </div>
                                     </div>
                                 </div>
                             </div>

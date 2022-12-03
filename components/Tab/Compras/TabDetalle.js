@@ -288,7 +288,31 @@ function TabDetalle(props) {
                     };
                     newDetComprasVsPst.push(mvto);
                 });
-            console.log("DATOS : ", newDetComprasVsPstMes)
+
+                let undpst = 0;
+                let valpst = 0;
+                let unding = 0;
+                let valing = 0;
+
+                newDetComprasVsPst &&
+                    newDetComprasVsPst.map((ing, index) => {
+                        undpst = parseInt(undpst) + parseInt(ing.UndPst);
+                        valpst = parseInt(undpst) + parseInt(ing.ValPst);
+                        unding = parseInt(unding) + parseInt(ing.UndIngreso);
+                        valing = parseInt(valing) + parseInt(ing.ValIngreso);
+
+                    });
+
+                let mvto = {
+                    Descripcion: "TOTAL",
+                    UndIngreso: unding,
+                    ValIngreso: valing,
+                    UndPst: undpst,
+                    ValPst: valpst
+                };
+                newDetComprasVsPst.push(mvto);
+
+            //console.log("DATOS : ", newDetComprasVsPstMes)
             setmovimientosMes(newDetComprasVsPstMes);
             setmovimientos(newDetComprasVsPst);
         } else
@@ -762,7 +786,6 @@ function TabDetalle(props) {
                     }
     }
 
-
     const header_test = [
         { title: "LINEA", dataIndex: "Descripcion", key: "Descripcion", width: 200, fixed: true },
         {
@@ -842,6 +865,116 @@ function TabDetalle(props) {
                         }
                     </Title>
 
+                );
+            }
+        }
+    ]
+
+    const header_testdos = [
+        { title: "LINEA", dataIndex: "Descripcion", key: "Descripcion", width: 200 },
+        {
+            title: "Und-" + nombreUno, dataIndex: "pesossemestre", key: "pesossemestre", width: 150, align: "right",
+            sortDirections: ['descend', 'ascend'],
+            sorter: (a, b) => a.UndIngreso1 - b.UndIngreso1,
+            render: (text, row, index) => {
+                return (
+                    <Title level={4} style={{ fontSize: 15, }}>
+                        {myNumber(1, row.UndIngreso1, 2)}
+                    </Title>
+
+                );
+            }
+        },
+        {
+            title: "Pesos-" + nombreUno, dataIndex: "undsemestre", key: "undsemestre", width: 150, align: "right",
+            sortDirections: ['descend', 'ascend'],
+            //sorter: (a, b) => a.unidades4_ - b.unidades4_,
+            render: (text, row, index) => {
+                return (
+                    <Title level={4} style={{ fontSize: 15, zIndex: 0 }}>
+                        {myNumber(1, row.ValIngreso1, 2)}
+                    </Title>
+
+                );
+            }
+        },
+    ]
+
+    const header_testtres = [
+        { title: "LINEA", dataIndex: "Descripcion", key: "Descripcion", width: 200 },
+        {
+            title: "Und-" + nombreUno, dataIndex: "pesossemestre", key: "pesossemestre", width: 150, align: "right",
+            sortDirections: ['descend', 'ascend'],
+            sorter: (a, b) => a.UndIngreso1 - b.UndIngreso1,
+            render: (text, row, index) => {
+                return (
+                    <Title level={4} style={{ fontSize: 15, }}>
+                        {myNumber(1, row.UndIngreso1, 2)}
+                    </Title>
+
+                );
+            }
+        },
+        {
+            title: "Pesos-" + nombreUno, dataIndex: "undsemestre", key: "undsemestre", width: 150, align: "right",
+            sortDirections: ['descend', 'ascend'],
+            //sorter: (a, b) => a.unidades4_ - b.unidades4_,
+            render: (text, row, index) => {
+                return (
+                    <Title level={4} style={{ fontSize: 15, zIndex: 0 }}>
+                        {myNumber(1, row.ValIngreso1, 2)}
+                    </Title>
+
+                );
+            }
+        },
+        {
+            title: "Und-" + nombreDos, dataIndex: "pesossemestre", key: "pesossemestre", width: 150, align: "right",
+            sortDirections: ['descend', 'ascend'],
+            sorter: (a, b) => a.UndPst - b.UndPst,
+            render: (text, row, index) => {
+                return (
+                    <Title level={4} style={{ fontSize: 15, }}>
+                        {
+                            nombreDos ?
+                                myNumber(1, row.UndIngreso2)
+                                :
+                                null
+                        }
+                    </Title>
+
+                );
+            }
+        },
+        {
+            title: "Pesos-" + nombreDos, dataIndex: "pesossemestre", key: "pesossemestre", width: 150, align: "right",
+            sortDirections: ['descend', 'ascend'],
+            sorter: (a, b) => a.UndPst - b.UndPst,
+            render: (text, row, index) => {
+                return (
+                    <Title level={4} style={{ fontSize: 15, }}>
+                        {
+                            nombreDos ?
+                                myNumber(1, row.ValIngreso2)
+                                :
+                                null
+                        }
+                    </Title>
+
+                );
+            }
+        },
+        {
+            title: "Desviación", dataIndex: "valppto", key: "valppto", width: 150, align: "right",
+            render: (text, row, index) => {
+                return (
+                    <Title level={4} style={{ fontSize: 15, }}>
+                        {isNaN(parseInt(row.Variacion)) ?
+                            0
+                            :
+                            myNumber(1, row.Variacion)
+                        }
+                    </Title>
                 );
             }
         }
@@ -1023,70 +1156,18 @@ function TabDetalle(props) {
                             :
                             opcion == 1 && semestre == 0 ?
                                 (
-                                    <div className="mt-8 flex flex-col">
-                                        <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                                            <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-                                                <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-                                                    <table className="min-w-full divide-y divide-gray-300">
-                                                        <thead className="bg-gray-50">
-                                                            <tr>
-                                                                <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
-                                                                    Linea
-                                                                </th>
-                                                                <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                                                    Und Ent Acumuladas
-                                                                </th>
-                                                                <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                                                    Und Pto Acumuladas
-                                                                </th>
-                                                                <th scope="col" className="px-8 py-3.5 text-right text-sm font-semibold text-gray-900">
-                                                                    % Desviación
-                                                                </th>
-                                                                <th scope="col" className="px-7 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                                                    $ Ent Acumuladas
-                                                                </th>
-                                                                <th scope="col" className="px-2 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                                                    $ Pto Acumuladas
-                                                                </th>
-                                                                <th scope="col" className="px-8 py-3.5 text-right text-sm font-semibold text-gray-900">
-                                                                    % Desviación
-                                                                </th>
-                                                                <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
-                                                                    <span className="sr-only">Edit</span>
-                                                                </th>
-                                                            </tr>
-                                                        </thead>{ }
-                                                        <tbody className="bg-white">
-                                                            {movimientos && movimientos.map((compras, comprasIdx) => (
-                                                                <tr key={compras.nombre} className={comprasIdx % 2 === 0 ? undefined : 'bg-gray-50'}>
-                                                                    <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                                                                        {compras.Descripcion}
-                                                                    </td>
-                                                                    <td className="whitespace-nowrap px-4 py-4 text-sm text-gray-500 text-right">{myNumber(1, compras.UndIngreso)}</td>
-                                                                    <td className="whitespace-nowrap px-5 py-4 text-sm text-gray-500 text-right">{myNumber(1, compras.UndPst)}</td>
-                                                                    <td className="whitespace-nowrap px-8 py-4 text-sm text-gray-500 text-right">
-                                                                        {isNaN(parseInt(((compras.UndIngreso / compras.UndPst) * 100).toFixed(2))) ?
-                                                                            0
-                                                                            :
-                                                                            myNumber(1, (((compras.UndIngreso / compras.UndPst) - 1) * 100).toFixed(2))
-                                                                        }
-                                                                    </td>
-
-                                                                    <td className="whitespace-nowrap px-9 py-4 text-sm text-gray-500 text-right">
-                                                                        {myNumber(1, compras.ValIngreso)}</td>
-                                                                    <td className="whitespace-nowrap px-9 py-4 text-sm text-gray-500 text-right">
-                                                                        {myNumber(1, compras.ValPst)}</td>
-                                                                    <td className="whitespace-nowrap px-9 py-4 text-sm text-gray-500 text-right">
-                                                                        {isNaN(parseInt(((compras.ValIngreso / compras.ValPst) * 100).toFixed(2))) ?
-                                                                            0
-                                                                            :
-                                                                            myNumber(1, (((compras.ValIngreso / compras.ValPst) - 1) * 100).toFixed(2))
-                                                                        }
-                                                                    </td>
-                                                                </tr>
-                                                            ))}
-                                                        </tbody>
-                                                    </table>
+                                    <div className="min-w-full  margenizaquierdanegativo px-4 sm:px-6 lg:px-8">
+                                        <div className="min-w-full  mt-8 flex flex-col">
+                                            <div className="min-w-full  -my-2 -mx-4 sm:-mx-6 lg:-mx-8">
+                                                <div className="min-w-full py-2 align-middle md:px-6 lg:px-8">
+                                                    <div className="min-w-full shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                                                        <Table columns={header_test} dataSource={movimientos} pagination={false}
+                                                            scroll={{
+                                                                x: 1200,
+                                                                y: 500,
+                                                            }}
+                                                            bordered />
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -1095,95 +1176,47 @@ function TabDetalle(props) {
                                 :
                                 semestre == 1 ?
                                     (
-                                        <div className="mt-8 flex flex-col">
-                                            <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                                                <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-                                                    <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-                                                        <table className="min-w-full divide-y divide-gray-300">
-                                                            <thead className="bg-gray-50">
-                                                                <tr>
-                                                                    <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
-                                                                        Linea
-                                                                    </th>
-                                                                    <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                                                        {
-                                                                            nombreUno ?
-                                                                                und + " - " + nombreUno
-                                                                                :
-                                                                                null
-                                                                        }
-
-                                                                    </th>
-                                                                    <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                                                        {
-                                                                            nombreUno ?
-                                                                                pesos + " - " + nombreUno
-                                                                                :
-                                                                                null
-                                                                        }
-                                                                    </th>
-                                                                    <th scope="col" className="px-8 py-3.5 text-right text-sm font-semibold text-gray-900">
-                                                                        {
-                                                                            nombreDos ?
-                                                                                und + " - " + nombreDos
-                                                                                :
-                                                                                null
-                                                                        }
-                                                                    </th>
-                                                                    <th scope="col" className="px-7 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                                                        {
-                                                                            nombreDos ?
-                                                                                pesos + " - " + nombreDos
-                                                                                :
-                                                                                null
-                                                                        }
-                                                                    </th>
-                                                                    <th scope="col" className="px-8 py-3.5 text-right text-sm font-semibold text-gray-900">
-                                                                        % Desviación
-                                                                    </th>
-                                                                    <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
-                                                                        <span className="sr-only">Edit</span>
-                                                                    </th>
-                                                                </tr>
-                                                            </thead>{ }
-                                                            <tbody className="bg-white">
-                                                                {movimientos && movimientos.map((compras, comprasIdx) => (
-                                                                    <tr key={compras.nombre} className={comprasIdx % 2 === 0 ? undefined : 'bg-gray-50'}>
-                                                                        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                                                                            {compras.Descripcion}
-                                                                        </td>
-                                                                        <td className="whitespace-nowrap px-4 py-4 text-sm text-gray-500 text-right">{myNumber(1, compras.UndIngreso1)}</td>
-                                                                        <td className="whitespace-nowrap px-5 py-4 text-sm text-gray-500 text-right">{myNumber(1, compras.ValIngreso1)}</td>
-                                                                        <td className="whitespace-nowrap px-4 py-4 text-sm text-gray-500 text-right">
-                                                                            {
-                                                                                nombreDos ?
-                                                                                    myNumber(1, compras.UndIngreso2)
-                                                                                    :
-                                                                                    null
-                                                                            }</td>
-                                                                        <td className="whitespace-nowrap px-5 py-4 text-sm text-gray-500 text-right">
-                                                                            {
-                                                                                nombreDos ?
-                                                                                    myNumber(1, compras.ValIngreso2)
-                                                                                    :
-                                                                                    null
-                                                                            }
-                                                                        </td>
-                                                                        <td className="whitespace-nowrap px-9 py-4 text-sm text-gray-500 text-right">
-                                                                            {isNaN(parseInt(compras.Variacion)) ?
-                                                                                0
-                                                                                :
-                                                                                myNumber(1, compras.Variacion)
-                                                                            }
-                                                                        </td>
-                                                                    </tr>
-                                                                ))}
-                                                            </tbody>
-                                                        </table>
+                                        nombreDos ?
+                                            (
+                                                <div className="min-w-full  margenizaquierdanegativo px-4 sm:px-6 lg:px-8">
+                                                    <div className="min-w-full  mt-8 flex flex-col">
+                                                        <div className="min-w-full  -my-2 -mx-4 sm:-mx-6 lg:-mx-8">
+                                                            <div className="min-w-full py-2 align-middle md:px-6 lg:px-8">
+                                                                <div className="min-w-full shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                                                                    <Table columns={header_testtres} dataSource={movimientos} pagination={false}
+                                                                        scroll={{
+                                                                            x: 1200,
+                                                                            y: 500,
+                                                                        }}
+                                                                        bordered />
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </div>
+                                            )
+                                            :
+                                            nombreUno ?
+                                                (
+                                                    <div className="min-w-full  margenizaquierdanegativo px-4 sm:px-6 lg:px-8">
+                                                        <div className="min-w-full  mt-8 flex flex-col">
+                                                            <div className="min-w-full  -my-2 -mx-4 sm:-mx-6 lg:-mx-8">
+                                                                <div className="min-w-full py-2 align-middle md:px-6 lg:px-8">
+                                                                    <div className="min-w-full shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                                                                        <Table columns={header_testdos} dataSource={movimientos} pagination={false}
+                                                                            scroll={{
+                                                                                x: 1200,
+                                                                                y: 500,
+                                                                            }}
+                                                                            bordered />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                )
+                                                :
+                                                null
                                     )
                                     :
                                     null
