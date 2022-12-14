@@ -2,6 +2,7 @@ import { Fragment, useState, useEffect } from "react";
 import { myNumber, nameMonth } from "../../../utils/ArrayFunctions";
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { ChevronDownIcon, FunnelIcon, } from "@heroicons/react/solid";
+import { Table, Tag, Typography } from 'antd';
 import swal from 'sweetalert';
 import { MultiSelect } from "react-multi-select-component";
 
@@ -9,15 +10,9 @@ function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
 }
 
-const options = [
-    { label: "Grapes 🍇", value: "grapes" },
-    { label: "Mango 🥭", value: "mango" },
-    { label: "Strawberry 🍓", value: "strawberry", disabled: true },
-];
-
-const dato = [];
 
 function TabVariacion(props) {
+    const { Title } = Typography;
     const { tipo, setTipo, datosCostos, ventasDiariasMes, } = props;
     const [entMargenCentro, setEntMargenCentro] = useState(true);
     const [entMargenSubcategoria, setEntMargenSubcategoria] = useState(false);
@@ -47,9 +42,9 @@ function TabVariacion(props) {
     const [labelTres, setLabelTres] = useState([]);
 
     const tabsdos = [
-        { name: 'Margen x Centro', href: '#', current: entMargenCentro },
-        { name: 'Margen x Subcategoría', href: '#', current: entMargenSubcategoria },
-        { name: 'Margen x Proveedor', href: '#', current: entMargenProveedor },
+        { name: 'Variación x Centro', href: '#', current: entMargenCentro },
+        { name: 'Variación x Sublínea', href: '#', current: entMargenSubcategoria },
+        { name: 'Variación x Proveedor', href: '#', current: entMargenProveedor },
     ]
 
     useEffect(() => {
@@ -109,7 +104,7 @@ function TabVariacion(props) {
         }
         else
             if (seleccion == 1) {
-                setTituloTipo("SUBCATEGORÍAS");
+                setTituloTipo("SUBLÍNEA");
                 setEntMargenSubcategoria(true);
                 setEntMargenCentro(false);
                 setEntMargenProveedor(false);
@@ -127,6 +122,8 @@ function TabVariacion(props) {
                     setEntMargenProveedor(false);
                     setdatosVariacion("");
                 }
+
+        consolidar();
     }
 
     const limpiarFiltros = () => {
@@ -338,6 +335,30 @@ function TabVariacion(props) {
                                 });
                         });
                 }
+
+                let ventauno = 0;
+                let ventados = 0;
+                let per = 0;
+
+                newDetVtasCompara &&
+                    newDetVtasCompara.map((mes, index) => {
+                        ventauno = ventauno + mes.Vlr_VentaAnoUno;
+                        ventados = ventados + mes.Vlr_VentaAnoDos;
+                        per = mes.Periodo;
+                    });
+
+                let varia = ((1 - (ventauno / ventados)) * 100).toFixed(2);
+
+                let mvto = {
+                    Descripcion: "TOTAL",
+                    Periodo: per,
+                    Variacion: varia,
+                    Vlr_VentaAnoDos: ventauno,
+                    Vlr_VentaAnoUno: ventados
+                };
+
+                newDetVtasCompara.push(mvto);
+                //console.log("DATOS : ", newDetVtasCompara)
                 setDatosVariacion(newDetVtasCompara);
             } else
                 if (opcion == 1) {
@@ -499,6 +520,30 @@ function TabVariacion(props) {
                                     });
                             });
                     }
+
+                    let ventauno = 0;
+                    let ventados = 0;
+                    let per = 0;
+
+                    newDetVtasCompara &&
+                        newDetVtasCompara.map((mes, index) => {
+                            ventauno = ventauno + mes.Vlr_VentaAnoUno;
+                            ventados = ventados + mes.Vlr_VentaAnoDos;
+                            per = mes.Periodo;
+                        });
+
+                    let varia = ((1 - (ventauno / ventados)) * 100).toFixed(2);
+
+                    let mvto = {
+                        Descripcion: "TOTAL",
+                        Periodo: per,
+                        Variacion: varia,
+                        Vlr_VentaAnoDos: ventauno,
+                        Vlr_VentaAnoUno: ventados
+                    };
+
+                    newDetVtasCompara.push(mvto);
+
                     setDatosVariacion(newDetVtasCompara);
 
                 } else
@@ -664,6 +709,30 @@ function TabVariacion(props) {
                                         });
                                 });
                         }
+
+                        let ventauno = 0;
+                        let ventados = 0;
+                        let per = 0;
+
+                        newDetVtasCompara &&
+                            newDetVtasCompara.map((mes, index) => {
+                                ventauno = ventauno + mes.Vlr_VentaAnoUno;
+                                ventados = ventados + mes.Vlr_VentaAnoDos;
+                                per = mes.Periodo;
+                            });
+
+                        let varia = ((1 - (ventauno / ventados)) * 100).toFixed(2);
+
+                        let mvto = {
+                            Descripcion: "TOTAL",
+                            Periodo: per,
+                            Variacion: varia,
+                            Vlr_VentaAnoDos: ventauno,
+                            Vlr_VentaAnoUno: ventados
+                        };
+
+                        newDetVtasCompara.push(mvto);
+
                         setDatosVariacion(newDetVtasCompara);
                     } else
                         setDatosVariacion([])
@@ -702,19 +771,7 @@ function TabVariacion(props) {
                                         ventastotalanodos = ventastotalanodos + vtas.Vlr_Total;
                                         setLabelDos("Periodo-" + selectedMes[i].label + "-" + selectedAno[0].label)
                                     }
-                                /*
-                                                            if (i == 2) {
-                                                                if (vtas.ano == selectedAno[i].value) {
-                                                                    //ventastotalanotres = ventastotalanotres + vtas.Vlr_Total;
-                                                                    setLabelTres([])
-                                                                }
-                                                            }
-                                
-                                                            if (i == 3)
-                                                                if (vtas.ano == selectedAno[i].value) {
-                                                                    //ventastotalanocuatro = ventastotalanocuatro + vtas.Vlr_Total;
-                                                                }
-                                                                */
+
                             });
                     }
 
@@ -773,52 +830,6 @@ function TabVariacion(props) {
                                 });
                         }
 
-                        /*
-                                            if (i == 2) {
-                                                centrosoperacion &&
-                                                    centrosoperacion.map((centros, index) => {
-                                                        let valorventa = 0;
-                                                        let participacion = 0;
-                                                        datosCostos.costosvtacentro &&
-                                                            datosCostos.costosvtacentro.map((vtas, index) => {
-                                                                if (vtas.ano == selectedAno[i].value
-                                                                    && vtas.Descripcion == centros.Centros_Operacion) {
-                                                                    valorventa = valorventa + vtas.Vlr_Total;
-                                                                }
-                                                            });
-                                                        let vtatres = {
-                                                            Descripcion: centros.Centros_Operacion,
-                                                            ano: selectedAno[i].value,
-                                                            VentaAcumulada: valorventa,
-                                                            ParticipacionAcum: valorventa / ventastotalanouno
-                                                        };
-                                                        newDetVtasAcumAnoTres.push(vtatres);
-                                                    });
-                                            }
-                        */
-                        /*
-                                             if (i == 3) {
-                                                 centrosoperacion &&
-                                                     centrosoperacion.map((centros, index) => {
-                                                         let valorventa = 0;
-                                                         let participacion = 0;
-                                                         datosCostos.costosvtacentro &&
-                                                             datosCostos.costosvtacentro.map((vtas, index) => {
-                                                                 if (vtas.ano == selectedAno[i].value
-                                                                     && vtas.Descripcion == centros.Centros_Operacion) {
-                                                                     valorventa = valorventa + vtas.Vlr_Total;
-                                                                 }
-                                                             });
-                                                         let vtacuatro = {
-                                                             Descripcion: centros.Centros_Operacion,
-                                                             ano: selectedAno[i].value,
-                                                             VentaAcumulada: valorventa,
-                                                             ParticipacionAcum: valorventa / ventastotalanouno
-                                                         };
-                                                         newDetVtasAcumAnoCuatro.push(vtacuatro);
-                                                     });
-                                             }
-                                             */
                     }
 
 
@@ -848,6 +859,30 @@ function TabVariacion(props) {
                                     });
                             });
                     }
+
+                    let ventauno = 0;
+                    let ventados = 0;
+                    let per = 0;
+
+                    newDetVtasCompara &&
+                        newDetVtasCompara.map((mes, index) => {
+                            ventauno = ventauno + mes.Vlr_VentaAnoUno;
+                            ventados = ventados + mes.Vlr_VentaAnoDos;
+                            per = mes.Periodo;
+                        });
+
+                    let varia = ((1 - (ventauno / ventados)) * 100).toFixed(2);
+
+                    let mvto = {
+                        Descripcion: "TOTAL",
+                        Periodo: per,
+                        Variacion: varia,
+                        Vlr_VentaAnoDos: ventauno,
+                        Vlr_VentaAnoUno: ventados
+                    };
+
+                    newDetVtasCompara.push(mvto);
+
                     setDatosVariacion(newDetVtasCompara);
                 } else
                     if (opcion == 1) {
@@ -882,25 +917,13 @@ function TabVariacion(props) {
                                             ventastotalanodos = ventastotalanodos + vtas.Vlr_Total;
                                             setLabelDos("Periodo-" + selectedMes[i].label + "-" + selectedAno[0].label)
                                         }
-                                    /*
-                                                                if (i == 2) {
-                                                                    if (vtas.ano == selectedAno[i].value) {
-                                                                        //ventastotalanotres = ventastotalanotres + vtas.Vlr_Total;
-                                                                        setLabelTres([])
-                                                                    }
-                                                                }
-                                    
-                                                                if (i == 3)
-                                                                    if (vtas.ano == selectedAno[i].value) {
-                                                                        //ventastotalanocuatro = ventastotalanocuatro + vtas.Vlr_Total;
-                                                                    }
-                                                                    */
+
                                 });
                         }
 
-                        console.log("VENTAS : ", datosCostos.costosvtasubcategoria)
+
                         for (var i = 0; i < longitud; i++) {
-                            console.log("VALOR I : ", i)
+
                             if (i == 0) {
                                 subcategorias &&
                                     subcategorias.map((centros, index) => {
@@ -954,52 +977,6 @@ function TabVariacion(props) {
                                     });
                             }
 
-                            /*
-                                                if (i == 2) {
-                                                    centrosoperacion &&
-                                                        centrosoperacion.map((centros, index) => {
-                                                            let valorventa = 0;
-                                                            let participacion = 0;
-                                                            datosCostos.costosvtacentro &&
-                                                                datosCostos.costosvtacentro.map((vtas, index) => {
-                                                                    if (vtas.ano == selectedAno[i].value
-                                                                        && vtas.Descripcion == centros.Centros_Operacion) {
-                                                                        valorventa = valorventa + vtas.Vlr_Total;
-                                                                    }
-                                                                });
-                                                            let vtatres = {
-                                                                Descripcion: centros.Centros_Operacion,
-                                                                ano: selectedAno[i].value,
-                                                                VentaAcumulada: valorventa,
-                                                                ParticipacionAcum: valorventa / ventastotalanouno
-                                                            };
-                                                            newDetVtasAcumAnoTres.push(vtatres);
-                                                        });
-                                                }
-                            */
-                            /*
-                                                 if (i == 3) {
-                                                     centrosoperacion &&
-                                                         centrosoperacion.map((centros, index) => {
-                                                             let valorventa = 0;
-                                                             let participacion = 0;
-                                                             datosCostos.costosvtacentro &&
-                                                                 datosCostos.costosvtacentro.map((vtas, index) => {
-                                                                     if (vtas.ano == selectedAno[i].value
-                                                                         && vtas.Descripcion == centros.Centros_Operacion) {
-                                                                         valorventa = valorventa + vtas.Vlr_Total;
-                                                                     }
-                                                                 });
-                                                             let vtacuatro = {
-                                                                 Descripcion: centros.Centros_Operacion,
-                                                                 ano: selectedAno[i].value,
-                                                                 VentaAcumulada: valorventa,
-                                                                 ParticipacionAcum: valorventa / ventastotalanouno
-                                                             };
-                                                             newDetVtasAcumAnoCuatro.push(vtacuatro);
-                                                         });
-                                                 }
-                                                 */
                         }
 
 
@@ -1029,10 +1006,178 @@ function TabVariacion(props) {
                                         });
                                 });
                         }
+
+                        let ventauno = 0;
+                        let ventados = 0;
+                        let per = 0;
+
+                        newDetVtasCompara &&
+                            newDetVtasCompara.map((mes, index) => {
+                                ventauno = ventauno + mes.Vlr_VentaAnoUno;
+                                ventados = ventados + mes.Vlr_VentaAnoDos;
+                                per = mes.Periodo;
+                            });
+
+                        let varia = ((1 - (ventauno / ventados)) * 100).toFixed(2);
+
+                        let mvto = {
+                            Descripcion: "TOTAL",
+                            Periodo: per,
+                            Variacion: varia,
+                            Vlr_VentaAnoDos: ventauno,
+                            Vlr_VentaAnoUno: ventados
+                        };
+
+                        newDetVtasCompara.push(mvto);
                         setDatosVariacion(newDetVtasCompara);
-                    } else {
-                        console.log("");
-                    }
+                    } else
+                        if (opcion == 2) {
+
+                            let ventastotalanouno = 0;
+                            let ventastotalanodos = 0;
+                            let ventastotalanotres = 0;
+                            let ventastotalanocuatro = 0;
+
+                            let newDetVtasAcumAnoUno = [];
+                            let newDetVtasAcumAnoDos = [];
+                            let newDetVtasAcumAnoTres = [];
+                            let newDetVtasAcumAnoCuatro = [];
+                            let longitud = selectedMes.length;
+
+                            setLabelDos([]);
+                            setLabelTres([]);
+
+                            for (var i = 0; i < longitud; i++) {
+
+                                datosCostos.costosproveedor &&
+                                    datosCostos.costosproveedor.map((vtas, index) => {
+
+                                        if (i == 0)
+                                            if (vtas.ano == selectedAno[0].value && vtas.mes == selectedMes[i].value) {
+                                                ventastotalanouno = ventastotalanouno + vtas.Vlr_Total;
+                                                setLabelUno("Periodo-" + selectedMes[i].label + "-" + selectedAno[i].label)
+                                            }
+
+                                        if (i == 1)
+                                            if (vtas.ano == selectedAno[0].value && vtas.mes == selectedMes[i].value) {
+                                                ventastotalanodos = ventastotalanodos + vtas.Vlr_Total;
+                                                setLabelDos("Periodo-" + selectedMes[i].label + "-" + selectedAno[0].label)
+                                            }
+
+                                    });
+                            }
+
+
+                            for (var i = 0; i < longitud; i++) {
+
+                                if (i == 0) {
+                                    proveedores &&
+                                        proveedores.map((prov, index) => {
+                                            let valorventa = 0;
+                                            let participacion = 0;
+                                            datosCostos.costosproveedor &&
+                                                datosCostos.costosproveedor.map((vtas, index) => {
+
+                                                    if (vtas.ano == selectedAno[0].value
+                                                        && vtas.Descripcion == prov.Nombre_Proveedor
+                                                        && vtas.mes == selectedMes[i].value
+                                                    ) {
+                                                        valorventa = valorventa + vtas.Vlr_Total;
+                                                    }
+                                                });
+                                            let vtauno = {
+                                                Descripcion: prov.Nombre_Proveedor,
+                                                ano: selectedAno[0].value,
+                                                VentaAcumulada: valorventa,
+                                                ParticipacionAcum: valorventa / ventastotalanouno
+                                            };
+                                            newDetVtasAcumAnoUno.push(vtauno);
+                                        });
+                                }
+
+                                if (i == 1) {
+                                    proveedores &&
+                                        proveedores.map((prov, index) => {
+                                            let valorventa = 0;
+                                            let participacion = 0;
+                                            datosCostos.costosproveedor &&
+                                                datosCostos.costosproveedor.map((vtas, index) => {
+
+                                                    if (vtas.ano == selectedAno[0].value
+                                                        && vtas.Descripcion == prov.Nombre_Proveedor
+                                                        && vtas.mes == selectedMes[i].value
+                                                    ) {
+                                                        valorventa = valorventa + vtas.Vlr_Total;
+                                                    }
+
+                                                });
+
+                                            let vtados = {
+                                                Descripcion: prov.Nombre_Proveedor,
+                                                ano: selectedAno[0].value,
+                                                VentaAcumulada: valorventa,
+                                                ParticipacionAcum: valorventa / ventastotalanouno
+                                            };
+                                            newDetVtasAcumAnoDos.push(vtados);
+
+                                        });
+                                }
+
+                            }
+
+
+                            let newDetVtasCompara = [];
+
+                            if (longitud == 2) {
+                                newDetVtasAcumAnoUno &&
+                                    newDetVtasAcumAnoUno.map((acumula, index) => {
+                                        newDetVtasAcumAnoDos &&
+                                            newDetVtasAcumAnoDos.map((meses, index) => {
+                                                let variacion = 0;
+                                                variacion = ((1 - (acumula.VentaAcumulada / meses.VentaAcumulada)) * 100).toFixed(2);
+
+                                                if (isNaN(variacion))
+                                                    variacion = 0;
+
+                                                if (acumula.Descripcion == meses.Descripcion) {
+                                                    let vta = {
+                                                        Descripcion: acumula.Descripcion,
+                                                        Periodo: acumula.ano + " - " + meses.ano,
+                                                        Vlr_VentaAnoUno: acumula.VentaAcumulada,
+                                                        Vlr_VentaAnoDos: meses.VentaAcumulada,
+                                                        Variacion: variacion
+                                                    };
+                                                    newDetVtasCompara.push(vta);
+                                                }
+                                            });
+                                    });
+                            }
+
+                            let ventauno = 0;
+                            let ventados = 0;
+                            let per = 0;
+
+                            newDetVtasCompara &&
+                                newDetVtasCompara.map((mes, index) => {
+                                    ventauno = ventauno + mes.Vlr_VentaAnoUno;
+                                    ventados = ventados + mes.Vlr_VentaAnoDos;
+                                    per = mes.Periodo;
+                                });
+
+                            let varia = ((1 - (ventauno / ventados)) * 100).toFixed(2);
+
+                            let mvto = {
+                                Descripcion: "TOTAL",
+                                Periodo: per,
+                                Variacion: varia,
+                                Vlr_VentaAnoDos: ventauno,
+                                Vlr_VentaAnoUno: ventados
+                            };
+
+                            newDetVtasCompara.push(mvto);
+
+                            setDatosVariacion(newDetVtasCompara);
+                        }
             }
 
         setConsultarAno(false);
@@ -1044,6 +1189,80 @@ function TabVariacion(props) {
         setConsultar(true)
     }, [opcion]);
 
+    const header_test = [
+        { title: tituloTipo, dataIndex: "Descripcion", key: "Descripcion", width: 80, fixed: true },
+        {
+            title: labelUno, dataIndex: "labelUno", key: "labelUno", width: 100, align: "right",
+            sorter: (a, b) => a.Vlr_VentaAnoUno - b.Vlr_VentaAnoUno,
+            render: (text, row, index) => {
+                return (
+                    <Title level={4} style={{ fontSize: 15, }}>
+                        {myNumber(1, row.Vlr_VentaAnoUno, 2)}
+                    </Title>
+                );
+            }
+        },
+        {
+            title: labelDos, dataIndex: "labelDos", key: "labelDos", width: 100, align: "right",
+            sorter: (a, b) => a.Vlr_VentaAnoUno - b.Vlr_VentaAnoUno,
+            render: (text, row, index) => {
+                return (
+                    <Title level={4} style={{ fontSize: 15, }}>
+                        {myNumber(1, row.Vlr_VentaAnoDos, 2)}
+                    </Title>
+                );
+            }
+        },
+        {
+            title: "Variación %", dataIndex: "variacion", key: "variacion", width: 100, align: "right",
+            sorter: (a, b) => a.Variacion - b.Variacion,
+            render: (text, row, index) => {
+                return (
+                    <Title level={4} style={{ fontSize: 15, }}>
+                        {myNumber(1, row.Variacion, 2)}%
+                    </Title>
+                );
+            }
+        }
+    ]
+
+    const header_testmes = [
+        { title: tituloTipo, dataIndex: "Descripcion", key: "Descripcion", width: 80, fixed: true },
+        {
+            title: labelUno, dataIndex: "labelUno", key: "labelUno", width: 150, align: "right",
+            sorter: (a, b) => a.Vlr_VentaAnoUno - b.Vlr_VentaAnoUno,
+            render: (text, row, index) => {
+                return (
+                    <Title level={4} style={{ fontSize: 15, }}>
+                        {myNumber(1, row.Vlr_VentaAnoUno, 2)}
+                    </Title>
+                );
+            }
+        },
+        {
+            title: labelDos, dataIndex: "labelDos", key: "labelDos", width: 150, align: "right",
+            sorter: (a, b) => a.Vlr_VentaAnoUno - b.Vlr_VentaAnoUno,
+            render: (text, row, index) => {
+                return (
+                    <Title level={4} style={{ fontSize: 15, }}>
+                        {myNumber(1, row.Vlr_VentaAnoDos, 2)}
+                    </Title>
+                );
+            }
+        },
+        {
+            title: "Variación %", dataIndex: "variacion", key: "variacion", width: 150, align: "right",
+            sorter: (a, b) => a.Variacion - b.Variacion,
+            render: (text, row, index) => {
+                return (
+                    <Title level={4} style={{ fontSize: 15, }}>
+                        {myNumber(1, row.Variacion, 2)}%
+                    </Title>
+                );
+            }
+        }
+    ]
+
     return (
         <div className="mlanegativo">
             <h2 className="mx-auto mt-1 px-4 text-lg leading-6 font-medium text-gray-900 sm:px-6 lg:px-8">
@@ -1052,7 +1271,7 @@ function TabVariacion(props) {
                     <div className="mx-auto flex max-w-7xl justify-center px-4 sm:px-6 lg:px-8">
                         {/* justify-end */}
 
-                        <div className="flex">
+                        <div className="ml-60 flex">
                             <Menu as="div" className="relative inline-block" >
                                 <MultiSelect
                                     options={vtasAno}
@@ -1060,7 +1279,7 @@ function TabVariacion(props) {
                                     onChange={setSelectedAno}
                                     disableSearch="false"
                                     labelledBy="Filtrar por año"
-                                    className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                    className="absolute right-40 z10  ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                                     overrideStrings={{
                                         selectSomeItems: "Filtrar por año...",
                                         allItemsAreSelected:
@@ -1089,14 +1308,14 @@ function TabVariacion(props) {
                         </div>
 
                         <div className="flex">
-                            <Menu as="div" className="relative inline-block" >
+                            <Menu as="div" className="ml-4 relative inline-block" >
                                 <MultiSelect
                                     options={vtasMes}
                                     value={selectedMes}
                                     onChange={setSelectedMes}
                                     disableSearch="false"
                                     labelledBy="Filtrar por mes"
-                                    className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                    className="absolute right-6 z-10  text-sm font-medium text-gray-900 dark:text-gray-300"
                                     overrideStrings={{
                                         selectSomeItems: " Filtrar por mes...",
                                         allItemsAreSelected:
@@ -1124,17 +1343,17 @@ function TabVariacion(props) {
                             </Menu>
                         </div>
 
-                        <Menu as="div" className="ml-1 relative inline-block" >
+                        <Menu as="div" className="relative inline-block" >
                             <div className="flex">
 
-                                <div className="ml-1 mx-auto flex max-w-4xl h-10 space-x-6 divide-x bg-violet rounded divide-gray-200 px-4 text-sm sm:px-6 lg:px-8">
+                                <div className="mx-auto flex max-w-4xl h-10 space-x-6 divide-x bg-violet rounded divide-gray-200 px-4 text-sm sm:px-6 lg:px-8">
                                     <button
                                         onClick={() => generarConsulta()}
                                     >
                                         Consultar
                                     </button>
                                 </div>
-                                <div className="ml-2 mx-auto flex max-w-4xl h-10 space-x-6 divide-x bg-cosmocolor rounded divide-gray-200 px-4 text-sm sm:px-6 lg:px-8">
+                                <div className="ml-6 mx-auto flex max-w-4xl h-10 space-x-6 divide-x bg-cosmocolor rounded divide-gray-200 px-4 text-sm sm:px-6 lg:px-8">
                                     <div >
                                         <button
                                             type="button"
@@ -1187,59 +1406,19 @@ function TabVariacion(props) {
                     </div>
 
                     {
-                        selectedAno.length > 0 ?
+                        selectedAno.length > 0 && selectedMes.length == 0 ?
                             (
                                 <div className="margenizaquierdanegativo px-4 sm:px-6 lg:px-8">
                                     <div className="mt-8 flex flex-col">
                                         <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
                                             <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
                                                 <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-                                                    <table className="min-w-full divide-y divide-gray-300">
-                                                        <thead className="bg-gray-50">
-                                                            <tr>
-                                                                <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
-                                                                    {tituloTipo}
-                                                                </th>
-                                                                <th scope="col" className="px-2 py-3.5 text-right text-sm font-semibold text-gray-900">
-                                                                    {labelUno}
-                                                                </th>
-                                                                <th scope="col" className="px-2 py-3.5 text-right text-sm font-semibold text-gray-900">
-                                                                    {labelDos}
-                                                                </th>
-                                                                <th scope="col" className="px-2 py-3.5 text-right text-sm font-semibold text-gray-900">
-                                                                    Variación %
-                                                                </th>
-                                                            </tr>
-                                                        </thead>
-
-                                                        <tbody className="bg-white">
-                                                            {
-                                                                datosVariacion && datosVariacion.map((compras, comprasIdx) => (
-                                                                    <tr key={compras.nombre} className={comprasIdx % 2 === 0 ? undefined : 'bg-gray-50'}>
-                                                                        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                                                                            {compras.Descripcion}
-                                                                        </td>
-                                                                        <td className="whitespace-nowrap px-6 py-4 text-right text-sm text-gray-500">
-                                                                            {
-                                                                                myNumber(1, compras.Vlr_VentaAnoUno)
-                                                                            }
-                                                                        </td>
-                                                                        <td className="whitespace-nowrap px-2 py-4 text-right text-sm text-gray-500">
-                                                                            $ {
-                                                                                myNumber(1, compras.Vlr_VentaAnoDos)
-                                                                            }
-                                                                        </td>
-                                                                        <td className="whitespace-nowrap px-2 py-4 text-right text-sm text-gray-500">
-                                                                            {
-                                                                                myNumber(1, compras.Variacion, 1)
-                                                                            }
-                                                                        </td>
-
-                                                                    </tr>
-                                                                ))
-                                                            }
-                                                        </tbody>
-                                                    </table>
+                                                    <Table columns={header_test} dataSource={datosVariacion} pagination={false}
+                                                        scroll={{
+                                                            x: 1200,
+                                                            y: 500,
+                                                        }}
+                                                        bordered />
                                                 </div>
                                             </div>
                                         </div>
@@ -1254,55 +1433,12 @@ function TabVariacion(props) {
                                         <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
                                             <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
                                                 <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-
-                                                    <table className="min-w-full divide-y divide-gray-300">
-                                                        <thead className="bg-gray-50">
-                                                            <tr>
-                                                                <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
-                                                                    {tituloTipo}
-                                                                </th>
-                                                                <th scope="col" className="px-0 py-3.5 text-right text-sm font-semibold text-gray-900">
-
-                                                                </th>
-                                                                <th scope="col" className="px-2 py-3.5 text-right text-sm font-semibold text-gray-900">
-                                                                    Ventas
-                                                                </th>
-                                                                <th scope="col" className="px-2 py-3.5 text-right text-sm font-semibold text-gray-900">
-                                                                    % Participación
-                                                                </th>
-                                                            </tr>
-
-                                                        </thead>
-
-                                                        <tbody className="bg-white">
-                                                            {
-                                                                datosVariacion && datosVariacion.map((compras, comprasIdx) => (
-
-                                                                    <tr key={compras.nombre} className={comprasIdx % 2 === 0 ? undefined : 'bg-gray-50'}>
-                                                                        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                                                                            {compras.Descripcion}
-                                                                        </td>
-                                                                        <td className="whitespace-nowrap py-4 text-right text-sm text-gray-500">
-                                                                            $
-                                                                        </td>
-
-                                                                        <td className="whitespace-nowrap px-2 py-4 text-right text-sm text-gray-500">
-                                                                            {
-                                                                                myNumber(1, compras.VentaAcumulada)
-                                                                            }
-                                                                        </td>
-                                                                        <td className="whitespace-nowrap px-6 py-4 text-right text-sm text-gray-500">
-                                                                            {
-                                                                                (myNumber(1, compras.ParticipacionAcum) * 100).toFixed(2) + " % "
-                                                                            }
-                                                                        </td>
-
-                                                                    </tr>
-
-                                                                ))
-                                                            }
-                                                        </tbody>
-                                                    </table>
+                                                    <Table columns={header_testmes} dataSource={datosVariacion} pagination={false}
+                                                        scroll={{
+                                                            x: 1200,
+                                                            y: 500,
+                                                        }}
+                                                        bordered />
                                                 </div>
                                             </div>
                                         </div>

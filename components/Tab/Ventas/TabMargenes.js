@@ -9,9 +9,9 @@ function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
 }
 
-function TabParticipacion(props) {
+function TabMargenes(props) {
     const { Title } = Typography;
-    const { tipo, setTipo, datosCostos, ventasDiariasMes, } = props;
+    const { tipo, setTipo, datosCostos, ventasDiariasMes, listaPresupuestos } = props;
     const [entMargenCentro, setEntMargenCentro] = useState(true);
     const [entMargenSubcategoria, setEntMargenSubcategoria] = useState(false);
     const [entMargenProveedor, setEntMargenProveedor] = useState(false);
@@ -32,11 +32,10 @@ function TabParticipacion(props) {
     const [consultar, setConsultar] = useState(false);
 
     const tabsdos = [
-        { name: 'Participación x Centro', href: '#', current: entMargenCentro },
-        { name: 'Participación x Sublínea', href: '#', current: entMargenSubcategoria },
-        { name: 'Participación x Proveedor', href: '#', current: entMargenProveedor },
+        { name: 'Margen x Centro', href: '#', current: entMargenCentro },
+        { name: 'Margen x Subcategoría', href: '#', current: entMargenSubcategoria },
+        { name: 'Margen x Proveedor', href: '#', current: entMargenProveedor },
     ]
-    //costosvtacentro
 
     useEffect(() => {
         let newDetAnos = [];
@@ -82,10 +81,7 @@ function TabParticipacion(props) {
         setVtasDia(newDetDia);
     }, []);
 
-    const reiniciar = () => {
-        setDetalleCostos([]);
-    }
-
+    //costosvtacentro
     const selCostoVentas = (seleccion) => {
         setOpcion(seleccion)
         if (seleccion == 0) {
@@ -137,24 +133,24 @@ function TabParticipacion(props) {
 
         if (filtroAno && filtroMes) {
             if (opcion == 0) {
-                let ventastotal = 0;
-                let ventastotalmes = 0;
-
-                datosCostos.costosvtacentro &&
-                    datosCostos.costosvtacentro.map((vtas, index) => {
-                        if (vtas.ano == filtroAno && vtas.mes <= filtroMes) {
-                            ventastotal = ventastotal + vtas.Vlr_Total
-                        }
-                    });
-
-                datosCostos.costosvtacentro &&
-                    datosCostos.costosvtacentro.map((vtas, index) => {
-                        if (vtas.ano == filtroAno && vtas.mes == filtroMes) {
-                            ventastotalmes = ventastotalmes + vtas.Vlr_Total
-                        }
-                    });
-
                 let newDetVtas = [];
+                let newDetPpto = [];
+
+                listaPresupuestos.pptovtacentro &&
+                    listaPresupuestos.pptovtacentro.map((ppto, index) => {
+
+                        if (ppto.periodo == periodo) {
+                            let vta = {
+                                costopromedppto: ppto.costopromedio,
+                                nombrebodega: ppto.nombrebodega,
+                                periodo: ppto.periodo,
+                                pptovalor: ppto.pptovalor,
+                                pptound: ppto.pptound,
+                            };
+                            newDetPpto.push(vta);
+                        }
+                    });
+
 
                 datosCostos.costosvtacentro &&
                     datosCostos.costosvtacentro.map((vtas, index) => {
@@ -163,8 +159,8 @@ function TabParticipacion(props) {
                             let vta = {
                                 Descripcion: vtas.Descripcion,
                                 Periodo: vtas.Periodo,
-                                Vlr_Venta: vtas.Vlr_Total,
-                                participacion: vtas.Vlr_Total / ventastotalmes
+                                Vlr_Costo: vtas.Vlr_Costo,
+                                Vlr_Neto: vtas.Vlr_Neto
                             };
                             newDetVtas.push(vta);
                         }
@@ -174,88 +170,118 @@ function TabParticipacion(props) {
 
                 centrosoperacion &&
                     centrosoperacion.map((centros, index) => {
-                        let valorventa = 0;
-                        let participacion = 0;
+                        let costo = 0;
+                        let venta = 0;
+                        let valppto = 0;
                         datosCostos.costosvtacentro &&
                             datosCostos.costosvtacentro.map((vtas, index) => {
                                 if (vtas.ano == filtroAno && vtas.mes <= filtroMes
                                     && vtas.Descripcion == centros.Centros_Operacion) {
-                                    valorventa = valorventa + vtas.Vlr_Total;
+                                    costo = costo + vtas.Vlr_Costo;
+                                    venta = venta + vtas.Vlr_Neto;
                                 }
                             });
+
+                        newDetPpto &&
+                            newDetPpto.map((ppto, index) => {
+                                if (ppto.nombrebodega == centros.Centros_Operacion) {
+                                    valppto = valppto + ppto.pptovalor;
+                                }
+                            });
+
+
                         let vta = {
                             Descripcion: centros.Centros_Operacion,
                             Periodo: periodo,
-                            VentaAcumulada: valorventa,
-                            ParticipacionAcum: (valorventa / ventastotal)
+                            Vlr_CostoAcum: costo,
+                            Vlr_NetoAcum: venta,
+                            Vlr_Ppto: valppto
                         };
                         newDetVtasAcum.push(vta);
                     });
 
                 let newDetVtasTot = [];
-                newDetVtasAcum &&
-                    newDetVtasAcum.map((acumula, index) => {
-                        newDetVtas &&
-                            newDetVtas.map((meses, index) => {
-                                if (acumula.Descripcion == meses.Descripcion) {
-                                    let vta = {
-                                        Descripcion: acumula.Descripcion,
-                                        Periodo: periodo,
-                                        Vlr_Venta: meses.Vlr_Venta,
-                                        participacion: meses.participacion,
-                                        VentaAcumulada: acumula.VentaAcumulada,
-                                        ParticipacionAcum: acumula.ParticipacionAcum
-                                    };
-                                    newDetVtasTot.push(vta);
+                newDetVtas &&
+                    newDetVtas.map((vtasmes, index) => {
+                        let costo = 0;
+                        let venta = 0;
+                        let ppto = 0;
+
+                        newDetVtasAcum &&
+                            newDetVtasAcum.map((vtasacum, index) => {
+                                if (vtasmes.Descripcion == vtasacum.Descripcion) {
+                                    costo = vtasacum.Vlr_CostoAcum;
+                                    venta = vtasacum.Vlr_NetoAcum;
+                                    ppto = vtasacum.Vlr_Ppto;
                                 }
                             });
+                        let vta = {
+                            Descripcion: vtasmes.Descripcion,
+                            Periodo: vtasmes.Periodo,
+                            Vlr_Costo: vtasmes.Vlr_Costo,
+                            Vlr_Neto: vtasmes.Vlr_Neto,
+                            Vlr_CostoAcum: costo,
+                            Vlr_NetoAcum: venta,
+                            Vlr_Ppto: ppto,
+                        };
+                        newDetVtasTot.push(vta);
                     });
 
-                let partmes = 0;
-                let ventames = 0;
-                let part = 0;
-                let venta = 0;
+                let totalcostomes = 0;
+                let totalventames = 0;
+                let totalcosto = 0;
+                let totalventa = 0;
+                let totalppto = 0;
+
+                let Descripcion = "";
 
                 newDetVtasTot &&
-                    newDetVtasTot.map((mes, index) => {
-                        partmes = partmes + mes.participacion;
-                        ventames = ventames + mes.Vlr_Venta;
-                        part = part + mes.ParticipacionAcum;
-                        venta = venta + mes.VentaAcumulada;
+                    newDetVtasTot.map((tot, index) => {
+                        totalcostomes = totalcostomes + tot.Vlr_Costo;
+                        totalventames = totalventames + tot.Vlr_Neto;
+                        totalcosto = totalcosto + tot.Vlr_CostoAcum;
+                        totalventa = totalventa + tot.Vlr_NetoAcum;
+                        totalppto = totalppto + tot.Vlr_Ppto;
+                        Descripcion = tot.Descripcion;
+
                     });
 
-                let mvto = {
+                let acum = {
                     Descripcion: "TOTAL",
                     Periodo: periodo,
-                    Vlr_Venta: ventames,
-                    participacion: partmes,
-                    VentaAcumulada: venta,
-                    ParticipacionAcum: part
-                };
-                newDetVtasTot.push(mvto);
-                //console.log("VENTAS TOTAL : ", newDetVtasTot)
+                    Vlr_Costo: totalcostomes,
+                    Vlr_Neto: totalventames,
+                    Vlr_CostoAcum: totalcosto,
+                    Vlr_NetoAcum: totalventa,
+                    Vlr_Ppto: totalppto
+                }
 
+                newDetVtasTot.push(acum);
+
+                //console.log("VALORES : ", acum)
+                //return
                 setDetalleCostos(newDetVtasTot);
+
+
             } else
                 if (opcion == 1) {
-                    let ventastotal = 0;
-                    let ventastotalmes = 0;
-
-                    datosCostos.costosvtasubcategoria &&
-                        datosCostos.costosvtasubcategoria.map((vtas, index) => {
-                            if (vtas.ano == filtroAno && vtas.mes <= filtroMes) {
-                                ventastotal = ventastotal + vtas.Vlr_Total
-                            }
-                        });
-
-                    datosCostos.costosvtasubcategoria &&
-                        datosCostos.costosvtasubcategoria.map((vtas, index) => {
-                            if (vtas.ano == filtroAno && vtas.mes == filtroMes) {
-                                ventastotalmes = ventastotalmes + vtas.Vlr_Total
-                            }
-                        });
-
                     let newDetVtas = [];
+                    let newDetPpto = [];
+
+                    listaPresupuestos.pptovtasublinea &&
+                        listaPresupuestos.pptovtasublinea.map((ppto, index) => {
+
+                            if (ppto.periodo == periodo) {
+                                let vta = {
+                                    costopromedppto: ppto.costopromedio,
+                                    nombrebodega: ppto.nombreconcepto,
+                                    periodo: ppto.periodo,
+                                    pptovalor: ppto.pptovalor,
+                                    pptound: ppto.pptound,
+                                };
+                                newDetPpto.push(vta);
+                            }
+                        });
 
                     datosCostos.costosvtasubcategoria &&
                         datosCostos.costosvtasubcategoria.map((vtas, index) => {
@@ -264,8 +290,8 @@ function TabParticipacion(props) {
                                 let vta = {
                                     Descripcion: vtas.Descripcion,
                                     Periodo: vtas.Periodo,
-                                    Vlr_Venta: vtas.Vlr_Total,
-                                    participacion: (vtas.Vlr_Total / ventastotalmes) * 100
+                                    Vlr_Costo: vtas.Vlr_Costo,
+                                    Vlr_Neto: vtas.Vlr_Neto
                                 };
                                 newDetVtas.push(vta);
                             }
@@ -275,89 +301,116 @@ function TabParticipacion(props) {
 
                     subcategorias &&
                         subcategorias.map((centros, index) => {
-                            let valorventa = 0;
-                            let participacion = 0;
+                            let costo = 0;
+                            let venta = 0;
+                            let valppto = 0;
                             datosCostos.costosvtasubcategoria &&
                                 datosCostos.costosvtasubcategoria.map((vtas, index) => {
                                     if (vtas.ano == filtroAno && vtas.mes <= filtroMes
                                         && vtas.Descripcion == centros.Subcategorias) {
-                                        valorventa = valorventa + vtas.Vlr_Total;
+                                        costo = costo + vtas.Vlr_Costo;
+                                        venta = venta + vtas.Vlr_Neto;
                                     }
                                 });
+
+                            newDetPpto &&
+                                newDetPpto.map((ppto, index) => {
+                                    if (ppto.nombrebodega == centros.Subcategorias) {
+                                        valppto = valppto + ppto.pptovalor;
+                                    }
+                                });
+
+
                             let vta = {
                                 Descripcion: centros.Subcategorias,
                                 Periodo: periodo,
-                                VentaAcumulada: valorventa,
-                                ParticipacionAcum: (valorventa / ventastotal)
+                                Vlr_CostoAcum: costo,
+                                Vlr_NetoAcum: venta,
+                                Vlr_Ppto: valppto,
                             };
                             newDetVtasAcum.push(vta);
                         });
 
                     let newDetVtasTot = [];
-                    newDetVtasAcum &&
-                        newDetVtasAcum.map((acumula, index) => {
-                            newDetVtas &&
-                                newDetVtas.map((meses, index) => {
-                                    if (acumula.Descripcion == meses.Descripcion) {
-                                        let vta = {
-                                            Descripcion: acumula.Descripcion,
-                                            Periodo: periodo,
-                                            Vlr_Venta: meses.Vlr_Venta,
-                                            participacion: meses.participacion,
-                                            VentaAcumulada: acumula.VentaAcumulada,
-                                            ParticipacionAcum: acumula.ParticipacionAcum
-                                        };
-                                        newDetVtasTot.push(vta);
+
+                    newDetVtas &&
+                        newDetVtas.map((vtasmes, index) => {
+                            let costo = 0;
+                            let venta = 0;
+                            let ppto = 0;
+
+                            newDetVtasAcum &&
+                                newDetVtasAcum.map((vtasacum, index) => {
+                                    if (vtasmes.Descripcion == vtasacum.Descripcion) {
+                                        costo = vtasacum.Vlr_CostoAcum;
+                                        venta = vtasacum.Vlr_NetoAcum;
+                                        ppto = vtasacum.Vlr_Ppto;
                                     }
                                 });
+                            let vta = {
+                                Descripcion: vtasmes.Descripcion,
+                                Periodo: vtasmes.Periodo,
+                                Vlr_Costo: vtasmes.Vlr_Costo,
+                                Vlr_Neto: vtasmes.Vlr_Neto,
+                                Vlr_CostoAcum: costo,
+                                Vlr_NetoAcum: venta,
+                                Vlr_Ppto: ppto,
+                            };
+                            newDetVtasTot.push(vta);
                         });
 
-                    let partmes = 0;
-                    let ventames = 0;
-                    let part = 0;
-                    let venta = 0;
+                    let totalcostomes = 0;
+                    let totalventames = 0;
+                    let totalcosto = 0;
+                    let totalventa = 0;
+                    let totalppto = 0;
+
+                    let Descripcion = "";
 
                     newDetVtasTot &&
-                        newDetVtasTot.map((mes, index) => {
-                            partmes = partmes + mes.participacion;
-                            ventames = ventames + mes.Vlr_Venta;
-                            part = part + mes.ParticipacionAcum;
-                            venta = venta + mes.VentaAcumulada;
+                        newDetVtasTot.map((tot, index) => {
+                            totalcostomes = totalcostomes + tot.Vlr_Costo;
+                            totalventames = totalventames + tot.Vlr_Neto;
+                            totalcosto = totalcosto + tot.Vlr_CostoAcum;
+                            totalventa = totalventa + tot.Vlr_NetoAcum;
+                            totalppto = totalppto + tot.Vlr_Ppto;
+                            Descripcion = tot.Descripcion;
+
                         });
 
-                    let mvto = {
+                    let acum = {
                         Descripcion: "TOTAL",
                         Periodo: periodo,
-                        Vlr_Venta: ventames,
-                        participacion: partmes,
-                        VentaAcumulada: venta,
-                        ParticipacionAcum: part
-                    };
-                    newDetVtasTot.push(mvto);
-                    //console.log("VENTAS TOTAL : ", newDetVtasTot)
-                    setDetalleCostos(newDetVtasTot);
+                        Vlr_Costo: totalcostomes,
+                        Vlr_Neto: totalventames,
+                        Vlr_CostoAcum: totalcosto,
+                        Vlr_NetoAcum: totalventa,
+                        Vlr_Ppto: totalppto
+                    }
 
+                    newDetVtasTot.push(acum);
+                    //console.log("PPTO  : ",newDetVtasTot)
+                    setDetalleCostos(newDetVtasTot);
                 } else
                     if (opcion == 2) {
 
-                        let ventastotal = 0;
-                        let ventastotalmes = 0;
-
-                        datosCostos.costosproveedor &&
-                            datosCostos.costosproveedor.map((vtas, index) => {
-                                if (vtas.ano == filtroAno && vtas.mes <= filtroMes) {
-                                    ventastotal = ventastotal + vtas.Vlr_Total
-                                }
-                            });
-
-                        datosCostos.costosproveedor &&
-                            datosCostos.costosproveedor.map((vtas, index) => {
-                                if (vtas.ano == filtroAno && vtas.mes == filtroMes) {
-                                    ventastotalmes = ventastotalmes + vtas.Vlr_Total
-                                }
-                            });
-
                         let newDetVtas = [];
+                        let newDetPpto = [];
+
+                        listaPresupuestos.pptovtasublinea &&
+                            listaPresupuestos.pptovtasublinea.map((ppto, index) => {
+
+                                if (ppto.periodo == periodo) {
+                                    let vta = {
+                                        costopromedppto: ppto.costopromedio,
+                                        nombrebodega: ppto.nombreconcepto,
+                                        periodo: ppto.periodo,
+                                        pptovalor: ppto.pptovalor,
+                                        pptound: ppto.pptound,
+                                    };
+                                    newDetPpto.push(vta);
+                                }
+                            });
 
                         datosCostos.costosproveedor &&
                             datosCostos.costosproveedor.map((vtas, index) => {
@@ -366,8 +419,8 @@ function TabParticipacion(props) {
                                     let vta = {
                                         Descripcion: vtas.Descripcion,
                                         Periodo: vtas.Periodo,
-                                        Vlr_Venta: vtas.Vlr_Total,
-                                        participacion: vtas.Vlr_Total / ventastotalmes
+                                        Vlr_Costo: vtas.Vlr_Costo,
+                                        Vlr_Neto: vtas.Vlr_Neto
                                     };
                                     newDetVtas.push(vta);
                                 }
@@ -377,227 +430,285 @@ function TabParticipacion(props) {
 
                         proveedores &&
                             proveedores.map((prov, index) => {
-                                let valorventa = 0;
-                                let participacion = 0;
+                                let costo = 0;
+                                let venta = 0;
+                                let valppto = 0;
                                 datosCostos.costosproveedor &&
                                     datosCostos.costosproveedor.map((vtas, index) => {
                                         if (vtas.ano == filtroAno && vtas.mes <= filtroMes
                                             && vtas.Descripcion == prov.Nombre_Proveedor) {
-                                            valorventa = valorventa + vtas.Vlr_Total;
+                                            costo = costo + vtas.Vlr_Costo;
+                                            venta = venta + vtas.Vlr_Neto;
                                         }
                                     });
+
+                                newDetPpto &&
+                                    newDetPpto.map((ppto, index) => {
+                                        if (ppto.nombrebodega == prov.Nombre_Proveedor) {
+                                            valppto = valppto + ppto.pptovalor;
+                                        }
+                                    });
+
+
                                 let vta = {
                                     Descripcion: prov.Nombre_Proveedor,
                                     Periodo: periodo,
-                                    VentaAcumulada: valorventa,
-                                    ParticipacionAcum: (valorventa / ventastotal)
+                                    Vlr_CostoAcum: costo,
+                                    Vlr_NetoAcum: venta,
+                                    Vlr_Ppto: valppto,
                                 };
                                 newDetVtasAcum.push(vta);
                             });
 
-
                         let newDetVtasTot = [];
-                        newDetVtasAcum &&
-                            newDetVtasAcum.map((acumula, index) => {
-                                newDetVtas &&
-                                    newDetVtas.map((meses, index) => {
-                                        if (acumula.Descripcion == meses.Descripcion) {
-                                            let vta = {
-                                                Descripcion: acumula.Descripcion,
-                                                Periodo: periodo,
-                                                Vlr_Venta: meses.Vlr_Venta,
-                                                participacion: meses.participacion,
-                                                VentaAcumulada: acumula.VentaAcumulada,
-                                                ParticipacionAcum: acumula.ParticipacionAcum
-                                            };
-                                            newDetVtasTot.push(vta);
+
+                        newDetVtas &&
+                            newDetVtas.map((vtasmes, index) => {
+                                let costo = 0;
+                                let venta = 0;
+                                let ppto = 0;
+
+                                newDetVtasAcum &&
+                                    newDetVtasAcum.map((vtasacum, index) => {
+                                        if (vtasmes.Descripcion == vtasacum.Descripcion) {
+                                            costo = vtasacum.Vlr_CostoAcum;
+                                            venta = vtasacum.Vlr_NetoAcum;
+                                            ppto = vtasacum.Vlr_Ppto;
                                         }
                                     });
+                                let vta = {
+                                    Descripcion: vtasmes.Descripcion,
+                                    Periodo: vtasmes.Periodo,
+                                    Vlr_Costo: vtasmes.Vlr_Costo,
+                                    Vlr_Neto: vtasmes.Vlr_Neto,
+                                    Vlr_CostoAcum: costo,
+                                    Vlr_NetoAcum: venta,
+                                    Vlr_Ppto: ppto,
+                                };
+                                newDetVtasTot.push(vta);
                             });
 
-                        let partmes = 0;
-                        let ventames = 0;
-                        let part = 0;
-                        let venta = 0;
+                        let totalcostomes = 0;
+                        let totalventames = 0;
+                        let totalcosto = 0;
+                        let totalventa = 0;
+                        let totalppto = 0;
+
+                        let Descripcion = "";
 
                         newDetVtasTot &&
-                            newDetVtasTot.map((mes, index) => {
-                                partmes = partmes + mes.participacion;
-                                ventames = ventames + mes.Vlr_Venta;
-                                part = part + mes.ParticipacionAcum;
-                                venta = venta + mes.VentaAcumulada;
+                            newDetVtasTot.map((tot, index) => {
+                                totalcostomes = totalcostomes + tot.Vlr_Costo;
+                                totalventames = totalventames + tot.Vlr_Neto;
+                                totalcosto = totalcosto + tot.Vlr_CostoAcum;
+                                totalventa = totalventa + tot.Vlr_NetoAcum;
+                                totalppto = totalppto + tot.Vlr_Ppto;
+                                Descripcion = tot.Descripcion;
+
                             });
 
-                        let mvto = {
+                        let acum = {
                             Descripcion: "TOTAL",
                             Periodo: periodo,
-                            Vlr_Venta: ventames,
-                            participacion: partmes,
-                            VentaAcumulada: venta,
-                            ParticipacionAcum: part
-                        };
-                        newDetVtasTot.push(mvto);
+                            Vlr_Costo: totalcostomes,
+                            Vlr_Neto: totalventames,
+                            Vlr_CostoAcum: totalcosto,
+                            Vlr_NetoAcum: totalventa,
+                            Vlr_Ppto: totalppto
+                        }
 
+                        newDetVtasTot.push(acum);
+                        //console.log("PPTO  : ",newDetVtasTot)
                         setDetalleCostos(newDetVtasTot);
-
                     }
+
+
         } else {
             if (filtroAno) {
-                if (opcion == 0) {
-                    let ventastotal = 0;
 
-                    datosCostos.costosvtacentro &&
-                        datosCostos.costosvtacentro.map((vtas, index) => {
-                            if (vtas.ano == filtroAno) {
-                                ventastotal = ventastotal + vtas.Vlr_Total
-                            }
-                        });
+                if (opcion == 0) {
+                    let newDet = [];
+                    setTituloTipo("CENTROS_DE_OPERACIÓN")
 
                     let newDetVtasAcum = [];
 
                     centrosoperacion &&
                         centrosoperacion.map((centros, index) => {
-                            let valorventa = 0;
-                            let participacion = 0;
+                            let costo = 0;
+                            let venta = 0;
+
                             datosCostos.costosvtacentro &&
                                 datosCostos.costosvtacentro.map((vtas, index) => {
                                     if (vtas.ano == filtroAno && vtas.Descripcion == centros.Centros_Operacion) {
-                                        valorventa = valorventa + vtas.Vlr_Total;
+                                        costo = costo + vtas.Vlr_Costo;
+                                        venta = venta + vtas.Vlr_Neto;
                                     }
                                 });
                             let vta = {
                                 Descripcion: centros.Centros_Operacion,
                                 Periodo: periodo,
-                                VentaAcumulada: valorventa,
-                                ParticipacionAcum: (valorventa / ventastotal)
+                                Vlr_Costo: 0,
+                                Vlr_Neto: 0,
+                                Vlr_CostoAcum: costo,
+                                Vlr_NetoAcum: venta
                             };
                             newDetVtasAcum.push(vta);
                         });
 
-                    let part = 0;
-                    let venta = 0;
+
+                    let totalcostomes = 0;
+                    let totalventames = 0;
+                    let totalcosto = 0;
+                    let totalventa = 0;
+
+                    let Descripcion = "";
 
                     newDetVtasAcum &&
-                        newDetVtasAcum.map((mes, index) => {
-                            part = part + mes.ParticipacionAcum;
-                            venta = venta + mes.VentaAcumulada;
+                        newDetVtasAcum.map((tot, index) => {
+                            totalcostomes = totalcostomes + tot.Vlr_Costo;
+                            totalventames = totalventames + tot.Vlr_Neto;
+                            totalcosto = totalcosto + tot.Vlr_CostoAcum;
+                            totalventa = totalventa + tot.Vlr_NetoAcum;
+                            Descripcion = tot.Descripcion;
+
                         });
 
-                    let mvto = {
+                    let acum = {
                         Descripcion: "TOTAL",
                         Periodo: periodo,
-                        VentaAcumulada: venta,
-                        ParticipacionAcum: part
-                    };
-                    newDetVtasAcum.push(mvto);
-                    //console.log("VENTAS TOTAL : ", newDetVtasAcum)
-                    setDetalleCostos(newDetVtasAcum);
-                } else
-                    if (opcion == 1) {
-                        let ventastotal = 0;
+                        Vlr_Costo: totalcostomes,
+                        Vlr_Neto: totalventames,
+                        Vlr_CostoAcum: totalcosto,
+                        Vlr_NetoAcum: totalventa
+                    }
 
-                        datosCostos.costosvtasubcategoria &&
-                            datosCostos.costosvtasubcategoria.map((vtas, index) => {
-                                if (vtas.ano == filtroAno) {
-                                    ventastotal = ventastotal + vtas.Vlr_Total
-                                }
-                            });
+                    newDetVtasAcum.push(acum);
+
+                    //console.log("VENTAS ANÑO : ", newDetVtasAcum)
+                    setDetalleCostos(newDetVtasAcum);
+                }
+                else
+                    if (opcion == 1) {
+                        let newDet = [];
+                        setTituloTipo("SUBCATEGORÍAS")
 
                         let newDetVtasAcum = [];
 
                         subcategorias &&
                             subcategorias.map((centros, index) => {
-                                let valorventa = 0;
-                                let participacion = 0;
+                                let costo = 0;
+                                let venta = 0;
+
                                 datosCostos.costosvtasubcategoria &&
                                     datosCostos.costosvtasubcategoria.map((vtas, index) => {
                                         if (vtas.ano == filtroAno && vtas.Descripcion == centros.Subcategorias) {
-                                            valorventa = valorventa + vtas.Vlr_Total;
+                                            costo = costo + vtas.Vlr_Costo;
+                                            venta = venta + vtas.Vlr_Neto;
                                         }
                                     });
                                 let vta = {
                                     Descripcion: centros.Subcategorias,
                                     Periodo: periodo,
-                                    VentaAcumulada: valorventa,
-                                    ParticipacionAcum: (valorventa / ventastotal)
+                                    Vlr_Costo: 0,
+                                    Vlr_Neto: 0,
+                                    Vlr_CostoAcum: costo,
+                                    Vlr_NetoAcum: venta
                                 };
                                 newDetVtasAcum.push(vta);
                             });
 
+                        let totalcostomes = 0;
+                        let totalventames = 0;
+                        let totalcosto = 0;
+                        let totalventa = 0;
 
-                        let part = 0;
-                        let venta = 0;
+                        let Descripcion = "";
 
                         newDetVtasAcum &&
-                            newDetVtasAcum.map((mes, index) => {
-                                part = part + mes.ParticipacionAcum;
-                                venta = venta + mes.VentaAcumulada;
+                            newDetVtasAcum.map((tot, index) => {
+                                totalcostomes = totalcostomes + tot.Vlr_Costo;
+                                totalventames = totalventames + tot.Vlr_Neto;
+                                totalcosto = totalcosto + tot.Vlr_CostoAcum;
+                                totalventa = totalventa + tot.Vlr_NetoAcum;
+                                Descripcion = tot.Descripcion;
+
                             });
 
-                        let mvto = {
+                        let acum = {
                             Descripcion: "TOTAL",
                             Periodo: periodo,
-                            VentaAcumulada: venta,
-                            ParticipacionAcum: part
-                        };
-                        newDetVtasAcum.push(mvto);
+                            Vlr_Costo: totalcostomes,
+                            Vlr_Neto: totalventames,
+                            Vlr_CostoAcum: totalcosto,
+                            Vlr_NetoAcum: totalventa
+                        }
 
-                        //console.log("VENTAS TOTAL : ", newDetVtasTot)
+                        newDetVtasAcum.push(acum);
+
+
+                        //console.log("VENTAS ANÑO : ", newDetVtasAcum)
                         setDetalleCostos(newDetVtasAcum);
-
                     } else
                         if (opcion == 2) {
-                            let ventastotal = 0;
-
-                            datosCostos.costosproveedor &&
-                                datosCostos.costosproveedor.map((vtas, index) => {
-                                    if (vtas.ano == filtroAno) {
-                                        ventastotal = ventastotal + vtas.Vlr_Total
-                                    }
-                                });
+                            let newDet = [];
+                            setTituloTipo("PROVEEDORES")
 
                             let newDetVtasAcum = [];
 
                             proveedores &&
                                 proveedores.map((prov, index) => {
-                                    let valorventa = 0;
-                                    let participacion = 0;
+                                    let costo = 0;
+                                    let venta = 0;
+
                                     datosCostos.costosproveedor &&
                                         datosCostos.costosproveedor.map((vtas, index) => {
                                             if (vtas.ano == filtroAno && vtas.Descripcion == prov.Nombre_Proveedor) {
-                                                valorventa = valorventa + vtas.Vlr_Total;
+                                                costo = costo + vtas.Vlr_Costo;
+                                                venta = venta + vtas.Vlr_Neto;
                                             }
                                         });
                                     let vta = {
                                         Descripcion: prov.Nombre_Proveedor,
                                         Periodo: periodo,
-                                        VentaAcumulada: valorventa,
-                                        ParticipacionAcum: (valorventa / ventastotal)
+                                        Vlr_Costo: 0,
+                                        Vlr_Neto: 0,
+                                        Vlr_CostoAcum: costo,
+                                        Vlr_NetoAcum: venta
                                     };
                                     newDetVtasAcum.push(vta);
                                 });
 
+                            let totalcostomes = 0;
+                            let totalventames = 0;
+                            let totalcosto = 0;
+                            let totalventa = 0;
 
-                            let part = 0;
-                            let venta = 0;
+                            let Descripcion = "";
 
                             newDetVtasAcum &&
-                                newDetVtasAcum.map((mes, index) => {
-                                    part = part + mes.ParticipacionAcum;
-                                    venta = venta + mes.VentaAcumulada;
+                                newDetVtasAcum.map((tot, index) => {
+                                    totalcostomes = totalcostomes + tot.Vlr_Costo;
+                                    totalventames = totalventames + tot.Vlr_Neto;
+                                    totalcosto = totalcosto + tot.Vlr_CostoAcum;
+                                    totalventa = totalventa + tot.Vlr_NetoAcum;
+                                    Descripcion = tot.Descripcion;
+
                                 });
 
-                            let mvto = {
+                            let acum = {
                                 Descripcion: "TOTAL",
                                 Periodo: periodo,
-                                VentaAcumulada: venta,
-                                ParticipacionAcum: part
-                            };
-                            newDetVtasAcum.push(mvto);
+                                Vlr_Costo: totalcostomes,
+                                Vlr_Neto: totalventames,
+                                Vlr_CostoAcum: totalcosto,
+                                Vlr_NetoAcum: totalventa
+                            }
 
-                            //console.log("VENTAS TOTAL : ", newDetVtasTot)
+                            newDetVtasAcum.push(acum);
+
+
+                            //console.log("VENTAS ANÑO : ", newDetVtasAcum)
                             setDetalleCostos(newDetVtasAcum);
-
                         }
             }
         }
@@ -611,77 +722,144 @@ function TabParticipacion(props) {
     }, [opcion]);
 
     const header_test = [
-        { title: tituloTipo, dataIndex: "Descripcion", key: "Descripcion", width: 80, fixed: true },
+        { title: tituloTipo, dataIndex: "Descripcion", key: "Descripcion", width: 100, fixed: true },
         {
-            title: "VENTAS", dataIndex: "VentaAcumulada", key: "VentaAcumulada", width: 150, align: "right",
-            sorter: (a, b) => a.VentaAcumulada - b.VentaAcumulada,
+            title: "COSTO PROM ACUM.", dataIndex: "Vlr_CostoAcum", key: "Vlr_CostoAcum", width: 150, align: "right",
+            sorter: (a, b) => a.Vlr_CostoAcum - b.Vlr_CostoAcum,
             render: (text, row, index) => {
                 return (
                     <Title level={4} style={{ fontSize: 15, }}>
-                        {myNumber(1, row.VentaAcumulada, 2)}
+                        {myNumber(1, row.Vlr_CostoAcum, 2)}
                     </Title>
                 );
             }
         },
         {
-            title: "% PARTICIPACIÓN", dataIndex: "ParticipacionAcum", key: "ParticipacionAcum", width: 150, align: "right",
-            sorter: (a, b) => a.ParticipacionAcum - b.ParticipacionAcum,
+            title: "VTAS TOT ACUM.", dataIndex: "Vlr_NetoAcum", key: "Vlr_NetoAcum", width: 150, align: "right",
+            sorter: (a, b) => a.Vlr_NetoAcum - b.Vlr_NetoAcum,
             render: (text, row, index) => {
                 return (
                     <Title level={4} style={{ fontSize: 15, }}>
-                        {(myNumber(1, row.ParticipacionAcum, 2) * 100).toFixed(2)}%
+                        {myNumber(1, row.Vlr_NetoAcum, 2)}
                     </Title>
                 );
             }
-        }
+        },
+        {
+            title: "MARGEN ACUM.", dataIndex: "margenacum", key: "margenacum", width: 150, align: "right",
+            //sorter: (a, b) => a.(row.Vlr_CostoAcum / row.Vlr_NetoAcum) - b.(row.Vlr_CostoAcum / row.Vlr_NetoAcum),
+            render: (text, row, index) => {
+                return (
+                    <Title level={4} style={{ fontSize: 15, }}>
+                        {myNumber(1, (1 - (row.Vlr_CostoAcum / row.Vlr_NetoAcum)) * 100) + " % "}
+                    </Title>
+                );
+            }
+
+        },
     ]
 
     const header_testmes = [
-        { title: tituloTipo, dataIndex: "Descripcion", key: "Descripcion", width: 200, fixed: true },
+        { title: tituloTipo, dataIndex: "Descripcion", key: "Descripcion", width: 100, fixed: true },
         {
-            title: "VENTAS MES", dataIndex: "Vlr_Venta", key: "Vlr_Venta", width: 150, align: "right",
-            sorter: (a, b) => a.Vlr_Venta - b.Vlr_Venta,
+            title: "COSTO PROM MES.", dataIndex: "Vlr_Costo", key: "Vlr_Costo", width: 80, align: "right",
+            sorter: (a, b) => a.Vlr_Costo - b.Vlr_Costo,
             render: (text, row, index) => {
                 return (
                     <Title level={4} style={{ fontSize: 15, }}>
-                        {myNumber(1, row.Vlr_Venta, 2)}
+                        {myNumber(1, row.Vlr_Costo, 2)}
                     </Title>
                 );
             }
         },
         {
-            title: "% PARTICIPACIÓN MES", dataIndex: "ParticipacionAcum", key: "ParticipacionAcum", width: 150, align: "right",
-            sorter: (a, b) => a.ParticipacionAcum - b.ParticipacionAcum,
+            title: "VTAS TOT MES.", dataIndex: "Vlr_Neto", key: "Vlr_Neto", width: 80, align: "right",
+            sorter: (a, b) => a.Vlr_Neto - b.Vlr_Neto,
             render: (text, row, index) => {
                 return (
                     <Title level={4} style={{ fontSize: 15, }}>
-                        {(myNumber(1, row.participacion) * 100).toFixed(2)}%
+                        {myNumber(1, row.Vlr_Neto, 2)}
                     </Title>
                 );
             }
         },
         {
-            title: "VENTAS ACUM.", dataIndex: "VentaAcumulada", key: "VentaAcumulada", width: 150, align: "right",
-            sorter: (a, b) => a.VentaAcumulada - b.VentaAcumulada,
+            title: "PPTO TOT MES.", dataIndex: "Vlr_Ppto", key: "Vlr_Ppto", width: 80, align: "right",
+            sorter: (a, b) => a.Vlr_Ppto - b.Vlr_Ppto,
             render: (text, row, index) => {
                 return (
                     <Title level={4} style={{ fontSize: 15, }}>
-                        {myNumber(1, row.VentaAcumulada, 2)}
+                        {myNumber(1, row.Vlr_Ppto, 2)}
                     </Title>
                 );
             }
         },
         {
-            title: "% PARTICIPACIÓN ACUM.", dataIndex: "ParticipacionAcum", key: "ParticipacionAcum", width: 150, align: "right",
-            sorter: (a, b) => a.ParticipacionAcum - b.ParticipacionAcum,
+            title: "FALTANTE PPTO.", dataIndex: "faltante", key: "faltante", width: 80, align: "right",
+            //sorter: (a, b) => a.Vlr_NetoAcum - b.Vlr_NetoAcum,
             render: (text, row, index) => {
                 return (
                     <Title level={4} style={{ fontSize: 15, }}>
-                        {(myNumber(1, row.ParticipacionAcum, 2) * 100).toFixed(2)}%
+                        {myNumber(1, row.Vlr_Ppto - row.Vlr_Neto)}
                     </Title>
                 );
             }
-        }
+        },
+        {
+            title: "MARGEN MES.", dataIndex: "margenmes", key: "margenmes", width: 60, align: "right",
+            //sorter: (a, b) => a.(row.Vlr_CostoAcum / row.Vlr_NetoAcum) - b.(row.Vlr_CostoAcum / row.Vlr_NetoAcum),
+            render: (text, row, index) => {
+                return (
+                    <Title level={4} style={{ fontSize: 15, }}>
+                        {
+                            row.Vlr_Costo == 0 ?
+                                0 + " % "
+                                :
+                                myNumber(1, ((1 - (row.Vlr_Costo / row.Vlr_Neto)) * 80), 2) + " % "
+                        }
+                    </Title>
+                );
+            }
+
+        },
+        {
+            title: "COSTO PROM ACUM.", dataIndex: "costomes", key: "costomes", width: 80, align: "right",
+            sorter: (a, b) => a.Vlr_NetoAcum - b.Vlr_NetoAcum,
+            render: (text, row, index) => {
+                return (
+                    <Title level={4} style={{ fontSize: 15, }}>
+                        {myNumber(1, row.Vlr_CostoAcum)}
+                    </Title>
+                );
+            }
+        },
+        {
+            title: "VTA TOT ACUM.", dataIndex: "vtaacumulada", key: "vtaacumulada", width: 75, align: "right",
+            sorter: (a, b) => a.Vlr_NetoAcum - b.Vlr_NetoAcum,
+            render: (text, row, index) => {
+                return (
+                    <Title level={4} style={{ fontSize: 15, }}>
+                        {myNumber(1, row.Vlr_NetoAcum)}
+                    </Title>
+                );
+            }
+        },
+        {
+            title: "MARGEN ACUM.", dataIndex: "margenmes", key: "margenmes", width: 60, align: "right",
+            //sorter: (a, b) => a.(row.Vlr_CostoAcum / row.Vlr_NetoAcum) - b.(row.Vlr_CostoAcum / row.Vlr_NetoAcum),
+            render: (text, row, index) => {
+                return (
+                    <Title level={4} style={{ fontSize: 15, }}>
+                        {
+                            row.CSV_TOT == 0 ?
+                                0 + " % "
+                                :
+                            myNumber(1, ((1 - (row.Vlr_CostoAcum / row.Vlr_NetoAcum)) * 75), 2) + " % "
+                        }
+                    </Title>
+                );
+            }
+        },
     ]
 
     return (
@@ -692,9 +870,7 @@ function TabParticipacion(props) {
                     <div className="mx-auto flex max-w-7xl justify-center px-4 sm:px-6 lg:px-8">
                         {/* justify-end */}
                         <Menu as="div" className="mt-3 relative inline-block" >
-                            <div className="flex"
-                                onClick={reiniciar}
-                            >
+                            <div className="flex">
                                 <Menu.Button className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
                                     Filtrar por año
                                     <ChevronDownIcon
@@ -740,9 +916,7 @@ function TabParticipacion(props) {
                         </Menu>
 
                         <Menu as="div" className="ml-10 relative inline-block" >
-                            <div className="flex"
-                                onClick={reiniciar}
-                            >
+                            <div className="flex">
                                 <Menu.Button className="mt-3 group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
                                     Filtrar por mes
                                     <ChevronDownIcon
@@ -789,14 +963,14 @@ function TabParticipacion(props) {
                         </Menu>
                         <Menu as="div" className="ml-10 relative inline-block" >
                             <div className="flex">
-                                <div className="ml-5 mx-auto flex max-w-4xl h-10 space-x-6 divide-x bg-redhdr rounded divide-gray-200 px-4 text-sm sm:px-6 lg:px-8">
+                                <div className="ml-5 mx-auto flex max-w-4xl h-10 space-x-6 divide-x bg-basecosmos rounded divide-gray-200 px-4 text-sm sm:px-6 lg:px-8">
                                     <button
                                         onClick={() => generarConsulta()}
                                     >
                                         Consultar
                                     </button>
                                 </div>
-                                <div className="ml-5 mx-auto flex max-w-4xl h-10 space-x-6 divide-x bg-orange rounded divide-gray-200 px-4 text-sm sm:px-6 lg:px-8">
+                                <div className="ml-5 mx-auto flex max-w-4xl h-10 space-x-6 divide-x bg-blue rounded divide-gray-200 px-4 text-sm sm:px-6 lg:px-8">
                                     <div >
                                         <button
                                             type="button"
@@ -807,6 +981,7 @@ function TabParticipacion(props) {
                                     </div>
                                 </div>
                             </div>
+
 
                         </Menu>
                     </div>
@@ -854,12 +1029,13 @@ function TabParticipacion(props) {
                     {
                         filtroAno && filtroMes ?
                             (
+
                                 <div className="margenizaquierdanegativo px-4 sm:px-6 lg:px-8">
                                     <div className="mt-8 flex flex-col">
                                         <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
                                             <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
                                                 <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-                                                    <Table columns={header_testmes} dataSource={detalleCostos} pagination={false}
+                                                <Table columns={header_testmes} dataSource={detalleCostos} pagination={false}
                                                         scroll={{
                                                             x: 1200,
                                                             y: 500,
@@ -897,4 +1073,5 @@ function TabParticipacion(props) {
         </div >
     );
 }
-export default TabParticipacion;
+
+export default TabMargenes;

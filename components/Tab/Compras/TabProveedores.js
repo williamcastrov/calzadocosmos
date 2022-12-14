@@ -32,16 +32,10 @@ function TabProveedores(props) {
     const [vtasMes, setVtasMes] = useState([]);
     const [vtasDia, setVtasDia] = useState([]);
 
-    const [centrosoperacion, setCentrosoperacion] = useState(ventasDiariasMes.centrosoperacion);
-    const [subcategorias, setSubcategorias] = useState(ventasDiariasMes.subcategorias);
-    const [proveedores, setProveedores] = useState(ventasDiariasMes.proveedores);
-
     const [selectedAno, setSelectedAno] = useState([]);
     const [selectedMes, setSelectedMes] = useState([]);
     const [selectedDia, setSelectedDia] = useState([]);
-    const [labelUno, setLabelUno] = useState([]);
-    const [labelDos, setLabelDos] = useState([]);
-    const [labelTres, setLabelTres] = useState([]);
+    const [label, setLabel] = useState([]);
 
     useEffect(() => {
         let newDetAnos = [];
@@ -85,7 +79,7 @@ function TabProveedores(props) {
                 newDetDia.push(vta);
             });
         setVtasDia(newDetDia);
-    }, []);
+    }, [ventasDiariasMes]);
 
     const tabsdos = [
         { name: 'Entradas mes', href: '#', current: entMes },
@@ -144,10 +138,11 @@ function TabProveedores(props) {
     }, [opcion]);
 
     const limpiarFiltros = () => {
-        setFiltroAno([]);
-        setFiltroMes([]);
-        setFiltroDia([]);
-        setdatosVariacion([]);
+        setSelectedAno([]);
+        setSelectedMes([]);
+        setSelectedDia([]);
+        setmovimientosMes([]);
+        setmovimientos([]);
     }
 
     const generarConsulta = () => {
@@ -176,8 +171,9 @@ function TabProveedores(props) {
     }
 
     const consolidar = () => {
-        if (selectedAno.length > 0 && selectedMes.length > 0) {
-
+        if (selectedAno.length > 0 && selectedMes.length > 0 && !selectedDia.value) {
+          
+            setLabel("MES ")
             let newDetCompras = [];
             let newDetComprasMes = [];
 
@@ -201,7 +197,7 @@ function TabProveedores(props) {
                             }
                         });
 
-                    if (undcompras > 0 || undcomprasmes > 0) {
+                    if (undcompras > 0 || undcomprasmes > 0 && selectedDia) {
                         let mvto = {
                             Descripcion: lineas.Proveedor,
                             UndIngreso: undcompras,
@@ -271,15 +267,53 @@ function TabProveedores(props) {
                     }
                 });
 
+            let und = 0;
+            let val = 0;
+
+            newDetComprasVsPstMes &&
+                newDetComprasVsPstMes.map((mes, index) => {
+                    und = parseInt(und) + parseInt(mes.UndIngreso)
+                    val = parseInt(val) + parseInt(mes.ValIngreso)
+                });
+
+            let mvtomes = {
+                Descripcion: "TOTAL",
+                UndIngreso: und,
+                ValIngreso: val,
+                UndPst: 0,
+                ValPst: 0
+            };
+
+            newDetComprasVsPstMes.push(mvtomes);
+
+            let undtot = 0;
+            let valtot = 0;
+
+            newDetComprasVsPst &&
+                newDetComprasVsPst.map((mes, index) => {
+                    undtot = parseInt(undtot) + parseInt(mes.UndIngreso)
+                    valtot = parseInt(valtot) + parseInt(mes.ValIngreso)
+                });
+
+            let mvto = {
+                Descripcion: "TOTAL",
+                UndIngreso: undtot,
+                ValIngreso: valtot,
+                UndPst: 0,
+                ValPst: 0
+            };
+
+            newDetComprasVsPst.push(mvto);
+
             setmovimientosMes(newDetComprasVsPstMes);
             setmovimientos(newDetComprasVsPst);
         }
         else
             if (selectedAno.length > 0 && selectedMes.length == 0) {
-
+              
                 let newDetCompras = [];
                 let newDetComprasMes = [];
-
+                setLabel("TOTAL ")
                 proveedorescompras &&
                     proveedorescompras.map((lineas, index) => {
                         let undcompras = 0;
@@ -294,14 +328,15 @@ function TabProveedores(props) {
                                     valcompras = parseInt(valcompras) + parseInt(ingresos.MND);
                                 }
                                 /*
-                                if (ingresos.Nombreproveedor == lineas.Proveedor && ingresos.ano == selectedAno[0].value &&
-                                    ingresos.mes == selectedMes[0].value) {
-                                    undcomprasmes = undcomprasmes + ingresos.UND;
-                                    valcomprasmes = valcomprasmes + ingresos.MND;
-                                }*/
+                                   if (ingresos.Nombreproveedor == lineas.Proveedor && ingresos.ano == selectedAno[0].value &&
+                                       ingresos.mes == selectedMes[0].value) {
+                                       undcomprasmes = undcomprasmes + ingresos.UND;
+                                       valcomprasmes = valcomprasmes + ingresos.MND;
+                                   }
+                                   */
                             });
 
-                        if (undcompras > 0 || undcomprasmes > 0) {
+                        if (undcompras > 0) {
                             let mvto = {
                                 Descripcion: lineas.Proveedor,
                                 UndIngreso: undcompras,
@@ -372,13 +407,202 @@ function TabProveedores(props) {
 
                 setmovimientosMes(newDetComprasVsPstMes);
                 setmovimientos(newDetComprasVsPst);
-            }
+            } else
+                if (selectedAno.length > 0 && selectedMes.length > 0 && selectedDia) {
+                  
+                    setLabel("DIA ")
+                    let newDetCompras = [];
+                    let newDetComprasMes = [];
+
+                    proveedorescompras &&
+                        proveedorescompras.map((lineas, index) => {
+                            let undcompras = 0;
+                            let valcompras = 0;
+                            let undcomprasmes = 0;
+                            let valcomprasmes = 0;
+
+                            detalleCompras.costoproveedor &&
+                                detalleCompras.costoproveedor.map((ingresos, index) => {
+                                    if (ingresos.Nombreproveedor == lineas.Proveedor && ingresos.ano == selectedAno[0].value) {
+                                        undcompras = parseInt(undcompras) + parseInt(ingresos.UND);
+                                        valcompras = parseInt(valcompras) + parseInt(ingresos.MND);
+                                    }
+                                    if (ingresos.Nombreproveedor == lineas.Proveedor && ingresos.ano == selectedAno[0].value
+                                        && ingresos.mes == selectedMes[0].value && ingresos.dia == selectedDia.value) {
+                                        undcomprasmes = parseInt(undcomprasmes) + parseInt(ingresos.UND);
+                                        valcomprasmes = parseInt(valcomprasmes) + parseInt(ingresos.MND);
+                                    }
+                                });
+
+                            if (undcompras > 0 || undcomprasmes > 0) {
+                                let mvto = {
+                                    Descripcion: lineas.Proveedor,
+                                    UndIngreso: undcompras,
+                                    ValIngreso: valcompras,
+                                };
+
+                                let mvtomes = {
+                                    Descripcion: lineas.Proveedor,
+                                    UndIngresoMes: undcomprasmes,
+                                    ValIngresoMes: valcomprasmes,
+                                };
+
+                                newDetCompras.push(mvto);
+                                newDetComprasMes.push(mvtomes);
+                            }
+                        });
+
+                    let newDetComprasVsPst = [];
+                    let newDetComprasVsPstMes = [];
+
+                    newDetComprasMes &&
+                        newDetComprasMes.map((ingresos, index) => {
+                            let undpstmes = 0;
+                            let valpstmes = 0;
+                            presupuestosxlinea &&
+                                presupuestosxlinea.map((pst, index) => {
+                                    if (ingresos.Descripcion == pst.Sublinea && selectedAno[0].value == pst.ano
+                                        && pst.mes == selectedMes[0].value) {
+                                        undpstmes = parseInt(undpstmes) + parseInt(pst.UND_PST);
+                                        valpstmes = parseInt(valpstmes) + parseInt(pst.VAL_PST);
+                                    }
+                                });
+
+                            if (ingresos.ValIngresoMes > 0) {
+                                let mvto = {
+                                    Descripcion: ingresos.Descripcion,
+                                    UndIngreso: ingresos.UndIngresoMes,
+                                    ValIngreso: ingresos.ValIngresoMes,
+                                    UndPst: undpstmes,
+                                    ValPst: valpstmes
+                                };
+                                newDetComprasVsPstMes.push(mvto);
+                            }
+                        });
+
+                    newDetCompras &&
+                        newDetCompras.map((ingresos, index) => {
+                            let undpst = 0;
+                            let valpst = 0;
+                            presupuestosxlinea &&
+                                presupuestosxlinea.map((pst, index) => {
+                                    if (ingresos.Descripcion == pst.Sublinea && selectedAno[0].value == pst.ano) {
+                                        undpst = parseInt(undpst) + parseInt(pst.UND_PST);
+                                        valpst = parseInt(valpst) + parseInt(pst.VAL_PST);
+                                    }
+                                });
+
+                            if (ingresos.UndIngreso > 0) {
+                                let mvto = {
+                                    Descripcion: ingresos.Descripcion,
+                                    UndIngreso: ingresos.UndIngreso,
+                                    ValIngreso: ingresos.ValIngreso,
+                                    UndPst: undpst,
+                                    ValPst: valpst
+                                };
+                                newDetComprasVsPst.push(mvto);
+                            }
+                        });
+
+                    let und = 0;
+                    let val = 0;
+
+                    newDetComprasVsPstMes &&
+                        newDetComprasVsPstMes.map((mes, index) => {
+                            und = parseInt(und) + parseInt(mes.UndIngreso)
+                            val = parseInt(val) + parseInt(mes.ValIngreso)
+                        });
+
+                    let mvtomes = {
+                        Descripcion: "TOTAL",
+                        UndIngreso: und,
+                        ValIngreso: val,
+                        UndPst: 0,
+                        ValPst: 0
+                    };
+
+                    newDetComprasVsPstMes.push(mvtomes);
+
+                    let undtot = 0;
+                    let valtot = 0;
+
+                    newDetComprasVsPst &&
+                        newDetComprasVsPst.map((mes, index) => {
+                            undtot = parseInt(undtot) + parseInt(mes.UndIngreso)
+                            valtot = parseInt(valtot) + parseInt(mes.ValIngreso)
+                        });
+
+                    let mvto = {
+                        Descripcion: "TOTAL",
+                        UndIngreso: undtot,
+                        ValIngreso: valtot,
+                        UndPst: 0,
+                        ValPst: 0
+                    };
+
+                    newDetComprasVsPst.push(mvto);
+
+                    setmovimientosMes(newDetComprasVsPstMes);
+                    setmovimientos(newDetComprasVsPst);
+                }
     }
 
     const header_test = [
         { title: "PROVEEDOR", dataIndex: "Descripcion", key: "Descripcion", width: 80, fixed: true },
         {
             title: "UND MES", dataIndex: "UndIngreso", key: "UndIngreso", width: 150, align: "right",
+            sorter: (a, b) => a.UndIngreso - b.UndIngreso,
+            render: (text, row, index) => {
+                return (
+                    <Title level={4} style={{ fontSize: 15, }}>
+                        {myNumber(1, row.UndIngreso, 2)}
+                    </Title>
+                );
+            }
+        },
+        {
+            title: "VALOR MES", dataIndex: "ValIngreso", key: "ValIngreso", width: 150, align: "right",
+            sorter: (a, b) => a.ValIngreso - b.ValIngreso,
+            render: (text, row, index) => {
+                return (
+                    <Title level={4} style={{ fontSize: 15, }}>
+                        {myNumber(1, row.ValIngreso, 2)}
+                    </Title>
+                );
+            }
+        }
+    ]
+
+    const header_testtot = [
+        { title: "PROVEEDOR", dataIndex: "Descripcion", key: "Descripcion", width: 80, fixed: true },
+        {
+            title: "UND TOTAL", dataIndex: "UndIngreso", key: "UndIngreso", width: 150, align: "right",
+            sorter: (a, b) => a.UndIngreso - b.UndIngreso,
+            render: (text, row, index) => {
+                return (
+                    <Title level={4} style={{ fontSize: 15, }}>
+                        {myNumber(1, row.UndIngreso, 2)}
+                    </Title>
+                );
+            }
+        },
+        {
+            title: "VALOR TOTAL", dataIndex: "ValIngreso", key: "ValIngreso", width: 150, align: "right",
+            sorter: (a, b) => a.ValIngreso - b.ValIngreso,
+            render: (text, row, index) => {
+                return (
+                    <Title level={4} style={{ fontSize: 15, }}>
+                        {myNumber(1, row.ValIngreso, 2)}
+                    </Title>
+                );
+            }
+        }
+    ]
+
+    const header_testdia = [
+        { title: "PROVEEDOR", dataIndex: "Descripcion", key: "Descripcion", width: 80, fixed: true },
+        {
+            title: "UND DIA", dataIndex: "UndIngreso", key: "UndIngreso", width: 150, align: "right",
             sorter: (a, b) => a.UndIngreso - b.UndIngreso,
             render: (text, row, index) => {
                 return (
@@ -518,48 +742,20 @@ function TabProveedores(props) {
                         </nav>
                     </div>
 
-
                     <div className="margenizaquierdanegativo px-4 sm:px-6 lg:px-8">
-                        {opcion == 0 ?
-                            (
-                                <div className="mt-8 flex flex-col">
-                                    <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                                        <div className="ml-10">
-                                            <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-                                                <div className="min-w-full  margenizaquierdanegativo px-4 sm:px-6 lg:px-8">
-                                                    <div className="min-w-full  mt-8 flex flex-col">
-                                                        <div className="min-w-full  -my-2 -mx-4 sm:-mx-6 lg:-mx-8">
-                                                            <div className="min-w-full py-2 align-middle md:px-6 lg:px-8">
-                                                                <div className="min-w-full shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-                                                                    <Table columns={header_test} dataSource={movimientosMes} pagination={false}
-                                                                        scroll={{
-                                                                            x: 1200,
-                                                                            y: 500,
-                                                                        }}
-                                                                        bordered />
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            )
-                            :
-                            opcion == 1 ?
+                        {
+                            selectedDia.value ?
                                 (
                                     <div className="mt-8 flex flex-col">
                                         <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                                            <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+                                            <div className="ml-10">
                                                 <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
                                                     <div className="min-w-full  margenizaquierdanegativo px-4 sm:px-6 lg:px-8">
                                                         <div className="min-w-full  mt-8 flex flex-col">
                                                             <div className="min-w-full  -my-2 -mx-4 sm:-mx-6 lg:-mx-8">
                                                                 <div className="min-w-full py-2 align-middle md:px-6 lg:px-8">
                                                                     <div className="min-w-full shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-                                                                        <Table columns={header_test} dataSource={movimientos} pagination={false}
+                                                                        <Table columns={header_testdia} dataSource={movimientosMes} pagination={false}
                                                                             scroll={{
                                                                                 x: 1200,
                                                                                 y: 500,
@@ -576,7 +772,63 @@ function TabProveedores(props) {
                                     </div>
                                 )
                                 :
-                                null
+                                opcion == 0 ?
+                                    (
+                                        <div className="mt-8 flex flex-col">
+                                            <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                                                <div className="ml-10">
+                                                    <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                                                        <div className="min-w-full  margenizaquierdanegativo px-4 sm:px-6 lg:px-8">
+                                                            <div className="min-w-full  mt-8 flex flex-col">
+                                                                <div className="min-w-full  -my-2 -mx-4 sm:-mx-6 lg:-mx-8">
+                                                                    <div className="min-w-full py-2 align-middle md:px-6 lg:px-8">
+                                                                        <div className="min-w-full shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                                                                            <Table columns={header_test} dataSource={movimientosMes} pagination={false}
+                                                                                scroll={{
+                                                                                    x: 1200,
+                                                                                    y: 500,
+                                                                                }}
+                                                                                bordered />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )
+                                    :
+                                    opcion == 1 ?
+                                        (
+                                            <div className="mt-8 flex flex-col">
+                                                <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                                                    <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+                                                        <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                                                            <div className="min-w-full  margenizaquierdanegativo px-4 sm:px-6 lg:px-8">
+                                                                <div className="min-w-full  mt-8 flex flex-col">
+                                                                    <div className="min-w-full  -my-2 -mx-4 sm:-mx-6 lg:-mx-8">
+                                                                        <div className="min-w-full py-2 align-middle md:px-6 lg:px-8">
+                                                                            <div className="min-w-full shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                                                                                <Table columns={header_testtot} dataSource={movimientos} pagination={false}
+                                                                                    scroll={{
+                                                                                        x: 1200,
+                                                                                        y: 500,
+                                                                                    }}
+                                                                                    bordered />
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )
+                                        :
+                                        null
                         }
                     </div>
                 </div>

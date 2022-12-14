@@ -198,8 +198,17 @@ function TabDetalle(props) {
             });
             return
         }
-
-        if (selectedAno.length > 0 && selectedMes.length > 0 && selectedSemestre.length === 0 && selectedTrimestre.length === 0) {
+        /*
+                if (selectedAno.length > 0 && selectedMes.length > 1 ) {
+                    swal({
+                        title: "Tablero Cosmos",
+                        text: "Seleccionaste mas de un mes para la consulta!",
+                        icon: "warning",
+                    });
+                    return
+                }
+        */
+        if (selectedAno.length > 0 && selectedMes.length === 1 && selectedSemestre.length === 0 && selectedTrimestre.length === 0) {
             let newDetCompras = [];
             let newDetComprasMes = [];
             setSemestre(0);
@@ -214,13 +223,13 @@ function TabDetalle(props) {
                     ingresosxlinea &&
                         ingresosxlinea.map((ingresos, index) => {
 
-                            if (ingresos.Sublinea == lineas.Sublinea && ingresos.ano == selectedAno[0].value
+                            if (ingresos.Sublinea == lineas.label && ingresos.ano == selectedAno[0].value
                                 && ingresos.mes <= selectedMes[0].value) {
                                 undcompras = parseInt(undcompras) + parseInt(ingresos.UND);
                                 valcompras = parseInt(valcompras) + parseInt(ingresos.MND);
                             }
 
-                            if (ingresos.Sublinea == lineas.Sublinea && ingresos.ano == selectedAno[0].value
+                            if (ingresos.Sublinea == lineas.label && ingresos.ano == selectedAno[0].value
                                 && ingresos.mes == selectedMes[0].value) {
 
                                 undcomprasmes = parseInt(undcomprasmes) + parseInt(ingresos.UND);
@@ -228,13 +237,13 @@ function TabDetalle(props) {
                             }
                         });
                     let mvto = {
-                        Descripcion: lineas.Sublinea,
+                        Descripcion: lineas.label,
                         UndIngreso: undcompras,
                         ValIngreso: valcompras,
                     };
 
                     let mvtomes = {
-                        Descripcion: lineas.Sublinea,
+                        Descripcion: lineas.label,
                         UndIngresoMes: undcomprasmes,
                         ValIngresoMes: valcomprasmes,
                     };
@@ -267,6 +276,29 @@ function TabDetalle(props) {
                     newDetComprasVsPstMes.push(mvto);
                 });
 
+            let undpstmes = 0;
+            let valpstmes = 0;
+            let undingmes = 0;
+            let valingmes = 0;
+
+            newDetComprasVsPstMes &&
+                newDetComprasVsPstMes.map((ing, index) => {
+                    undpstmes = parseInt(undpstmes) + parseInt(ing.UndPst);
+                    valpstmes = parseInt(valpstmes) + parseInt(ing.ValPst);
+                    undingmes = parseInt(undingmes) + parseInt(ing.UndIngreso);
+                    valingmes = parseInt(valingmes) + parseInt(ing.ValIngreso);
+
+                });
+
+            let mvtomes = {
+                Descripcion: "TOTAL",
+                UndIngreso: undingmes,
+                ValIngreso: valingmes,
+                UndPst: undpstmes,
+                ValPst: valpstmes
+            };
+            newDetComprasVsPstMes.push(mvtomes);
+
             newDetCompras &&
                 newDetCompras.map((ingresos, index) => {
                     let undpst = 0;
@@ -289,30 +321,29 @@ function TabDetalle(props) {
                     newDetComprasVsPst.push(mvto);
                 });
 
-                let undpst = 0;
-                let valpst = 0;
-                let unding = 0;
-                let valing = 0;
+            let undpst = 0;
+            let valpst = 0;
+            let unding = 0;
+            let valing = 0;
 
-                newDetComprasVsPst &&
-                    newDetComprasVsPst.map((ing, index) => {
-                        undpst = parseInt(undpst) + parseInt(ing.UndPst);
-                        valpst = parseInt(undpst) + parseInt(ing.ValPst);
-                        unding = parseInt(unding) + parseInt(ing.UndIngreso);
-                        valing = parseInt(valing) + parseInt(ing.ValIngreso);
+            newDetComprasVsPst &&
+                newDetComprasVsPst.map((ing, index) => {
+                    undpst = parseInt(undpst) + parseInt(ing.UndPst);
+                    valpst = parseInt(valpst) + parseInt(ing.ValPst);
+                    unding = parseInt(unding) + parseInt(ing.UndIngreso);
+                    valing = parseInt(valing) + parseInt(ing.ValIngreso);
 
-                    });
+                });
 
-                let mvto = {
-                    Descripcion: "TOTAL",
-                    UndIngreso: unding,
-                    ValIngreso: valing,
-                    UndPst: undpst,
-                    ValPst: valpst
-                };
-                newDetComprasVsPst.push(mvto);
+            let mvto = {
+                Descripcion: "TOTAL",
+                UndIngreso: unding,
+                ValIngreso: valing,
+                UndPst: undpst,
+                ValPst: valpst
+            };
+            newDetComprasVsPst.push(mvto);
 
-            //console.log("DATOS : ", newDetComprasVsPstMes)
             setmovimientosMes(newDetComprasVsPstMes);
             setmovimientos(newDetComprasVsPst);
         } else
@@ -395,7 +426,7 @@ function TabDetalle(props) {
                             ingresosxlinea &&
                                 ingresosxlinea.map((ingresos, index) => {
                                     for (var i = 0; i < longitudsemestre; i++) {
-                                        if (ingresos.Sublinea == lineas.Sublinea
+                                        if (ingresos.Sublinea == lineas.label
                                             && ingresos.periodo >= selectedSemestre[i].Inicia && ingresos.periodo <= selectedSemestre[i].Termina) {
                                             if (i == 0) {
                                                 undcompras1 = parseInt(undcompras1) + parseInt(ingresos.UND);
@@ -414,7 +445,7 @@ function TabDetalle(props) {
                                 });
 
                             let mvto = {
-                                Descripcion: lineas.Sublinea,
+                                Descripcion: lineas.label,
                                 UndIngreso1: undcompras1,
                                 ValIngreso1: valcompras1,
                                 UndIngreso2: undcompras2,
@@ -482,6 +513,51 @@ function TabDetalle(props) {
                             };
                             newDetComprasVsPstMes.push(mvto);
                         });
+
+                    //console.log("MVTO : ", newDetComprasVsPstMes);
+                    //return;
+
+                    let undpst1 = 0;
+                    let valpst1 = 0;
+                    let unding1 = 0;
+                    let valing1 = 0;
+                    let undpst2 = 0;
+                    let valpst2 = 0;
+                    let unding2 = 0;
+                    let valing2 = 0;
+                    let variacion = 0;
+
+                    newDetComprasVsPstMes &&
+                        newDetComprasVsPstMes.map((ing, index) => {
+                            undpst1 = parseInt(undpst1) + parseInt(ing.UndPst1);
+                            valpst1 = parseInt(valpst1) + parseInt(ing.ValPst1);
+                            unding1 = parseInt(unding1) + parseInt(ing.UndIngreso1);
+                            valing1 = parseInt(valing1) + parseInt(ing.ValIngreso1);
+                            undpst2 = parseInt(undpst2) + parseInt(ing.UndPst2);
+                            valpst2 = parseInt(valpst2) + parseInt(ing.ValPst2);
+                            unding2 = parseInt(unding2) + parseInt(ing.UndIngreso2);
+                            valing2 = parseInt(valing2) + parseInt(ing.ValIngreso2);
+
+                        });
+
+                    variacion = (((valing2 / valing1) - 1) * 100).toFixed(2);
+                    if (isNaN(variacion)) {
+                        variacion = 0;
+                    }
+
+                    let mvto = {
+                        Descripcion: 'TOTAL',
+                        UndIngreso1: unding1,
+                        ValIngreso1: valing1,
+                        UndIngreso2: unding2,
+                        ValIngreso2: valing2,
+                        UndPst1: undpst1,
+                        ValPst1: valpst2,
+                        UndPst2: undpst2,
+                        ValPst2: valpst2,
+                        Variacion: variacion
+                    };
+                    newDetComprasVsPstMes.push(mvto);
 
                     //console.log("DATOS COMPRAS : ",newDetComprasVsPstMes)  
 
@@ -569,7 +645,7 @@ function TabDetalle(props) {
                                 ingresosxlinea &&
                                     ingresosxlinea.map((ingresos, index) => {
                                         for (var i = 0; i < longitudtrimestre; i++) {
-                                            if (ingresos.Sublinea == lineas.Sublinea
+                                            if (ingresos.Sublinea == lineas.label
                                                 && ingresos.periodo >= selectedTrimestre[i].Inicia && ingresos.periodo <= selectedTrimestre[i].Termina) {
                                                 if (i == 0) {
                                                     undcompras1 = parseInt(undcompras1) + parseInt(ingresos.UND);
@@ -588,7 +664,7 @@ function TabDetalle(props) {
                                     });
 
                                 let mvto = {
-                                    Descripcion: lineas.Sublinea,
+                                    Descripcion: lineas.label,
                                     UndIngreso1: undcompras1,
                                     ValIngreso1: valcompras1,
                                     UndIngreso2: undcompras2,
@@ -657,133 +733,458 @@ function TabDetalle(props) {
                                 newDetComprasVsPstMes.push(mvto);
                             });
 
+                        let undpst1 = 0;
+                        let valpst1 = 0;
+                        let unding1 = 0;
+                        let valing1 = 0;
+                        let undpst2 = 0;
+                        let valpst2 = 0;
+                        let unding2 = 0;
+                        let valing2 = 0;
+                        let variacion = 0;
+
+                        newDetComprasVsPstMes &&
+                            newDetComprasVsPstMes.map((ing, index) => {
+                                undpst1 = parseInt(undpst1) + parseInt(ing.UndPst1);
+                                valpst1 = parseInt(valpst1) + parseInt(ing.ValPst1);
+                                unding1 = parseInt(unding1) + parseInt(ing.UndIngreso1);
+                                valing1 = parseInt(valing1) + parseInt(ing.ValIngreso1);
+                                undpst2 = parseInt(undpst2) + parseInt(ing.UndPst2);
+                                valpst2 = parseInt(valpst2) + parseInt(ing.ValPst2);
+                                unding2 = parseInt(unding2) + parseInt(ing.UndIngreso2);
+                                valing2 = parseInt(valing2) + parseInt(ing.ValIngreso2);
+
+                            });
+
+                        variacion = (((valing2 / valing1) - 1) * 100).toFixed(2);
+                        if (isNaN(variacion)) {
+                            variacion = 0;
+                        }
+
+                        let mvto = {
+                            Descripcion: 'TOTAL',
+                            UndIngreso1: unding1,
+                            ValIngreso1: valing1,
+                            UndIngreso2: unding2,
+                            ValIngreso2: valing2,
+                            UndPst1: undpst1,
+                            ValPst1: valpst2,
+                            UndPst2: undpst2,
+                            ValPst2: valpst2,
+                            Variacion: variacion
+                        };
+                        newDetComprasVsPstMes.push(mvto);
+
                         //console.log("DATOS COMPRAS : ",newDetComprasVsPstMes)  
 
                         setmovimientos(newDetComprasVsPstMes);
                     }
                 } else
-                    if (selectedAno.length > 0 && selectedMes.length === 0 && selectedSemestre.length === 0 &&
-                        selectedTrimestre.length === 0) {
-                        //console.log("INGRESOS LINEAS : ", ingresosxlinea)
+                    if (selectedAno.length > 0 && selectedMes.length > 0 && selectedSemestre.length === 0
+                        && selectedTrimestre.length === 0) {
 
                         let newDetCompras = [];
                         let newDetComprasMes = [];
+                        let opcionMes = 0;
+                        let longitudano = selectedAno.length;
+                        let longitudmes = selectedMes.length;
+                        //console.log("AÑO SELECCIONADO : ", selectedAno)
 
-                        lineasproductos &&
-                            lineasproductos.map((lineas, index) => {
-                                let undcompras = 0;
-                                let valcompras = 0;
-                                let undcomprasmes = 0;
-                                let valcomprasmes = 0;
-
-                                ingresosxlinea &&
-                                    ingresosxlinea.map((ingresos, index) => {
-
-                                        if (ingresos.Sublinea == lineas.Sublinea && ingresos.ano == selectedAno[0].value) {
-                                            undcompras = parseInt(undcompras) + parseInt(ingresos.UND);
-                                            valcompras = parseInt(valcompras) + parseInt(ingresos.MND);
-                                        }
-
-                                        if (ingresos.Sublinea == lineas.Sublinea && ingresos.ano == selectedAno[0].value &&
-                                            ingresos.mes == 10) {
-
-                                            undcomprasmes = parseInt(undcomprasmes) + parseInt(ingresos.UND);
-                                            valcomprasmes = parseInt(valcomprasmes) + parseInt(ingresos.MND);
-                                        }
-                                    });
-                                let mvto = {
-                                    Descripcion: lineas.Sublinea,
-                                    UndIngreso: undcompras,
-                                    ValIngreso: valcompras,
-                                };
-
-                                let mvtomes = {
-                                    Descripcion: lineas.Sublinea,
-                                    UndIngresoMes: undcomprasmes,
-                                    ValIngresoMes: valcomprasmes,
-                                };
-                                newDetCompras.push(mvto);
-                                newDetComprasMes.push(mvtomes);
+                        if (selectedAno.length > 1 && selectedMes.length > 1) {
+                            swal({
+                                title: "Tablero Cosmos",
+                                text: "Debes comparar un mes, para dos o mas años!",
+                                icon: "warning",
                             });
+                            return
+                        }
 
-                        let newDetComprasVsPst = [];
-                        let newDetComprasVsPstMes = [];
-
-                        //console.log("INGRESOS LINEA  : ", newDetCompras);
-
-                        newDetComprasMes &&
-                            newDetComprasMes.map((ingresos, index) => {
-                                let undpstmes = 0;
-                                let valpstmes = 0;
-                                presupuestosxlinea &&
-                                    presupuestosxlinea.map((pst, index) => {
-                                        if (ingresos.Descripcion == pst.Sublinea && selectedAno[0].value == pst.ano &&
-                                            pst.mes == 10) {
-                                            undpstmes = parseInt(undpstmes) + parseInt(pst.UND_PST);
-                                            valpstmes = parseInt(valpstmes) + parseInt(pst.VAL_PST);
-                                        }
-                                    });
-                                let mvto = {
-                                    Descripcion: ingresos.Descripcion,
-                                    UndIngreso: ingresos.UndIngresoMes,
-                                    ValIngreso: ingresos.ValIngresoMes,
-                                    UndPst: undpstmes,
-                                    ValPst: valpstmes
-                                };
-                                newDetComprasVsPstMes.push(mvto);
+                        if (selectedMes.length > 2) {
+                            swal({
+                                title: "Tablero Cosmos",
+                                text: "Solo puedes comparar dos meses!",
+                                icon: "warning",
                             });
+                            return
+                        }
 
-                        //console.log("UND COMPRAS : ",  newDetCompras)
+                        if (longitudmes === 1) {
+                            let nombreuno = "Mes" + selectedMes[0].value
+                            setNombreUno(nombreuno)
+                            setNombreDos(null)
+                            setNombreTres(null)
+                        } else
+                            if (longitudmes === 2) {
+                                let nombreuno = "Mes" + selectedMes[0].value;
+                                let nombredos = "Mes" + selectedMes[1].value;
+                                setNombreUno(nombreuno);
+                                setNombreDos(nombredos);
+                                setNombreTres(null);
+                            } else
+                                if (longitudmes === 2) {
+                                    let nombreuno = "Mes" + selectedMes[0].value;
+                                    let nombredos = "Mes" + selectedMes[1].value;
+                                    let nombretres = "Mes" + selectedMes[2].value;
+                                    setNombreUno(nombreuno);
+                                    setNombreDos(nombredos);
+                                    setNombreTres(nombretres);
 
-                        newDetCompras &&
-                            newDetCompras.map((ingresos, index) => {
-                                let undpst = 0;
-                                let valpst = 0;
-                                presupuestosxlinea &&
-                                    presupuestosxlinea.map((pst, index) => {
-                                        if (ingresos.Descripcion == pst.Sublinea && selectedAno[0].value == pst.ano &&
-                                            pst.mes <= 10) {
-                                            undpst = parseInt(undpst) + parseInt(pst.UND_PST);
-                                            valpst = parseInt(valpst) + parseInt(pst.VAL_PST);
-                                        }
-                                    });
-                                let mvto = {
-                                    Descripcion: ingresos.Descripcion,
-                                    UndIngreso: ingresos.UndIngreso,
-                                    ValIngreso: ingresos.ValIngreso,
-                                    UndPst: undpst,
-                                    ValPst: valpst
-                                };
-                                newDetComprasVsPst.push(mvto);
-                            });
+                                } else {
+                                    setNombreUno("");
+                                    setNombreDos("");
+                                    setNombreTres("");
+                                }
 
-                        let undpst = 0;
-                        let valpst = 0;
-                        let unding = 0;
-                        let valing = 0;
+                        if (selectedAno.length === 1 && selectedMes.length > 0)
+                            opcionMes = 1;
+                        else
+                            if (selectedAno.length > 1 && selectedMes.length === 1)
+                                opcionMes = 2;
+                            else {
+                                opcionMes = 0;
+                                return
+                            }
+                        //console.log("INGRESOS LINEA : ", ingresosxlinea)
+                        //console.log("SEMESTRE SELECCIONADO : ", selectedSemestre)
+                        setSemestre(opcionMes);
+                        if (opcionMes === 1) {
+                            lineasproductos &&
+                                lineasproductos.map((lineas, index) => {
+                                    let undcompras1 = 0;
+                                    let valcompras1 = 0;
+                                    let undcompras2 = 0;
+                                    let valcompras2 = 0;
+                                    let undcompras3 = 0;
+                                    let valcompras3 = 0;
 
-                        newDetComprasVsPstMes &&
-                            newDetComprasVsPstMes.map((ing, index) => {
+                                    ingresosxlinea &&
+                                        ingresosxlinea.map((ingresos, index) => {
+                                            for (var i = 0; i < longitudmes; i++) {
+                                                if (ingresos.Sublinea == lineas.label
+                                                    && (ingresos.mes == selectedMes[i].value || ingresos.mes == selectedMes[i])) {
+                                                    if (i == 0) {
+                                                        undcompras1 = parseInt(undcompras1) + parseInt(ingresos.UND);
+                                                        valcompras1 = parseInt(valcompras1) + parseInt(ingresos.MND);
+                                                    }
+                                                    if (i == 1) {
+                                                        undcompras2 = parseInt(undcompras2) + parseInt(ingresos.UND);
+                                                        valcompras2 = parseInt(valcompras2) + parseInt(ingresos.MND);
+                                                    }
+                                                    if (i == 2) {
+                                                        undcompras3 = parseInt(undcompras3) + parseInt(ingresos.UND);
+                                                        valcompras3 = parseInt(valcompras3) + parseInt(ingresos.MND);
+                                                    }
+                                                }
+                                            }
+                                        });
 
-                                undpst = parseInt(undpst) + parseInt(ing.UndPst);
-                                valpst = parseInt(undpst) + parseInt(ing.ValPst);
-                                unding = parseInt(unding) + parseInt(ing.UndIngreso);
-                                valing = parseInt(valing) + parseInt(ing.ValIngreso);
+                                    let mvto = {
+                                        Descripcion: lineas.label,
+                                        UndIngreso1: undcompras1,
+                                        ValIngreso1: valcompras1,
+                                        UndIngreso2: undcompras2,
+                                        ValIngreso2: valcompras2,
+                                        UndIngreso3: undcompras3,
+                                        ValIngreso3: valcompras3,
+                                    };
+                                    //newDetCompras.push(mvto);
+                                    newDetComprasMes.push(mvto);
+                                });
 
-                            });
+                            //console.log("INGRESOS LINEA : ", newDetComprasMes)
 
-                        let mvto = {
-                            Descripcion: "TOTAL",
-                            UndIngreso: unding,
-                            ValIngreso: valing,
-                            UndPst: undpst,
-                            ValPst: valpst
-                        };
-                        newDetComprasVsPstMes.push(mvto);
+                            let newDetComprasVsPst = [];
+                            let newDetComprasVsPstMes = [];
 
-                        setmovimientosMes(newDetComprasVsPstMes);
-                        setmovimientos(newDetComprasVsPst);
-                    }
+                            newDetComprasMes &&
+                                newDetComprasMes.map((ingresos, index) => {
+                                    let undpstmes1 = 0;
+                                    let valpstmes1 = 0;
+                                    let undpstmes2 = 0;
+                                    let valpstmes2 = 0;
+                                    let undpstmes3 = 0;
+                                    let valpstmes3 = 0;
+                                    let variacion = 0;
+
+                                    presupuestosxlinea &&
+                                        presupuestosxlinea.map((pst, index) => {
+                                            for (var i = 0; i < longitudmes; i++) {
+                                                if (ingresos.Descripcion == pst.Sublinea &&
+                                                    (pst.mes >= selectedMes[i].value || pst.mes <= selectedMes[i])) {
+                                                    if (i == 0) {
+                                                        undpstmes1 = parseInt(undpstmes1) + parseInt(pst.UND_PST);
+                                                        valpstmes1 = parseInt(valpstmes1) + parseInt(pst.VAL_PST);
+                                                    } else
+                                                        if (i == 1) {
+                                                            undpstmes2 = parseInt(undpstmes2) + parseInt(pst.UND_PST);
+                                                            valpstmes2 = parseInt(valpstmes2) + parseInt(pst.VAL_PST);
+                                                        }
+                                                    if (i == 2) {
+                                                        undpstmes3 = parseInt(undpstmes3) + parseInt(pst.UND_PST);
+                                                        valpstmes3 = parseInt(valpstmes3) + parseInt(pst.VAL_PST);
+                                                    }
+                                                }
+                                            }
+                                        });
+
+                                    variacion = (((ingresos.ValIngreso2 / ingresos.ValIngreso1) - 1) * 100).toFixed(2);
+                                    if (isNaN(variacion)) {
+                                        variacion = 0;
+                                    }
+
+                                    let mvto = {
+                                        Descripcion: ingresos.Descripcion,
+                                        UndIngreso1: ingresos.UndIngreso1,
+                                        ValIngreso1: ingresos.ValIngreso1,
+                                        UndIngreso2: ingresos.UndIngreso2,
+                                        ValIngreso2: ingresos.ValIngreso2,
+                                        UndPst1: undpstmes1,
+                                        ValPst1: valpstmes1,
+                                        UndPst2: undpstmes2,
+                                        ValPst2: valpstmes2,
+                                        Variacion: variacion
+
+                                    };
+                                    newDetComprasVsPstMes.push(mvto);
+                                });
+
+                            let undpst1 = 0;
+                            let valpst1 = 0;
+                            let unding1 = 0;
+                            let valing1 = 0;
+                            let undpst2 = 0;
+                            let valpst2 = 0;
+                            let unding2 = 0;
+                            let valing2 = 0;
+                            let variacion = 0;
+
+                            newDetComprasVsPstMes &&
+                                newDetComprasVsPstMes.map((ing, index) => {
+                                    undpst1 = parseInt(undpst1) + parseInt(ing.UndPst1);
+                                    valpst1 = parseInt(valpst1) + parseInt(ing.ValPst1);
+                                    unding1 = parseInt(unding1) + parseInt(ing.UndIngreso1);
+                                    valing1 = parseInt(valing1) + parseInt(ing.ValIngreso1);
+                                    undpst2 = parseInt(undpst2) + parseInt(ing.UndPst2);
+                                    valpst2 = parseInt(valpst2) + parseInt(ing.ValPst2);
+                                    unding2 = parseInt(unding2) + parseInt(ing.UndIngreso2);
+                                    valing2 = parseInt(valing2) + parseInt(ing.ValIngreso2);
+
+                                });
+
+                            variacion = (((valing2 / valing1) - 1) * 100).toFixed(2);
+                            if (isNaN(variacion)) {
+                                variacion = 0;
+                            }
+
+                            let mvto = {
+                                Descripcion: 'TOTAL',
+                                UndIngreso1: unding1,
+                                ValIngreso1: valing1,
+                                UndIngreso2: unding2,
+                                ValIngreso2: valing2,
+                                UndPst1: undpst1,
+                                ValPst1: valpst2,
+                                UndPst2: undpst2,
+                                ValPst2: valpst2,
+                                Variacion: variacion
+                            };
+                            newDetComprasVsPstMes.push(mvto);
+
+                            //console.log("DATOS COMPRAS : ",newDetComprasVsPstMes)  
+
+                            setmovimientos(newDetComprasVsPstMes);
+                        }
+                    } else
+                        if (selectedAno.length > 0 && selectedMes.length === 0 && selectedSemestre.length === 0 &&
+                            selectedTrimestre.length === 0) {
+                            //console.log("INGRESOS LINEAS : ", ingresosxlinea)
+
+                            let newDetCompras = [];
+                            let newDetComprasMes = [];
+  //console.log("LINEAS XX: ", lineasproductos)
+                            //return
+
+                            lineasproductos &&
+                                lineasproductos.map((lineas, index) => {
+                                    let undcompras = 0;
+                                    let valcompras = 0;
+                                    let undcomprasmes = 0;
+                                    let valcomprasmes = 0;
+
+                                    ingresosxlinea &&
+                                        ingresosxlinea.map((ingresos, index) => {
+
+                                            if (ingresos.Sublinea == lineas.label && ingresos.ano == selectedAno[0].value
+                                                && ingresos.mes <= selectedMes[0].value) {
+                                                undcompras = parseInt(undcompras) + parseInt(ingresos.UND);
+                                                valcompras = parseInt(valcompras) + parseInt(ingresos.MND);
+                                            }
+
+                                            if (ingresos.Sublinea == lineas.label && ingresos.ano == selectedAno[0].value
+                                                && ingresos.mes == selectedMes[0].value) {
+
+                                                undcomprasmes = parseInt(undcomprasmes) + parseInt(ingresos.UND);
+                                                valcomprasmes = parseInt(valcomprasmes) + parseInt(ingresos.MND);
+                                            }
+                                        });
+/*
+                                    let mvto = {
+                                        Descripcion: lineas.label,
+                                        UndIngreso: undcompras,
+                                        ValIngreso: valcompras,
+                                    };
+
+                                    let mvtomes = {
+                                        Descripcion: lineas.label,
+                                        UndIngresoMes: undcomprasmes,
+                                        ValIngresoMes: valcomprasmes,
+                                    };
+*/
+                                    newDetCompras.push(mvto);
+                                    //newDetComprasMes.push(mvtomes);
+                                });
+
+                            lineasproductos &&
+                                lineasproductos.map((lineas, index) => {
+                                    let undcompras = 0;
+                                    let valcompras = 0;
+                                    let undcomprasmes = 0;
+                                    let valcomprasmes = 0;
+
+                                    ingresosxlinea &&
+                                        ingresosxlinea.map((ingresos, index) => {
+
+                                            if (ingresos.Sublinea == lineas.label && ingresos.ano == selectedAno[0].value) {
+                                                undcompras = parseInt(undcompras) + parseInt(ingresos.UND);
+                                                valcompras = parseInt(valcompras) + parseInt(ingresos.MND);
+                                            }
+
+                                            if (ingresos.Sublinea == lineas.label && ingresos.ano == selectedAno[0].value &&
+                                                ingresos.mes == 10) {
+
+                                                undcomprasmes = parseInt(undcomprasmes) + parseInt(ingresos.UND);
+                                                valcomprasmes = parseInt(valcomprasmes) + parseInt(ingresos.MND);
+                                            }
+                                        });
+                                    let mvto = {
+                                        Descripcion: lineas.label,
+                                        UndIngreso: undcompras,
+                                        ValIngreso: valcompras,
+                                    };
+
+                                    let mvtomes = {
+                                        Descripcion: lineas.label,
+                                        UndIngresoMes: undcomprasmes,
+                                        ValIngresoMes: valcomprasmes,
+                                    };
+                                    newDetCompras.push(mvto);
+                                    newDetComprasMes.push(mvtomes);
+                                });
+
+                            let newDetComprasVsPst = [];
+                            let newDetComprasVsPstMes = [];
+
+                            //console.log("INGRESOS LINEA  : ", newDetCompras);
+
+                            newDetComprasMes &&
+                                newDetComprasMes.map((ingresos, index) => {
+                                    let undpstmes = 0;
+                                    let valpstmes = 0;
+                                    presupuestosxlinea &&
+                                        presupuestosxlinea.map((pst, index) => {
+                                            if (ingresos.Descripcion == pst.Sublinea && selectedAno[0].value == pst.ano &&
+                                                pst.mes == 10) {
+                                                undpstmes = parseInt(undpstmes) + parseInt(pst.UND_PST);
+                                                valpstmes = parseInt(valpstmes) + parseInt(pst.VAL_PST);
+                                            }
+                                        });
+                                    let mvto = {
+                                        Descripcion: ingresos.Descripcion,
+                                        UndIngreso: ingresos.UndIngresoMes,
+                                        ValIngreso: ingresos.ValIngresoMes,
+                                        UndPst: undpstmes,
+                                        ValPst: valpstmes
+                                    };
+                                    newDetComprasVsPstMes.push(mvto);
+                                });
+
+                            //console.log("UND COMPRAS : ",  newDetCompras)
+
+                            newDetCompras &&
+                                newDetCompras.map((ingresos, index) => {
+                                    let undpst = 0;
+                                    let valpst = 0;
+                                    presupuestosxlinea &&
+                                        presupuestosxlinea.map((pst, index) => {
+                                            if (ingresos.Descripcion == pst.Sublinea && selectedAno[0].value == pst.ano &&
+                                                pst.mes <= 10) {
+                                                undpst = parseInt(undpst) + parseInt(pst.UND_PST);
+                                                valpst = parseInt(valpst) + parseInt(pst.VAL_PST);
+                                            }
+                                        });
+                                    let mvto = {
+                                        Descripcion: ingresos.Descripcion,
+                                        UndIngreso: ingresos.UndIngreso,
+                                        ValIngreso: ingresos.ValIngreso,
+                                        UndPst: undpst,
+                                        ValPst: valpst
+                                    };
+                                    newDetComprasVsPst.push(mvto);
+                                });
+
+                            let undpst = 0;
+                            let valpst = 0;
+                            let unding = 0;
+                            let valing = 0;
+
+                            newDetComprasVsPstMes &&
+                                newDetComprasVsPstMes.map((ing, index) => {
+
+                                    undpst = parseInt(undpst) + parseInt(ing.UndPst);
+                                    valpst = parseInt(undpst) + parseInt(ing.ValPst);
+                                    unding = parseInt(unding) + parseInt(ing.UndIngreso);
+                                    valing = parseInt(valing) + parseInt(ing.ValIngreso);
+
+                                });
+
+                            let mvto = {
+                                Descripcion: "TOTAL",
+                                UndIngreso: unding,
+                                ValIngreso: valing,
+                                UndPst: undpst,
+                                ValPst: valpst
+                            };
+                            newDetComprasVsPstMes.push(mvto);
+
+                            setmovimientosMes(newDetComprasVsPstMes);
+
+                            let undpsttot = 0;
+                            let valpsttot = 0;
+                            let undingtot = 0;
+                            let valingtot = 0;
+                            console.log("PPTO  : ", newDetComprasVsPst)
+
+                            newDetComprasVsPst &&
+                                newDetComprasVsPst.map((ing, index) => {
+
+                                    undpsttot = parseInt(undpsttot) + parseInt(ing.UndPst);
+                                    valpsttot = parseInt(undpsttot) + parseInt(ing.ValPst);
+                                    undingtot = parseInt(undingtot) + parseInt(ing.UndIngreso);
+                                    valingtot = parseInt(valingtot) + parseInt(ing.ValIngreso);
+
+                                });
+
+                            let mvtotot = {
+                                Descripcion: "TOTAL",
+                                UndIngreso: undingtot,
+                                ValIngreso: valingtot,
+                                UndPst: undpsttot,
+                                ValPst: valpsttot
+                            };
+                            newDetComprasVsPst.push(mvtotot);
+
+                            setmovimientos(newDetComprasVsPst);
+                        }
     }
 
     const header_test = [
@@ -815,7 +1216,7 @@ function TabDetalle(props) {
             }
         },
         {
-            title: "%", dataIndex: "presupuesto", key: "presupuesto", width: 150, align: "right",
+            title: "% UNIDADES", dataIndex: "presupuesto", key: "presupuesto", width: 150, align: "right",
             render: (text, row, index) => {
                 return (
                     <Title level={4} style={{ fontSize: 15, }}>
@@ -854,14 +1255,14 @@ function TabDetalle(props) {
             }
         },
         {
-            title: "%", dataIndex: "valppto", key: "valppto", width: 150, align: "right",
+            title: "% VALORES", dataIndex: "valppto", key: "valppto", width: 150, align: "right",
             render: (text, row, index) => {
                 return (
                     <Title level={4} style={{ fontSize: 15, }}>
                         {isNaN(parseInt(((row.ValIngreso / row.ValPst) * 100).toFixed(2))) ?
                             0
                             :
-                            myNumber(1, (((row.ValIngreso / row.ValPst) - 1) * 100).toFixed(2))
+                            (myNumber(1, ((row.ValIngreso / row.ValPst)) * 100, 2))
                         }
                     </Title>
 

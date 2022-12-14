@@ -18,6 +18,7 @@ import TabDetalle from "../Tab/Compras/TabDetalle";
 import TabProveedores from "../Tab/Compras/TabProveedores";
 import TabCostos from "../Tab/Compras/TabCostos";
 import TabPresupuesto from "../Tab/Compras/TabPresupuesto";
+import TabConciliacionInventarios from "../Tab/Compras/TabConciliacionInventarios";
 
 //Anibal
 import TileIcon from "../TileIcon";
@@ -64,6 +65,8 @@ function classNames(...classes) {
 export default function HomeScreen(props) {
     const { movimientoscompras } = props;
 
+    console.log("COMPRAS : ", movimientoscompras.lineasproductos);
+
     const dispatch = useDispatch();
     const router = useRouter();
     const [anoACT, setAnoACT] = useState(0);
@@ -74,12 +77,14 @@ export default function HomeScreen(props) {
     const [tipo, setTipo] = useState(1);
     const [detalleCostos, setDetalleCostos] = useState([]);
     const [detalleCompras, setDetalleCompras] = useState([]);
-    const [listaPresupuestos, setListaPresupuestos] = useState(null)
+    const [listaPresupuestos, setListaPresupuestos] = useState(null);
+    const [listaInventarios, setListaInventarios] = useState([]);
 
     const [tabIngresoslinea, setTabIngresoslinea] = useState(true);
     const [tabCostosingreso, setTabCostosingreso] = useState(false);
     const [tabIngresoProveedor, setTabIngresoProveedor] = useState(false);
     const [tabPresupuestos, setTabPresupuestos] = useState(false);
+    const [tabInventarios, setTabInventarios] = useState(false);
 
     const [tabPendienteslinea, setTabPendienteslinea] = useState(false);
     const [tabPendientesProveedor, setTabPendientesProveedor] = useState(false);
@@ -109,6 +114,7 @@ export default function HomeScreen(props) {
         { name: 'Ingresos x linea', href: '#', current: tabIngresoslinea },
         { name: 'Variación', href: '#', current: tabCostosingreso },
         { name: 'Ingresos Proveedor', href: '#', current: tabIngresoProveedor },
+        { name: 'Conciliación Inventarios', href: '#', current: tabInventarios },
         { name: 'Presupuestos', href: '#', current: tabPresupuestos },
     ]
 
@@ -118,14 +124,14 @@ export default function HomeScreen(props) {
     }
 
     useEffect(() => {
-       
-        let anoactual = 2022; //detalleCompras.ano_actual;
-        let mesactual = 11; //detalleCompras.mes_actual;
+
+        let anoactual = detalleCompras.ano_actual;
+        let mesactual = detalleCompras.mes_actual;
         let und = 0;
         let val = 0;
         let undpst = 0;
         let valpst = 0;
-        
+
         detalleCompras.costoproveedor &&
             detalleCompras.costoproveedor.map((ingresos, index) => {
                 if (parseInt(ingresos.ano) == parseInt(anoactual) && ingresos.mes == parseInt(mesactual)) {
@@ -134,19 +140,19 @@ export default function HomeScreen(props) {
                 }
             });
 
-            movimientoscompras.presupuestosxlinea &&
+        movimientoscompras.presupuestosxlinea &&
             movimientoscompras.presupuestosxlinea.map((ingresos, index) => {
                 if (parseInt(ingresos.ano) == parseInt(anoactual) && ingresos.mes == parseInt(mesactual)) {
                     undpst = parseInt(undpst) + parseInt(ingresos.UND_PST)
                     valpst = parseInt(valpst) + parseInt(ingresos.VAL_PST)
                 }
             });
-            
-            setTotalMesCorrMnd(val);
-            setTotalMesCorrUnd(und);
-            setTotalMesPstMnd(valpst);
-            setTotalMesPstUnd(undpst);
-         
+
+        setTotalMesCorrMnd(val);
+        setTotalMesCorrUnd(und);
+        setTotalMesPstMnd(valpst);
+        setTotalMesPstUnd(undpst);
+
     }, [detalleCompras]);
 
 
@@ -230,8 +236,6 @@ export default function HomeScreen(props) {
                     //console.log("RETORNA VENTAS RESUMEN: ", res.data)
                     if (res) {
                         setListaPresupuestos(res.data);
-                        //localStorage.setItem('detalledatosvtas', JSON.stringify(datos));
-                        //setIsLoading(false);
                     } else {
                         console.log("RETORNA DATOS PRESUPUESTOS: ", "ERROR")
                     }
@@ -243,7 +247,30 @@ export default function HomeScreen(props) {
             .catch((error) =>
                 alert("Error Inesperado 4")
             )
+        // Datos Inventarios
+        axios({
+            method: "post",
+            url: `${URL_SERVICE}/20`,
+            headers: {
+                "Content-type": "application/json",
+            },
+        })
+            .then((res) => {
+                if (res.status == 200) {
+                    //console.log("RETORNA VENTAS RESUMEN: ", res.data)
+                    if (res) {
+                        setListaInventarios(res.data);
+                    } else {
+                        console.log("RETORNA DATOS INVENTARIOS: ", "ERROR")
+                    }
 
+                } else {
+                    console.log("RETORNA DATOS INVENTARIOS: ", "ERROR")
+                }
+            })
+            .catch((error) =>
+                alert("Error Inesperado 4")
+            )
     }, []);
 
     const verDetalle = (seleccion) => {
@@ -251,16 +278,16 @@ export default function HomeScreen(props) {
             setTabIngresoslinea(true);
             setTabCostosingreso(false);
             setTabIngresoProveedor(false);
-            setTabPendienteslinea(false);
-            setTabPendientesProveedor(false);
+            setTabPresupuestos(false);
+            setTabInventarios(false);
             setTabMargen(false);
         } else
             if (seleccion == 1) {
                 setTabIngresoslinea(false);
                 setTabCostosingreso(true);
                 setTabIngresoProveedor(false);
-                setTabPendienteslinea(false);
-                setTabPendientesProveedor(false);
+                setTabPresupuestos(false);
+                setTabInventarios(false);
                 setTabMargen(false);
             }
             else
@@ -268,8 +295,8 @@ export default function HomeScreen(props) {
                     setTabIngresoslinea(false);
                     setTabCostosingreso(false);
                     setTabIngresoProveedor(true);
-                    setTabPendienteslinea(false);
-                    setTabPendientesProveedor(false);
+                    setTabPresupuestos(false);
+                    setTabInventarios(false);
                     setTabMargen(false);
                 }
                 else
@@ -277,17 +304,16 @@ export default function HomeScreen(props) {
                         setTabIngresoslinea(false);
                         setTabCostosingreso(false);
                         setTabIngresoProveedor(false);
-                        setTabPendienteslinea(false);
-                        setTabPresupuestos(true);
-                        setTabPendientesProveedor(false);
-
+                        setTabInventarios(true);
+                        setTabPresupuestos(false);
+                        setTabMargen(false);
                     }
                     else {
                         setTabIngresoslinea(true);
                         setTabCostosingreso(false);
                         setTabIngresoProveedor(false);
-                        setTabPendienteslinea(false);
-                        setTabPendientesProveedor(false);
+                        setTabInventarios(false);
+                        setTabPresupuestos(true);
                         setTabMargen(false);
                     }
     }
@@ -694,7 +720,10 @@ export default function HomeScreen(props) {
                                                     (
                                                         <TabCostos tipo={tipo} setTipo={setTipo}
                                                             detalleCostos={detalleCostos}
-                                                            detalleCompras={detalleCompras} />
+                                                            detalleCompras={detalleCompras}
+                                                            proveedorescompras={movimientoscompras.proveedorescompras}
+                                                            lineasproductos={movimientoscompras.lineasproductos}
+                                                            />
                                                     ) :
                                                     tabIngresoProveedor ?
                                                         (
@@ -707,13 +736,20 @@ export default function HomeScreen(props) {
                                                                 detalleCompras={detalleCompras}
                                                             />
                                                         ) :
-                                                        tabPresupuestos ?
+                                                        tabInventarios ?
                                                             (
-                                                                <TabPresupuesto tipo={tipo} setTipo={setTipo}
-                                                                    listaPresupuestos={listaPresupuestos}
+                                                                <TabConciliacionInventarios tipo={tipo} setTipo={setTipo}
+                                                                    filtrosVentas={filtrosVentas}
+                                                                    listaInventarios={listaInventarios}
                                                                 />
                                                             ) :
-                                                            null
+                                                            tabPresupuestos ?
+                                                                (
+                                                                    <TabPresupuesto tipo={tipo} setTipo={setTipo}
+                                                                        listaPresupuestos={listaPresupuestos}
+                                                                    />
+                                                                ) :
+                                                                null
                                         }
                                     </div>
                                 </h2>

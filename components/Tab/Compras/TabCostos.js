@@ -12,7 +12,7 @@ function classNames(...classes) {
 
 function TabCostos(props) {
     const { Title } = Typography;
-    const { tipo, setTipo, detalleCostos, detalleCompras } = props;
+    const { tipo, setTipo, proveedorescompras, lineasproductos, detalleCompras } = props;
     const [entProveedor, setEntProveedor] = useState(true);
     const [entLinea, setEntLinea] = useState(false);
     const [entFamilia, setEntFamilia] = useState(false);
@@ -21,31 +21,30 @@ function TabCostos(props) {
     const [tituloTipo, setTituloTipo] = useState("PROVEEDORES");
     const [detalleFamilia, setdetalleFamilia] = useState(detalleCompras.costofamilia)
 
-    //console.log("DETALLE COMPRAS : ", detalleCompras.costoproveedor);
     let ventasDiariasMes = [];
     ventasDiariasMes = useSelector((state) => state.datosfiltros.datosfiltros);
 
     const [selectedAno, setSelectedAno] = useState([]);
-    const [selectedSemestre, setSelectedSemestre] = useState([]);
-    const [selectedTrimestre, setSelectedTrimestre] = useState([]);
     const [selectedMes, setSelectedMes] = useState([]);
     const [selectedDia, setSelectedDia] = useState([]);
     const [vtasSemestre, setVtasSemestre] = useState([]);
     const [vtasTrimestre, setVtasTrimestre] = useState([]);
 
-    const [nombreUno, setNombreUno] = useState("");
-    const [nombreDos, setNombreDos] = useState("");
-    const [nombreTres, setNombreTres] = useState("");
+    const [selectedProveedores, setSelectedProveedores] = useState([]);
+    const [selectedSublinea, setSelectedSublinea] = useState([]);
+    const [selectedMarca, setSelectedMarca] = useState([]);
 
     const [consultar, setConsultar] = useState(false);
     const [labelcostos, setLabelcostos] = useState([]);
+
+    const [datosProveedores, setDatosProveedores] = useState(proveedorescompras);
+    const [datosSublineas, setDatosSublineas] = useState(lineasproductos);
 
     const [vtasAno, setVtasAno] = useState(ventasDiariasMes.anos_vtasdiarias);
     const [vtasMes, setVtasMes] = useState(ventasDiariasMes.meses_vtasdiarias);
     const [vtasDia, setVtasDia] = useState(ventasDiariasMes.dias_vtas);
     const [sublineas, setSublineas] = useState(ventasDiariasMes.sublineas);
     const [familias, setFamilias] = useState(ventasDiariasMes.familias);
-    //const [proveedores, setProveedores] = useState(detalleCompras.proveedorescompras);
 
     const [labelUno, setLabelUno] = useState([]);
     const [labelDos, setLabelDos] = useState([]);
@@ -55,8 +54,8 @@ function TabCostos(props) {
 
     const tabsdos = [
         { name: 'Variación x Proveedor', href: '#', current: entProveedor },
-        { name: 'Variación x Línea', href: '#', current: entLinea },
-        { name: 'Variación x Familia', href: '#', current: entFamilia },
+        { name: 'Variación x Sublínea', href: '#', current: entLinea },
+        { name: 'Variación x Subgrupo', href: '#', current: entFamilia },
     ]
 
     const selCostoslinea = (seleccion) => {
@@ -259,10 +258,10 @@ function TabCostos(props) {
                 let totvaldos = 0;
 
                 newDetCostos && newDetCostos.map((items) => {
-                    totunduno = parseInt(totunduno) + items.undanouno;
-                    totunddos = parseInt(totunddos) + items.undanodos;
-                    totvaluno = parseInt(totvaluno) + items.valanouno;
-                    totvaldos = parseInt(totvaldos) + items.valanodos;
+                    totunduno = parseInt(totunduno) + parseInt(items.undanouno);
+                    totunddos = parseInt(totunddos) + parseInt(items.undanodos);
+                    totvaluno = parseInt(totvaluno) + parseInt(items.valanouno);
+                    totvaldos = parseInt(totvaldos) + parseInt(items.valanodos);
                 });
 
                 let variacion = 0;
@@ -279,8 +278,21 @@ function TabCostos(props) {
 
                 newDetCostos.push(item);
 
-                setmovimientos(newDetCostos);
-                console.log("COSTOS INGRESOS : ", newDetCostos);
+                let newArray = [];
+
+                if (selectedProveedores.length > 0) {
+                    selectedProveedores && selectedProveedores.map((prov) => {
+                        newDetCostos && newDetCostos.map((mov) => {
+                            if (prov.Proveedor == mov.nombre) {
+                                newArray.push(mov)
+                            }
+                        })
+                    })
+                    setmovimientos(newArray);
+                    //setmovimientos(newArray[0]);
+                } else
+                    setmovimientos(newDetCostos);
+
             } else
                 if (opcion == 1) {
                     let newDetCostos = [];
@@ -353,6 +365,8 @@ function TabCostos(props) {
                     newDetCostos.push(item);
 
                     setmovimientos(newDetCostos);
+                    console.log("LINEAS : ", newDetCostos)
+
 
                 } else
                     if (opcion == 2) {
@@ -433,6 +447,7 @@ function TabCostos(props) {
                         setmovimientos([])
         } else
             if (selectedAno.length > 0 && selectedMes.length > 0) {
+
                 if (selectedAno.length > 1 && selectedMes.length > 1) {
                     swal({
                         title: "Tablero Cosmos",
@@ -442,17 +457,34 @@ function TabCostos(props) {
                     return
                 }
 
-                let longitud = selectedMes.length;
+                let longitudmes = selectedMes.length;
+                let longitudano = selectedAno.length;
                 let newDet = [];
 
-                if (longitud == 1) {
-                    let vta = {
+                if (longitudmes == 1 && longitudano == 2) {
+                    let vta;
+                    let nommesuno = "";
+                    let nommesdos = "";
+
+                    if (selectedMes[0].value < 10) {
+                        let mes = "0" + selectedMes[0].value;
+                        nommesuno = nameMonth(mes);
+                    } else {
+                        let mes = "" + selectedMes[0].value;
+                        nommesuno = nameMonth(mes);
+                    }
+
+                    vta = {
                         nombre: { tituloTipo },
-                        ano1: "VARIACIÓN" + selectedAno[0].value + selectedMes[0].value
+                        ano1: nommesuno + "-" + selectedAno[0].value,
+                        ano2: nommesuno + "-" + selectedAno[1].value,
+                        variacion: "VARIACIÓN"
                     };
                     newDet.push(vta);
+                    setLabelUno(vta.ano1);
+                    setLabelDos(vta.ano2);
                 } else
-                    if (longitud == 2) {
+                    if (longitudmes == 2 && longitudano == 1) {
                         let vta;
                         let nommesuno = "";
                         let nommesdos = "";
@@ -504,25 +536,46 @@ function TabCostos(props) {
                         let mes = selectedMes[0].value;
                         let mesdos = 0;
 
-                        detalleCompras.costoproveedor && detalleCompras.costoproveedor.map((items) => {
+                        if (longitudano == 1) {
+                            detalleCompras.costoproveedor && detalleCompras.costoproveedor.map((items) => {
 
-                            if (items.ano == selectedAno[0].value && prov.Nombreproveedor == items.Nombreproveedor &&
-                                items.mes == mes) {
-
-                                valcomprasprov = valcomprasprov + items.MND;
-                                undcomprasprov = undcomprasprov + items.UND;
-                            }
-
-                            if (longitud == 2) {
-                                mesdos = selectedMes[1].value;
                                 if (items.ano == selectedAno[0].value && prov.Nombreproveedor == items.Nombreproveedor &&
-                                    items.mes == mesdos) {
-                                    valcomprasprovdos = valcomprasprovdos + items.MND;
-                                    undcomprasprovdos = undcomprasprovdos + items.UND;
+                                    items.mes == mes) {
+
+                                    valcomprasprov = valcomprasprov + items.MND;
+                                    undcomprasprov = undcomprasprov + items.UND;
                                 }
 
+                                if (longitudmes == 2) {
+                                    mesdos = selectedMes[1].value;
+                                    if (items.ano == selectedAno[0].value && prov.Nombreproveedor == items.Nombreproveedor &&
+                                        items.mes == mesdos) {
+                                        valcomprasprovdos = valcomprasprovdos + items.MND;
+                                        undcomprasprovdos = undcomprasprovdos + items.UND;
+                                    }
+
+                                }
+                            })
+                        } else
+                            if (longitudano == 2) {
+
+                                detalleCompras.costoproveedor && detalleCompras.costoproveedor.map((items) => {
+
+                                    if (items.ano == selectedAno[0].value && prov.Nombreproveedor == items.Nombreproveedor &&
+                                        items.mes == mes) {
+                                        valcomprasprov = valcomprasprov + items.MND;
+                                        undcomprasprov = undcomprasprov + items.UND;
+                                    }
+
+                                    if (longitudano == 2) {
+                                        if (items.ano == selectedAno[1].value && prov.Nombreproveedor == items.Nombreproveedor &&
+                                            items.mes == mes) {
+                                            valcomprasprovdos = valcomprasprovdos + items.MND;
+                                            undcomprasprovdos = undcomprasprovdos + items.UND;
+                                        }
+                                    }
+                                })
                             }
-                        })
 
                         let variacion = 0;
                         variacion = ((1 - (valcomprasprov / valcomprasprovdos)) * 100).toFixed(2);
@@ -546,12 +599,50 @@ function TabCostos(props) {
                         }
                     })
 
-                    setmovimientos(newDetCostos);
-                    //console.log("COSTOS INGRESOS : ", newDetCostos);
+                    let totunduno = 0;
+                    let totunddos = 0;
+                    let totvaluno = 0;
+                    let totvaldos = 0;
+
+                    newDetCostos && newDetCostos.map((items) => {
+                        totunduno = parseInt(totunduno) + parseInt(items.undanouno);
+                        totunddos = parseInt(totunddos) + parseInt(items.undanodos);
+                        totvaluno = parseInt(totvaluno) + parseInt(items.valanouno);
+                        totvaldos = parseInt(totvaldos) + parseInt(items.valanodos);
+                    });
+
+                    let variacion = 0;
+                    variacion = ((1 - (totvaluno / totvaldos)) * 100).toFixed(2);
+
+                    let item = {
+                        nombre: "TOTAL",
+                        valanouno: totvaluno,
+                        undanouno: totunduno,
+                        valanodos: totvaldos,
+                        undanodos: totunddos,
+                        variacion: variacion
+                    };
+
+                    newDetCostos.push(item);
+                    console.log("NEW DET  : ", newDetCostos)
+
+                    let newArray = [];
+
+                    if (selectedProveedores.length > 0) {
+                        selectedProveedores && selectedProveedores.map((prov) => {
+                            newDetCostos && newDetCostos.map((mov) => {
+                                if (prov.Proveedor == mov.nombre) {
+                                    newArray.push(mov)
+                                }
+                            })
+                        })
+                        setmovimientos(newArray);
+                        //setmovimientos(newArray[0]);
+                    } else
+                        setmovimientos(newDetCostos);
 
                 } else
                     if (opcion == 1) {
-
 
                         let newDetCostos = [];
                         sublineas && sublineas.map((prov) => {
@@ -570,7 +661,7 @@ function TabCostos(props) {
                                     undcomprasprov = undcomprasprov + items.UND;
                                 }
 
-                                if (longitud == 2) {
+                                if (longitudmes == 2) {
                                     mesdos = selectedMes[1].value;
                                     if (items.ano == selectedAno[0].value && prov.Sublinea == items.Sublinea &&
                                         items.mes == mesdos) {
@@ -620,7 +711,7 @@ function TabCostos(props) {
                                         undcomprasprov = undcomprasprov + items.UND;
                                     }
 
-                                    if (longitud == 2) {
+                                    if (longitudmes == 2) {
                                         mesdos = selectedMes[1].value;
                                         if (items.ano == selectedAno[0].value && prov.Familia == items.Grupo &&
                                             items.mes == mesdos) {
@@ -653,7 +744,6 @@ function TabCostos(props) {
                         } else
                             setmovimientos([])
             }
-
 
     }, [consultar]);
 
@@ -732,6 +822,9 @@ function TabCostos(props) {
 
     return (
         <div className="mlanegativo">
+            {
+                console.log("MOVI : ", movimientos)
+            }
             <h2 className="mx-auto mt-1 px-4 text-lg leading-6 font-medium text-gray-900 sm:px-6 lg:px-8">
                 <div className="sm:hidden">
                     <label htmlFor="tabs" className="sr-only">
@@ -791,7 +884,6 @@ function TabCostos(props) {
                                     />
                                 </Menu>
                             </div>
-
                             <div className="flex">
                                 <Menu as="div" className="relative inline-block" >
                                     <MultiSelect
@@ -805,6 +897,48 @@ function TabCostos(props) {
                                             selectSomeItems: " Filtrar por mes...",
                                             allItemsAreSelected:
                                                 "Todos los meses",
+                                            search: "Buscar",
+                                            selectAll:
+                                                "Todos"
+                                        }}
+                                    />
+                                </Menu>
+                            </div>
+
+                            <div className="flex">
+                                <Menu as="div" className="mt-1 relative inline-block" >
+                                    <MultiSelect
+                                        options={datosProveedores}
+                                        value={selectedProveedores}
+                                        onChange={setSelectedProveedores}
+                                        enableSearch="true"
+                                        labelledBy="Filtrar por proveedor"
+                                        className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                        overrideStrings={{
+                                            selectSomeItems: "Filtrar por proveedor...",
+                                            allItemsAreSelected:
+                                                "Todos los proveedores",
+                                            search: "Buscar",
+                                            selectAll:
+                                                "Todos"
+                                        }}
+                                    />
+                                </Menu>
+                            </div>
+
+                            <div className="flex">
+                                <Menu as="div" className="mt-1 relative inline-block" >
+                                    <MultiSelect
+                                        options={lineasproductos}
+                                        value={selectedSublinea}
+                                        onChange={setSelectedSublinea}
+                                        enableSearch="true"
+                                        labelledBy="Filtrar por sublínea"
+                                        className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                        overrideStrings={{
+                                            selectSomeItems: "Filtrar por Sublínea...",
+                                            allItemsAreSelected:
+                                                "Todas las Sublineas",
                                             search: "Buscar",
                                             selectAll:
                                                 "Todos"

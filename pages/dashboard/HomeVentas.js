@@ -21,7 +21,7 @@ import { setDatosUser } from "../../components/store/slices/users";
 
 //Componentes detalle movimientos
 import TabVtasDiarias from "../../components/Tab/Ventas/TabVtasDiarias";
-import TabCostosVentas from "../../components/Tab/Ventas/TabCostosVentas";
+import TabMargenes from "../../components/Tab/Ventas/TabMargenes";
 import TabParticipacion from "../../components/Tab/Ventas/TabParticipacion";
 import TabVariacion from "../../components/Tab/Ventas/TabVariacion";
 import TabListasPrecios from "../../components/Tab/Ventas/TabListasPrecios";
@@ -600,7 +600,7 @@ export default function HomeVentas(props) {
                                                     />
                                                 ) : tabCostosVtas ?
                                                     (
-                                                        <TabCostosVentas tipo={tipo} setTipo={setTipo} datosCostos={datosCostos}
+                                                        <TabMargenes tipo={tipo} setTipo={setTipo} datosCostos={datosCostos}
                                                             ventasDiariasMes={ventasDiariasMes} listaPresupuestos={listaPresupuestos}
                                                         />
                                                     ) : tabParticipacionVtas ?

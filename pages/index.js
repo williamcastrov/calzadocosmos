@@ -51,7 +51,7 @@ export default function Home() {
             if (res.status == 200) {
 
               if (res.data) {
-                console.log("RETORNA API COMPRAS: ", res.data)
+                //console.log("RETORNA API COMPRAS: ", res.data)
                 dispatch(setDatosDashBoardPeriod(res.data));
                 setMovimientoscompras(res.data);
                 setOk(true)
@@ -64,7 +64,7 @@ export default function Home() {
             }
           })
           .catch((error) =>
-            alert("Error Inesperado")
+            alert("Error Inesperado 1")
           )
 
         // lee datos filtros y los coloca en el state
@@ -91,7 +91,7 @@ export default function Home() {
             }
           })
           .catch((error) =>
-            alert("Error Inesperado")
+            alert("Error Inesperado 2")
           )
 
         // lee datos filtros genear informes ventas
@@ -120,7 +120,7 @@ export default function Home() {
             }
           })
           .catch((error) =>
-            alert("Error Inesperado")
+            alert("Error Inesperado 3")
           )
 
       } else {

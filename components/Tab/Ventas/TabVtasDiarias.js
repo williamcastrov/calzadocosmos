@@ -45,7 +45,7 @@ function TabVtasDiarias(props) {
     //console.log("LABEL DIAS: ", labelVentas);
     const tabsdos = [
         { name: 'Centro operación', href: '#', current: entMes },
-        { name: 'Subcategoría', href: '#', current: entAcumuladas },
+        { name: 'Sublínea', href: '#', current: entAcumuladas },
     ]
 
     const reiniciar = () => {

@@ -4,21 +4,15 @@ import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { ChevronDownIcon, FunnelIcon, } from "@heroicons/react/solid";
 import swal from 'sweetalert';
 import { MultiSelect } from "react-multi-select-component";
+import { Table, Tag, Typography } from 'antd';
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
 }
 
-const options = [
-    { label: "Grapes 🍇", value: "grapes" },
-    { label: "Mango 🥭", value: "mango" },
-    { label: "Strawberry 🍓", value: "strawberry", disabled: true },
-];
-
-const dato = [];
-
 function TabListasPrecios(props) {
+    const { Title } = Typography;
     const { tipo, setTipo, datosCostos, ventasDiariasMes, listaPrecios, sublineas } = props;
     const [entMargenCentro, setEntMargenCentro] = useState(true);
     const [entMargenSubcategoria, setEntMargenSubcategoria] = useState(false);
@@ -46,9 +40,9 @@ function TabListasPrecios(props) {
     const [selectedAno, setSelectedAno] = useState([]);
     const [selectedMes, setSelectedMes] = useState([]);
     const [selectedDia, setSelectedDia] = useState([]);
-    const [labelUno, setLabelUno] = useState([]);
-    const [labelDos, setLabelDos] = useState([]);
-    const [labelTres, setLabelTres] = useState([]);
+    const [labelUno, setLabelUno] = useState("");
+    const [labelDos, setLabelDos] = useState("");
+    const [labelTres, setLabelTres] = useState("");
 
     const tabsdos = [
         { name: 'Consolidado', href: '#', current: entMargenCentro },
@@ -183,6 +177,9 @@ function TabListasPrecios(props) {
                         nombre2: "Costo" + selectedAno[0].value,
                         variacion: "Margen"
                     };
+                    setLabelUno(vta.nombre1);
+                    setLabelDos(vta.nombre2);
+                    setLabelTres(vta.variacion);
                     newDet.push(vta);
                 } else
                     if (longitud == 2) {
@@ -193,6 +190,9 @@ function TabListasPrecios(props) {
                             nombre2: "Costo" + selectedAno[1].value,
                             variacion: "Margen"
                         };
+                        setLabelUno(vta.nombre1);
+                        setLabelDos(vta.nombre2);
+                        setLabelTres(vta.variacion);
                         newDet.push(vta);
                     } else {
                         swal({
@@ -229,7 +229,7 @@ function TabListasPrecios(props) {
                     })
 
                     let margen = 0;
-                    margen = ((valorneto - costo) / valorneto) * 100;
+                    margen = ((valorneto - costo) / valorneto);
 
                     if (isNaN(margen)) {
                         margen = 0;
@@ -237,12 +237,32 @@ function TabListasPrecios(props) {
 
                     let det = {
                         nombre: prov.NombreListaPrecio,
-                        valorneto: (valorneto).toFixed(0),
-                        costo: (costo).toFixed(0),
-                        margen: (margen).toFixed(2)
+                        valorneto: valorneto,
+                        costo: costo,
+                        margen: margen
                     };
                     newPreConsolida.push(det)
                 })
+
+                let costo = 0;
+                let margen = 0;
+                let valorneto = 0;
+
+                newPreConsolida &&
+                    newPreConsolida.map((tot, index) => {
+                        costo = parseInt(costo) + parseInt(tot.costo);
+                        margen = parseInt(margen) + parseInt(tot.margen);
+                        valorneto = parseInt(valorneto) + parseInt(tot.valorneto);
+                    });
+
+                let acum = {
+                    nombre: "TOTAL",
+                    valorneto: valorneto,
+                    costo: costo,
+                    margen: ((valorneto - costo) / valorneto)
+                }
+
+                newPreConsolida.push(acum);
 
                 setmovimientos(newPreConsolida);
             } else
@@ -334,8 +354,26 @@ function TabListasPrecios(props) {
                         })
                     })
 
-                    //console.log("VALORES  : ", newPreConsolida)
-                    //return
+                    let costo = 0;
+                    let margen = 0;
+                    let valorneto = 0;
+
+                    newPreConsolida &&
+                        newPreConsolida.map((tot, index) => {
+                            costo = parseInt(costo) + parseInt(tot.costo);
+                            margen = parseInt(margen) + parseInt(tot.margen);
+                            valorneto = parseInt(valorneto) + parseInt(tot.valorneto);
+                        });
+
+                    let acum = {
+                        nombre: "TOTAL",
+                        valorneto: valorneto,
+                        costo: costo,
+                        margen: ((valorneto - costo) / valorneto)
+                    }
+
+                    newPreConsolida.push(acum);
+
                     setmovimientos(newPreConsolida);
 
                 } else
@@ -431,8 +469,26 @@ function TabListasPrecios(props) {
                             })
                         })
 
-                        //console.log("VALORES  : ", newPreConsolida)
-                        //return
+                        let costo = 0;
+                        let margen = 0;
+                        let valorneto = 0;
+
+                        newPreConsolida &&
+                            newPreConsolida.map((tot, index) => {
+                                costo = parseInt(costo) + parseInt(tot.costo);
+                                margen = parseInt(margen) + parseInt(tot.margen);
+                                valorneto = parseInt(valorneto) + parseInt(tot.valorneto);
+                            });
+
+                        let acum = {
+                            nombre: "TOTAL",
+                            valorneto: valorneto,
+                            costo: costo,
+                            margen: ((valorneto - costo) / valorneto)
+                        }
+
+                        newPreConsolida.push(acum);
+
                         setmovimientos(newPreConsolida);
 
                     }
@@ -534,6 +590,26 @@ function TabListasPrecios(props) {
                         newPreConsolida.push(det)
                     })
 
+                    let costo = 0;
+                    let margen = 0;
+                    let valorneto = 0;
+
+                    newPreConsolida &&
+                        newPreConsolida.map((tot, index) => {
+                            costo = parseInt(costo) + parseInt(tot.costo);
+                            margen = parseInt(margen) + parseInt(tot.margen);
+                            valorneto = parseInt(valorneto) + parseInt(tot.valorneto);
+                        });
+
+                    let acum = {
+                        nombre: "TOTAL",
+                        valorneto: valorneto,
+                        costo: costo,
+                        margen: ((valorneto - costo) / valorneto)
+                    }
+
+                    newPreConsolida.push(acum);
+
                     setmovimientos(newPreConsolida);
                 } else
                     if (opcion == 1) {
@@ -592,8 +668,26 @@ function TabListasPrecios(props) {
                             })
                         })
 
-                        //console.log("VALORES  : ", newPreConsolida)
-                        //return
+                        let costo = 0;
+                        let margen = 0;
+                        let valorneto = 0;
+
+                        newPreConsolida &&
+                            newPreConsolida.map((tot, index) => {
+                                costo = parseInt(costo) + parseInt(tot.costo);
+                                margen = parseInt(margen) + parseInt(tot.margen);
+                                valorneto = parseInt(valorneto) + parseInt(tot.valorneto);
+                            });
+
+                        let acum = {
+                            nombre: "TOTAL",
+                            valorneto: valorneto,
+                            costo: costo,
+                            margen: ((valorneto - costo) / valorneto)
+                        }
+
+                        newPreConsolida.push(acum);
+
                         setmovimientos(newPreConsolida);
 
                     } else
@@ -657,8 +751,26 @@ function TabListasPrecios(props) {
                                 })
                             })
 
-                            //console.log("VALORES  : ", newPreConsolida)
-                            //return
+                            let costo = 0;
+                            let margen = 0;
+                            let valorneto = 0;
+
+                            newPreConsolida &&
+                                newPreConsolida.map((tot, index) => {
+                                    costo = parseInt(costo) + parseInt(tot.costo);
+                                    margen = parseInt(margen) + parseInt(tot.margen);
+                                    valorneto = parseInt(valorneto) + parseInt(tot.valorneto);
+                                });
+
+                            let acum = {
+                                nombre: "TOTAL",
+                                valorneto: valorneto,
+                                costo: costo,
+                                margen: ((valorneto - costo) / valorneto)
+                            }
+
+                            newPreConsolida.push(acum);
+
                             setmovimientos(newPreConsolida);
 
                         }
@@ -668,11 +780,103 @@ function TabListasPrecios(props) {
         setConsultarAno(false);
     }
 
+    const header_test = [
+        { title: tituloTipo, dataIndex: "nombre", key: "nombre", width: 80, fixed: true },
+        {
+            title: labelUno, dataIndex: "labeluno", key: "labeluno", width: 100, align: "right",
+            sorter: (a, b) => a.valorneto - b.valorneto,
+            render: (text, row, index) => {
+                return (
+                    <Title level={4} style={{ fontSize: 15, }}>
+                        {isNaN(row.valorneto) ?
+                            0
+                            :
+                            myNumber(1, row.valorneto)
+                        }
+                    </Title>
+                );
+            }
+        },
+        {
+            title: labelDos, dataIndex: "labelDos", key: "labelDos", width: 100, align: "right",
+            sorter: (a, b) => a.costo - b.costo,
+            render: (text, row, index) => {
+                return (
+                    <Title level={4} style={{ fontSize: 15, }}>
+                        {isNaN(row.costo) ?
+                            0
+                            :
+                            myNumber(1, row.costo)
+                        }
+                    </Title>
+                );
+            }
+        },
+        {
+            title: labelTres, dataIndex: "labelTres", key: "labelTres", width: 100, align: "right",
+            sorter: (a, b) => a.margen - b.margen,
+            render: (text, row, index) => {
+                return (
+                    <Title level={4} style={{ fontSize: 15, }}>
+                        {myNumber(1, (row.margen) * 100, 2)}%
+                    </Title>
+                );
+            }
+        }
+    ]
+
+    const header_testotr = [
+        { title: tituloTipo, dataIndex: "nombre", key: "nombre", width: 80, fixed: true },
+        { title: tituloTipoDos, dataIndex: "sublinea", key: "sublinea", width: 80, fixed: true },
+        {
+            title: labelUno, dataIndex: "labeluno", key: "labeluno", width: 100, align: "right",
+            sorter: (a, b) => a.valorneto - b.valorneto,
+            render: (text, row, index) => {
+                return (
+                    <Title level={4} style={{ fontSize: 15, }}>
+                        {isNaN(row.valorneto) ?
+                            0
+                            :
+                            myNumber(1, row.valorneto)
+                        }
+                    </Title>
+                );
+            }
+        },
+        {
+            title: labelDos, dataIndex: "labelDos", key: "labelDos", width: 100, align: "right",
+            sorter: (a, b) => a.costo - b.costo,
+            render: (text, row, index) => {
+                return (
+                    <Title level={4} style={{ fontSize: 15, }}>
+                        {isNaN(row.costo) ?
+                            0
+                            :
+                            myNumber(1, row.costo)
+                        }
+                    </Title>
+                );
+            }
+        },
+        {
+            title: labelTres, dataIndex: "labelTres", key: "labelTres", width: 100, align: "right",
+            sorter: (a, b) => a.margen - b.margen,
+            render: (text, row, index) => {
+                return (
+                    <Title level={4} style={{ fontSize: 15, }}>
+                        {myNumber(1, (row.margen) * 100, 2)}%
+                    </Title>
+                );
+            }
+        }
+    ]
+
+
     return (
         <div className="mlanegativo">
             <h2 className="mx-auto mt-1 px-4 text-lg leading-6 font-medium text-gray-900 sm:px-6 lg:px-8">
 
-                <div className="col-start-1 row-start-1 py-4">
+                <div className="ml-80 col-start-1 row-start-1 py-4">
                     <div className="mx-auto flex max-w-7xl justify-center px-4 sm:px-6 lg:px-8">
                         {/* justify-end */}
 
@@ -684,7 +888,7 @@ function TabListasPrecios(props) {
                                     onChange={setSelectedAno}
                                     disableSearch="false"
                                     labelledBy="Filtrar por año"
-                                    className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                    className="absolute right-40 z-8 text-sm font-medium text-gray-900 dark:text-gray-300"
                                     overrideStrings={{
                                         selectSomeItems: "Filtrar por año...",
                                         allItemsAreSelected:
@@ -720,7 +924,7 @@ function TabListasPrecios(props) {
                                     onChange={setSelectedMes}
                                     disableSearch="false"
                                     labelledBy="Filtrar por mes"
-                                    className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                    className="absolute right-1 z-10  text-sm font-medium text-gray-900 dark:text-gray-300"
                                     overrideStrings={{
                                         selectSomeItems: " Filtrar por mes...",
                                         allItemsAreSelected:
@@ -751,7 +955,7 @@ function TabListasPrecios(props) {
                         <Menu as="div" className="ml-1 relative inline-block" >
                             <div className="flex">
 
-                                <div className="ml-1 mx-auto flex max-w-4xl h-10 space-x-6 divide-x bg-violet rounded divide-gray-200 px-4 text-sm sm:px-6 lg:px-8">
+                                <div className="ml-4 mx-auto flex max-w-4xl h-10 space-x-6 divide-x bg-violet rounded divide-gray-200 px-4 text-sm sm:px-6 lg:px-8">
                                     <button
                                         onClick={() => generarConsulta()}
                                     >
@@ -768,7 +972,7 @@ function TabListasPrecios(props) {
                                         />
                                     </button>
                                 </div>
-                                <div className="ml-2 mx-auto flex max-w-4xl h-10 space-x-6 divide-x bg-cosmocolor rounded divide-gray-200 px-4 text-sm sm:px-6 lg:px-8">
+                                <div className="ml-5 mx-auto flex max-w-4xl h-10 space-x-6 divide-x bg-cosmocolor rounded divide-gray-200 px-4 text-sm sm:px-6 lg:px-8">
                                     <div >
                                         <button
                                             type="button"
@@ -820,9 +1024,6 @@ function TabListasPrecios(props) {
                         </nav>
                     </div>
                     {
-                        console.log("OPCION : ", opcion)
-                    }
-                    {
                         opcion == 0 ?
                             (
                                 <div className="margenizaquierdanegativo px-4 sm:px-6 lg:px-8">
@@ -830,59 +1031,12 @@ function TabListasPrecios(props) {
                                         <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
                                             <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
                                                 <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-                                                    <table id="precioslinea" className="min-w-full divide-y divide-gray-300">
-                                                        <thead className="bg-gray-50">
-                                                            {labelcostos && labelcostos.map((dias, index) => (
-                                                                <tr>
-                                                                    <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
-                                                                        {tituloTipo}
-                                                                    </th>
-                                                                    <th scope="col" className="px-5 py-3.5 text-right text-sm font-semibold text-gray-900">
-                                                                        {dias.nombre1}
-                                                                    </th>
-                                                                    <th scope="col" className="px-5 py-3.5 text-right text-sm font-semibold text-gray-900">
-                                                                        {dias.nombre2}
-                                                                    </th>
-                                                                    <th scope="col" className="px-6 py-3.5 text-right text-sm font-semibold text-gray-900">
-                                                                        {dias.variacion}
-                                                                    </th>
-                                                                    <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
-                                                                        <span className="sr-only">Edit</span>
-                                                                    </th>
-                                                                </tr>
-                                                            ))}
-                                                        </thead>{ }
-                                                        <tbody className="bg-white">
-                                                            {movimientos && movimientos.map((compras, comprasIdx) => (
-                                                                <tr key={compras.nombre} className={comprasIdx % 2 === 0 ? undefined : 'bg-gray-50'}>
-                                                                    <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                                                                        {compras.nombre}
-                                                                    </td>
-                                                                    <td className="whitespace-nowrap px-6 py-4 text-right text-sm text-gray-500">
-                                                                        {isNaN(compras.valorneto) ?
-                                                                            0
-                                                                            :
-                                                                            myNumber(1, compras.valorneto)
-                                                                        }
-                                                                    </td>
-                                                                    <td className="whitespace-nowrap px-6 py-4 text-right text-sm text-gray-500">
-                                                                        {isNaN(compras.costo) ?
-                                                                            0
-                                                                            :
-                                                                            myNumber(1, compras.costo)
-                                                                        }
-                                                                    </td>
-                                                                    <td className="whitespace-nowrap px-6 py-4 text-right text-sm text-gray-500">
-                                                                        {isNaN(compras.margen) ?
-                                                                            0
-                                                                            :
-                                                                            myNumber(1, compras.margen)
-                                                                        }%
-                                                                    </td>
-                                                                </tr>
-                                                            ))}
-                                                        </tbody>
-                                                    </table>
+                                                    <Table columns={header_test} dataSource={movimientos} pagination={false}
+                                                        scroll={{
+                                                            x: 1200,
+                                                            y: 500,
+                                                        }}
+                                                        bordered />
                                                 </div>
                                             </div>
                                         </div>
@@ -897,65 +1051,12 @@ function TabListasPrecios(props) {
                                             <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
                                                 <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
                                                     <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-                                                        <table id="precioslinea" className="min-w-full divide-y divide-gray-300">
-                                                            <thead className="bg-gray-50">
-                                                                {labelcostos && labelcostos.map((dias, index) => (
-                                                                    <tr>
-                                                                        <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
-                                                                            {tituloTipo}
-                                                                        </th>
-                                                                        <th scope="col" className="px-5 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                                                            {tituloTipoDos}
-                                                                        </th>
-                                                                        <th scope="col" className="px-5 py-3.5 text-right text-sm font-semibold text-gray-900">
-                                                                            {dias.nombre1}
-                                                                        </th>
-                                                                        <th scope="col" className="px-5 py-3.5 text-right text-sm font-semibold text-gray-900">
-                                                                            {dias.nombre2}
-                                                                        </th>
-                                                                        <th scope="col" className="px-6 py-3.5 text-right text-sm font-semibold text-gray-900">
-                                                                            {dias.variacion}
-                                                                        </th>
-                                                                        <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
-                                                                            <span className="sr-only">Edit</span>
-                                                                        </th>
-                                                                    </tr>
-                                                                ))}
-                                                            </thead>{ }
-                                                            <tbody className="bg-white">
-                                                                {movimientos && movimientos.map((compras, comprasIdx) => (
-                                                                    <tr key={compras.nombre} className={comprasIdx % 2 === 0 ? undefined : 'bg-gray-50'}>
-                                                                        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                                                                            {compras.nombre}
-                                                                        </td>
-                                                                        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                                                                            {compras.sublinea}
-                                                                        </td>
-                                                                        <td className="whitespace-nowrap px-6 py-4 text-right text-sm text-gray-500">
-                                                                            {isNaN(compras.valorneto) ?
-                                                                                0
-                                                                                :
-                                                                                myNumber(1, compras.valorneto)
-                                                                            }
-                                                                        </td>
-                                                                        <td className="whitespace-nowrap px-6 py-4 text-right text-sm text-gray-500">
-                                                                            {isNaN(compras.costo) ?
-                                                                                0
-                                                                                :
-                                                                                myNumber(1, compras.costo)
-                                                                            }
-                                                                        </td>
-                                                                        <td className="whitespace-nowrap px-6 py-4 text-right text-sm text-gray-500">
-                                                                            {isNaN(compras.margen) ?
-                                                                                0
-                                                                                :
-                                                                                myNumber(1, compras.margen, 1)
-                                                                            }%
-                                                                        </td>
-                                                                    </tr>
-                                                                ))}
-                                                            </tbody>
-                                                        </table>
+                                                        <Table columns={header_testotr} dataSource={movimientos} pagination={false}
+                                                            scroll={{
+                                                                x: 1200,
+                                                                y: 500,
+                                                            }}
+                                                            bordered />
                                                     </div>
                                                 </div>
                                             </div>
