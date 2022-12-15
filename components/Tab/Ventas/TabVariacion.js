@@ -1267,11 +1267,11 @@ function TabVariacion(props) {
         <div className="mlanegativo">
             <h2 className="mx-auto mt-1 px-4 text-lg leading-6 font-medium text-gray-900 sm:px-6 lg:px-8">
 
-                <div className="col-start-1 row-start-1 py-4">
+                <div className="col-start-2 row-start-2 py-6">
                     <div className="mx-auto flex max-w-7xl justify-center px-4 sm:px-6 lg:px-8">
                         {/* justify-end */}
 
-                        <div className="ml-60 flex">
+                        <div className="flex">
                             <Menu as="div" className="relative inline-block" >
                                 <MultiSelect
                                     options={vtasAno}
@@ -1279,7 +1279,7 @@ function TabVariacion(props) {
                                     onChange={setSelectedAno}
                                     disableSearch="false"
                                     labelledBy="Filtrar por año"
-                                    className="absolute right-40 z10  ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                    className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                                     overrideStrings={{
                                         selectSomeItems: "Filtrar por año...",
                                         allItemsAreSelected:
@@ -1315,7 +1315,7 @@ function TabVariacion(props) {
                                     onChange={setSelectedMes}
                                     disableSearch="false"
                                     labelledBy="Filtrar por mes"
-                                    className="absolute right-6 z-10  text-sm font-medium text-gray-900 dark:text-gray-300"
+                                    className="text-sm font-medium text-gray-900 dark:text-gray-300"
                                     overrideStrings={{
                                         selectSomeItems: " Filtrar por mes...",
                                         allItemsAreSelected:

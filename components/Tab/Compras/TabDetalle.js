@@ -997,59 +997,38 @@ function TabDetalle(props) {
                     } else
                         if (selectedAno.length > 0 && selectedMes.length === 0 && selectedSemestre.length === 0 &&
                             selectedTrimestre.length === 0) {
-                            //console.log("INGRESOS LINEAS : ", ingresosxlinea)
-
+                            setEntMes(false);
+                            setOpcion(1)
+                            setEntAcumuladas(true);
                             let newDetCompras = [];
-                            let newDetComprasMes = [];
-  //console.log("LINEAS XX: ", lineasproductos)
-                            //return
 
                             lineasproductos &&
                                 lineasproductos.map((lineas, index) => {
                                     let undcompras = 0;
                                     let valcompras = 0;
-                                    let undcomprasmes = 0;
-                                    let valcomprasmes = 0;
 
                                     ingresosxlinea &&
                                         ingresosxlinea.map((ingresos, index) => {
 
-                                            if (ingresos.Sublinea == lineas.label && ingresos.ano == selectedAno[0].value
-                                                && ingresos.mes <= selectedMes[0].value) {
+                                            if (ingresos.Sublinea == lineas.label && ingresos.ano == selectedAno[0].value) {
                                                 undcompras = parseInt(undcompras) + parseInt(ingresos.UND);
                                                 valcompras = parseInt(valcompras) + parseInt(ingresos.MND);
                                             }
-
-                                            if (ingresos.Sublinea == lineas.label && ingresos.ano == selectedAno[0].value
-                                                && ingresos.mes == selectedMes[0].value) {
-
-                                                undcomprasmes = parseInt(undcomprasmes) + parseInt(ingresos.UND);
-                                                valcomprasmes = parseInt(valcomprasmes) + parseInt(ingresos.MND);
-                                            }
                                         });
-/*
+
                                     let mvto = {
                                         Descripcion: lineas.label,
                                         UndIngreso: undcompras,
                                         ValIngreso: valcompras,
                                     };
 
-                                    let mvtomes = {
-                                        Descripcion: lineas.label,
-                                        UndIngresoMes: undcomprasmes,
-                                        ValIngresoMes: valcomprasmes,
-                                    };
-*/
                                     newDetCompras.push(mvto);
-                                    //newDetComprasMes.push(mvtomes);
                                 });
-
+                           
                             lineasproductos &&
                                 lineasproductos.map((lineas, index) => {
                                     let undcompras = 0;
                                     let valcompras = 0;
-                                    let undcomprasmes = 0;
-                                    let valcomprasmes = 0;
 
                                     ingresosxlinea &&
                                         ingresosxlinea.map((ingresos, index) => {
@@ -1059,56 +1038,10 @@ function TabDetalle(props) {
                                                 valcompras = parseInt(valcompras) + parseInt(ingresos.MND);
                                             }
 
-                                            if (ingresos.Sublinea == lineas.label && ingresos.ano == selectedAno[0].value &&
-                                                ingresos.mes == 10) {
-
-                                                undcomprasmes = parseInt(undcomprasmes) + parseInt(ingresos.UND);
-                                                valcomprasmes = parseInt(valcomprasmes) + parseInt(ingresos.MND);
-                                            }
                                         });
-                                    let mvto = {
-                                        Descripcion: lineas.label,
-                                        UndIngreso: undcompras,
-                                        ValIngreso: valcompras,
-                                    };
-
-                                    let mvtomes = {
-                                        Descripcion: lineas.label,
-                                        UndIngresoMes: undcomprasmes,
-                                        ValIngresoMes: valcomprasmes,
-                                    };
-                                    newDetCompras.push(mvto);
-                                    newDetComprasMes.push(mvtomes);
                                 });
 
                             let newDetComprasVsPst = [];
-                            let newDetComprasVsPstMes = [];
-
-                            //console.log("INGRESOS LINEA  : ", newDetCompras);
-
-                            newDetComprasMes &&
-                                newDetComprasMes.map((ingresos, index) => {
-                                    let undpstmes = 0;
-                                    let valpstmes = 0;
-                                    presupuestosxlinea &&
-                                        presupuestosxlinea.map((pst, index) => {
-                                            if (ingresos.Descripcion == pst.Sublinea && selectedAno[0].value == pst.ano &&
-                                                pst.mes == 10) {
-                                                undpstmes = parseInt(undpstmes) + parseInt(pst.UND_PST);
-                                                valpstmes = parseInt(valpstmes) + parseInt(pst.VAL_PST);
-                                            }
-                                        });
-                                    let mvto = {
-                                        Descripcion: ingresos.Descripcion,
-                                        UndIngreso: ingresos.UndIngresoMes,
-                                        ValIngreso: ingresos.ValIngresoMes,
-                                        UndPst: undpstmes,
-                                        ValPst: valpstmes
-                                    };
-                                    newDetComprasVsPstMes.push(mvto);
-                                });
-
-                            //console.log("UND COMPRAS : ",  newDetCompras)
 
                             newDetCompras &&
                                 newDetCompras.map((ingresos, index) => {
@@ -1116,8 +1049,7 @@ function TabDetalle(props) {
                                     let valpst = 0;
                                     presupuestosxlinea &&
                                         presupuestosxlinea.map((pst, index) => {
-                                            if (ingresos.Descripcion == pst.Sublinea && selectedAno[0].value == pst.ano &&
-                                                pst.mes <= 10) {
+                                            if (ingresos.Descripcion == pst.Sublinea && selectedAno[0].value == pst.ano) {
                                                 undpst = parseInt(undpst) + parseInt(pst.UND_PST);
                                                 valpst = parseInt(valpst) + parseInt(pst.VAL_PST);
                                             }
@@ -1132,37 +1064,10 @@ function TabDetalle(props) {
                                     newDetComprasVsPst.push(mvto);
                                 });
 
-                            let undpst = 0;
-                            let valpst = 0;
-                            let unding = 0;
-                            let valing = 0;
-
-                            newDetComprasVsPstMes &&
-                                newDetComprasVsPstMes.map((ing, index) => {
-
-                                    undpst = parseInt(undpst) + parseInt(ing.UndPst);
-                                    valpst = parseInt(undpst) + parseInt(ing.ValPst);
-                                    unding = parseInt(unding) + parseInt(ing.UndIngreso);
-                                    valing = parseInt(valing) + parseInt(ing.ValIngreso);
-
-                                });
-
-                            let mvto = {
-                                Descripcion: "TOTAL",
-                                UndIngreso: unding,
-                                ValIngreso: valing,
-                                UndPst: undpst,
-                                ValPst: valpst
-                            };
-                            newDetComprasVsPstMes.push(mvto);
-
-                            setmovimientosMes(newDetComprasVsPstMes);
-
                             let undpsttot = 0;
                             let valpsttot = 0;
                             let undingtot = 0;
                             let valingtot = 0;
-                            console.log("PPTO  : ", newDetComprasVsPst)
 
                             newDetComprasVsPst &&
                                 newDetComprasVsPst.map((ing, index) => {
@@ -1191,8 +1096,7 @@ function TabDetalle(props) {
         { title: "LINEA", dataIndex: "Descripcion", key: "Descripcion", width: 200, fixed: true },
         {
             title: "UND MES ACTUAL", dataIndex: "UndIngreso", key: "UndIngreso", width: 150, align: "right",
-            sortDirections: ['descend', 'ascend'],
-            //sorter: (a, b) => a.unidades4_ - b.unidades4_,
+            sorter: (a, b) => a.unidades4_ - b.unidades4_,
             render: (text, row, index) => {
                 return (
                     <Title level={4} style={{ fontSize: 15, zIndex: 0 }}>
@@ -1204,7 +1108,6 @@ function TabDetalle(props) {
         },
         {
             title: "UNIDADES PRESUPUESTO", dataIndex: "UndPst", key: "UndPst", width: 150, align: "right",
-            sortDirections: ['descend', 'ascend'],
             sorter: (a, b) => a.UndPst - b.UndPst,
             render: (text, row, index) => {
                 return (
@@ -1275,7 +1178,6 @@ function TabDetalle(props) {
         { title: "LINEA", dataIndex: "Descripcion", key: "Descripcion", width: 200 },
         {
             title: "Und-" + nombreUno, dataIndex: "pesossemestre", key: "pesossemestre", width: 150, align: "right",
-            sortDirections: ['descend', 'ascend'],
             sorter: (a, b) => a.UndIngreso1 - b.UndIngreso1,
             render: (text, row, index) => {
                 return (
@@ -1287,9 +1189,8 @@ function TabDetalle(props) {
             }
         },
         {
-            title: "Pesos-" + nombreUno, dataIndex: "undsemestre", key: "undsemestre", width: 150, align: "right",
-            sortDirections: ['descend', 'ascend'],
-            //sorter: (a, b) => a.unidades4_ - b.unidades4_,
+            title: "Pesos-" + nombreUno, dataIndex: "ValIngreso1", key: "ValIngreso1", width: 150, align: "right",
+            sorter: (a, b) => a.ValIngreso1 - b.ValIngreso1,
             render: (text, row, index) => {
                 return (
                     <Title level={4} style={{ fontSize: 15, zIndex: 0 }}>
@@ -1304,8 +1205,7 @@ function TabDetalle(props) {
     const header_testtres = [
         { title: "LINEA", dataIndex: "Descripcion", key: "Descripcion", width: 200 },
         {
-            title: "Und-" + nombreUno, dataIndex: "pesossemestre", key: "pesossemestre", width: 150, align: "right",
-            sortDirections: ['descend', 'ascend'],
+            title: "Und-" + nombreUno, dataIndex: "unidades1", key: "unidades1", width: 150, align: "right",
             sorter: (a, b) => a.UndIngreso1 - b.UndIngreso1,
             render: (text, row, index) => {
                 return (
@@ -1317,9 +1217,8 @@ function TabDetalle(props) {
             }
         },
         {
-            title: "Pesos-" + nombreUno, dataIndex: "undsemestre", key: "undsemestre", width: 150, align: "right",
-            sortDirections: ['descend', 'ascend'],
-            //sorter: (a, b) => a.unidades4_ - b.unidades4_,
+            title: "Pesos-" + nombreUno, dataIndex: "unidades2", key: "unidades2", width: 150, align: "right",
+            sorter: (a, b) => a.ValIngreso1 - b.ValIngreso1,
             render: (text, row, index) => {
                 return (
                     <Title level={4} style={{ fontSize: 15, zIndex: 0 }}>
@@ -1330,9 +1229,8 @@ function TabDetalle(props) {
             }
         },
         {
-            title: "Und-" + nombreDos, dataIndex: "pesossemestre", key: "pesossemestre", width: 150, align: "right",
-            sortDirections: ['descend', 'ascend'],
-            sorter: (a, b) => a.UndPst - b.UndPst,
+            title: "Und-" + nombreDos, dataIndex: "unidades3", key: "unidades3", width: 150, align: "right",
+            sorter: (a, b) => a.UndIngreso2 - b.UndIngreso2,
             render: (text, row, index) => {
                 return (
                     <Title level={4} style={{ fontSize: 15, }}>
@@ -1348,9 +1246,8 @@ function TabDetalle(props) {
             }
         },
         {
-            title: "Pesos-" + nombreDos, dataIndex: "pesossemestre", key: "pesossemestre", width: 150, align: "right",
-            sortDirections: ['descend', 'ascend'],
-            sorter: (a, b) => a.UndPst - b.UndPst,
+            title: "Pesos-" + nombreDos, dataIndex: "unidades4", key: "unidades4", width: 150, align: "right",
+            sorter: (a, b) => a.ValIngreso2 - b.ValIngreso2,
             render: (text, row, index) => {
                 return (
                     <Title level={4} style={{ fontSize: 15, }}>
@@ -1367,6 +1264,7 @@ function TabDetalle(props) {
         },
         {
             title: "Desviación", dataIndex: "valppto", key: "valppto", width: 150, align: "right",
+            sorter: (a, b) => a.Variacion - b.Variacion,
             render: (text, row, index) => {
                 return (
                     <Title level={4} style={{ fontSize: 15, }}>

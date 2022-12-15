@@ -26,6 +26,10 @@ function TabVtasDiarias(props) {
     const [labeldiasDos, setLabeldiasDos] = useState([]);
     const [consultar, setConsultar] = useState(false);
 
+    const [label1, setLabel1] = useState("");
+    const [label2, setLabel2] = useState("");
+    const [label3, setLabel3] = useState("");
+
     const [selectedAno, setSelectedAno] = useState([]);
     const [selectedSemestre, setSelectedSemestre] = useState([]);
     const [selectedTrimestre, setSelectedTrimestre] = useState([]);
@@ -385,7 +389,7 @@ function TabVtasDiarias(props) {
                     let vta;
                     vta = {
                         Periodo: selectedAno[0].value,
-                        Dia1: "Venta" + selectedAno[0].value + "-" + selectedMes[0].value + "-" + selectedDia[0].value
+                        Dia1: "VENTA-" + selectedAno[0].value + "-" + selectedMes[0].value + "-" + selectedDia[0].value
                     };
                     newDet.push(vta);
                     setLabeldias(newDet)
@@ -509,7 +513,7 @@ function TabVtasDiarias(props) {
                         let vta;
                         vta = {
                             Periodo: selectedAno[0].value,
-                            Dia1: "Venta" + selectedAno[0].value + "-" + selectedMes[0].value + "-" + selectedDia[0].value
+                            Dia1: "VENTA-" + selectedAno[0].value + "-" + selectedMes[0].value + "-" + selectedDia[0].value
                         };
                         newDet.push(vta);
                         setLabeldias(newDet)
@@ -519,10 +523,10 @@ function TabVtasDiarias(props) {
                         let newDetVtasAcum = [];
                         let newDetVtas = [];
                         setLabeldias(newDet)
-                        
+
                         //console.log("VTAS SUB: ", ventasDiariasMesSubcategoria)
                         //return
-                        
+
                         let dia = selectedDia[0].value;
                         let total = 0;
 
@@ -633,18 +637,22 @@ function TabVtasDiarias(props) {
                         if (longitud == 1) {
                             let vta = {
                                 Periodo: selectedAno[0].value,
-                                Dia1: "Venta_total" + selectedAno[0].value
+                                Dia1: "VENTA_TOTAL" + selectedAno[0].value
                             };
+                            setLabel1(vta.Dia1);
                             newDet.push(vta);
                         } else
                             if (longitud == 2) {
                                 let vta;
                                 vta = {
                                     Periodo: selectedAno[0].value,
-                                    Dia1: "Venta_año" + selectedAno[0].value,
-                                    Dia2: "Venta_año" + selectedAno[1].value,
-                                    Dia3: "Variación"
+                                    Dia1: "VENTA_AÑO" + selectedAno[0].value,
+                                    Dia2: "VENTA_AÑO" + selectedAno[1].value,
+                                    Dia3: "VARIACIÓN"
                                 };
+                                setLabel1(vta.Dia1);
+                                setLabel2(vta.Dia2);
+                                setLabel3(vta.Dia3);
                                 newDet.push(vta);
                             } else {
                                 swal({
@@ -734,19 +742,23 @@ function TabVtasDiarias(props) {
                             if (longitud == 1) {
                                 let vta = {
                                     Periodo: selectedAno[0].value,
-                                    Dia1: "Venta_total" + selectedAno[0].value
+                                    Dia1: "VENTA_TOTAL" + selectedAno[0].value
                                 };
                                 newDet.push(vta);
+                                setLabel1(vta.Dia1);
                             } else
                                 if (longitud == 2) {
                                     let vta;
                                     vta = {
                                         Periodo: selectedAno[0].value,
-                                        Dia1: "Venta_año" + selectedAno[0].value,
-                                        Dia2: "Venta_año" + selectedAno[1].value,
-                                        Dia3: "Variación"
+                                        Dia1: "VENTA_AÑO" + selectedAno[0].value,
+                                        Dia2: "VARIACIÓN" + selectedAno[1].value,
+                                        Dia3: "VARIACIÓN"
                                     };
                                     newDet.push(vta);
+                                    setLabel1(vta.Dia1);
+                                    setLabel2(vta.Dia2);
+                                    setLabel3(vta.Dia3);
                                 } else {
                                     swal({
                                         title: "Tablero Cosmos",
@@ -759,7 +771,6 @@ function TabVtasDiarias(props) {
 
                             //newDet.push(vta);
                             setLabeldias(newDet)
-                            console.log("VTAS SUB: ", ventasDiariasMesSubcategoria)
 
                             let newDetVtasAcum = [];
                             subcategorias &&
@@ -832,6 +843,7 @@ function TabVtasDiarias(props) {
                                 });
 
                             //console.log("VENTAS ANÑO : ", newDetVtasAcum)
+
                             setmovimientos(newDetVtasAcum);
                         }
                 }
@@ -1248,6 +1260,55 @@ function TabVtasDiarias(props) {
 
     ]
 
+    const header_testtot = [
+        { title: textoTipo, dataIndex: "Nombreagrupa", key: "Nombreagrupa", width: 100, fixed: true },
+        {
+            title: label1, dataIndex: "label1", key: "label1", width: 100, align: "right",
+            sorter: (a, b) => a.dia_1 - b.dia_1,
+            render: (text, row, index) => {
+                return (
+                    <Title level={4} style={{ fontSize: 15, }}>
+                        {isNaN(parseInt(row.dia_1)) ?
+                            null
+                            :
+                            myNumber(1, (row.dia_1))
+                        }
+                    </Title>
+                );
+            }
+        },
+        {
+            title: label2, dataIndex: "label2", key: "label2", width: 100, align: "right",
+            sorter: (a, b) => a.dia_2 - b.dia_2,
+            render: (text, row, index) => {
+                return (
+                    <Title level={4} style={{ fontSize: 15, }}>
+                        {isNaN(parseInt(row.dia_2)) ?
+                            null
+                            :
+                            myNumber(1, (row.dia_2))
+                        }
+                    </Title>
+                );
+            }
+        },
+        {
+            title: label3, dataIndex: "label3", key: "label3", width: 100, align: "right",
+            sorter: (a, b) => a.dia_3 - b.dia_3,
+            render: (text, row, index) => {
+                return (
+                    <Title level={4} style={{ fontSize: 15, }}>
+                        {isNaN(parseInt(row.dia_3)) ?
+                            null
+                            :
+                            myNumber(1, (row.dia_3))
+                        }
+                    </Title>
+                );
+            }
+        }
+    ]
+
 
     return (
         <div className="mlanegativo">
@@ -1404,20 +1465,14 @@ function TabVtasDiarias(props) {
                                 <div className="min-w-full  margenizaquierdanegativo px-4 sm:px-6 lg:px-8">
                                     <div className="min-w-full  mt-8 flex flex-col">
                                         <div className="min-w-full  -my-2 -mx-4 sm:-mx-6 lg:-mx-8">
-
                                             <div className="min-w-full py-2 align-middle md:px-6 lg:px-8">
-
                                                 <div className="min-w-full shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-
-
                                                     <Table columns={header_test} dataSource={movimientos} pagination={false}
                                                         scroll={{
                                                             x: 1200,
                                                             y: 500,
                                                         }}
                                                         bordered />
-
-
                                                 </div>
                                             </div>
                                         </div>
@@ -1484,61 +1539,13 @@ function TabVtasDiarias(props) {
                                             <div className="mt-8 flex flex-col">
                                                 <div className="-my-2 -mx-4 sm:-mx-6 lg:-mx-8">
                                                     <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-
                                                         <div className="shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-                                                            <table className="min-w-full divide-y divide-gray-300">
-                                                                <thead className="bg-slate-300">
-
-                                                                    {labeldias && labeldias.map((dias, index) => (
-                                                                        <tr>
-                                                                            <th scope="col" className="bg-slate-300 py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
-                                                                                {textoTipo}
-                                                                            </th>
-                                                                            <th scope="col" className=" bg-slate-300 px-6 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                                                                {dias.Dia1}
-                                                                            </th>
-                                                                            <th scope="col" className=" bg-slate-300 px-6 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                                                                {dias.Dia2}
-                                                                            </th>
-                                                                            <th scope="col" className=" bg-slate-300 px-6 py-3.5 text-left text-sm font-semibold text-gray-900">
-                                                                                {dias.Dia3}
-                                                                            </th>
-
-                                                                        </tr>
-                                                                    ))}
-                                                                </thead>{ }
-                                                                <tbody className="bg-white">
-                                                                    {movimientos && movimientos.map((ventas, index) => (
-                                                                        <tr key={index} className={index % 2 === 0 ? undefined : 'bg-gray-50'}>
-                                                                            <td className=" bg-slate-300 whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium  text-gray-900 sm:pl-6">
-                                                                                {ventas.Nombreagrupa}
-                                                                            </td>
-                                                                            <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-right text-gray-900 sm:pl-6">
-                                                                                {isNaN(parseInt(ventas.dia_1)) ?
-                                                                                    null
-                                                                                    :
-                                                                                    myNumber(1, (ventas.dia_1))
-                                                                                }
-                                                                            </td>
-                                                                            <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-right text-gray-900 sm:pl-6">
-                                                                                {isNaN(parseInt(ventas.dia_2)) ?
-                                                                                    null
-                                                                                    :
-                                                                                    myNumber(1, (ventas.dia_2))
-                                                                                }
-                                                                            </td>
-                                                                            <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-right text-gray-900 sm:pl-6">
-                                                                                {isNaN(parseInt(ventas.dia_3)) ?
-                                                                                    null
-                                                                                    :
-                                                                                    myNumber(1, (ventas.dia_3))
-                                                                                }
-                                                                            </td>
-
-                                                                        </tr>
-                                                                    ))}
-                                                                </tbody>
-                                                            </table>
+                                                            <Table columns={header_testtot} dataSource={movimientos} pagination={false}
+                                                                scroll={{
+                                                                    x: 1200,
+                                                                    y: 500,
+                                                                }}
+                                                                bordered />
                                                         </div>
                                                     </div>
                                                 </div>

@@ -172,7 +172,10 @@ function TabProveedores(props) {
 
     const consolidar = () => {
         if (selectedAno.length > 0 && selectedMes.length > 0 && !selectedDia.value) {
-          
+            setEntAcumuladas(false);
+            setEntMes(true);
+            setOpcion(0);
+
             setLabel("MES ")
             let newDetCompras = [];
             let newDetComprasMes = [];
@@ -310,7 +313,9 @@ function TabProveedores(props) {
         }
         else
             if (selectedAno.length > 0 && selectedMes.length == 0) {
-              
+                setEntAcumuladas(true);
+                setEntMes(false);
+                setOpcion(1);
                 let newDetCompras = [];
                 let newDetComprasMes = [];
                 setLabel("TOTAL ")
@@ -409,7 +414,7 @@ function TabProveedores(props) {
                 setmovimientos(newDetComprasVsPst);
             } else
                 if (selectedAno.length > 0 && selectedMes.length > 0 && selectedDia) {
-                  
+
                     setLabel("DIA ")
                     let newDetCompras = [];
                     let newDetComprasMes = [];
@@ -663,83 +668,87 @@ function TabProveedores(props) {
                                     {tab.name}
                                 </a>
                             ))}
+                        </nav>
+                        <div className="mt-2 border-b border-gray-200">
+                            <nav className="ml-80 mb-3 flex space-x-2" aria-label="Tabs">
+                                <div className="mt-1 flex">
+                                    <Menu as="div" className="relative inline-block" >
+                                        <MultiSelect
+                                            options={vtasAno}
+                                            value={selectedAno}
+                                            onChange={setSelectedAno}
+                                            disableSearch="false"
+                                            labelledBy="Filtrar por año"
+                                            className=" p-0 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                            overrideStrings={{
+                                                selectSomeItems: "Filtrar por año...",
+                                                allItemsAreSelected:
+                                                    "Todos los años",
+                                                search: "Buscar",
+                                                selectAll:
+                                                    "Todos"
+                                            }}
+                                        />
+                                    </Menu>
+                                </div>
+                                <div className="mt-1 flex">
+                                    <Menu as="div" className="relative inline-block" >
+                                        <MultiSelect
+                                            options={vtasMes}
+                                            value={selectedMes}
+                                            onChange={setSelectedMes}
+                                            disableSearch="false"
+                                            labelledBy="Filtrar por mes"
+                                            className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                            overrideStrings={{
+                                                selectSomeItems: " Filtrar por mes...",
+                                                allItemsAreSelected:
+                                                    "Todos los meses",
+                                                search: "Buscar",
+                                                selectAll:
+                                                    "Todos"
+                                            }}
+                                        />
+                                    </Menu>
+                                </div>
+                                <div className="mt-1 flex">
+                                    <Menu as="div" className="relative inline-block" >
+                                        <Select
+                                            options={vtasDia}
+                                            value={selectedDia}
+                                            onChange={setSelectedDia}
+                                            className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                            placeholder="Selec. día"
+                                        />
+                                    </Menu>
+                                </div>
+                                <div className="mt-1 flex">
+                                    <Menu as="div" className="ml-1 relative inline-block" >
+                                        <div className="flex">
 
-                            <div className="mt-1 flex" >
-                                <Menu as="div" className="relative inline-block" >
-                                    <MultiSelect
-                                        options={vtasAno}
-                                        value={selectedAno}
-                                        onChange={setSelectedAno}
-                                        disableSearch="false"
-                                        labelledBy="Filtrar por año"
-                                        className=" p-0 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                                        overrideStrings={{
-                                            selectSomeItems: "Filtrar por año...",
-                                            allItemsAreSelected:
-                                                "Todos los años",
-                                            search: "Buscar",
-                                            selectAll:
-                                                "Todos"
-                                        }}
-                                    />
-                                </Menu>
-                            </div>
-                            <div className="mt-1 flex">
-                                <Menu as="div" className="relative inline-block" >
-                                    <MultiSelect
-                                        options={vtasMes}
-                                        value={selectedMes}
-                                        onChange={setSelectedMes}
-                                        disableSearch="false"
-                                        labelledBy="Filtrar por mes"
-                                        className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                                        overrideStrings={{
-                                            selectSomeItems: " Filtrar por mes...",
-                                            allItemsAreSelected:
-                                                "Todos los meses",
-                                            search: "Buscar",
-                                            selectAll:
-                                                "Todos"
-                                        }}
-                                    />
-                                </Menu>
-                            </div>
-                            <div className="mt-1 flex">
-                                <Menu as="div" className="relative inline-block" >
-                                    <Select
-                                        options={vtasDia}
-                                        value={selectedDia}
-                                        onChange={setSelectedDia}
-                                        className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                                        placeholder="Selec. día"
-                                    />
-                                </Menu>
-                            </div>
-                            <div className="mt-1 flex">
-                                <Menu as="div" className="ml-1 relative inline-block" >
-                                    <div className="flex">
-
-                                        <div className="mx-auto flex max-w-4xl h-10 space-x-6 divide-x bg-green rounded divide-gray-200 px-4 text-sm sm:px-6 lg:px-8">
-                                            <button
-                                                onClick={() => generarConsulta()}
-                                            >
-                                                Consultar
-                                            </button>
-                                        </div>
-                                        <div className="ml-3 mx-auto flex max-w-4xl h-10 space-x-6 divide-x bg-yellow rounded divide-gray-200 px-4 text-sm sm:px-6 lg:px-8">
-                                            <div >
+                                            <div className="mx-auto flex max-w-4xl h-10 space-x-6 divide-x bg-green rounded divide-gray-200 px-4 text-sm sm:px-6 lg:px-8">
                                                 <button
-                                                    type="button"
-                                                    onClick={() => limpiarFiltros()}
-                                                    className="text-white text-sm p-2 max-w-4xl ">
-                                                    Limpiar filtros
+                                                    onClick={() => generarConsulta()}
+                                                >
+                                                    Consultar
                                                 </button>
                                             </div>
+                                            <div className="ml-3 mx-auto flex max-w-4xl h-10 space-x-6 divide-x bg-yellow rounded divide-gray-200 px-4 text-sm sm:px-6 lg:px-8">
+                                                <div >
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => limpiarFiltros()}
+                                                        className="text-white text-sm p-2 max-w-4xl ">
+                                                        Limpiar filtros
+                                                    </button>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </Menu>
-                            </div>
-                        </nav>
+                                    </Menu>
+                                </div>
+                            </nav>
+                        </div>
+
                     </div>
 
                     <div className="margenizaquierdanegativo px-4 sm:px-6 lg:px-8">
@@ -832,8 +841,8 @@ function TabProveedores(props) {
                         }
                     </div>
                 </div>
-            </h2>
-        </div>
+            </h2 >
+        </div >
     );
 }
 

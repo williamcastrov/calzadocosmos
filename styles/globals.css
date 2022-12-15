@@ -206,3 +206,7 @@
     height: 50px !important;
     filter: opacity(0.55) drop-shadow(0 0 0 blue); 
 }
+
+.ant-table-thead .ant-table-cell {
+  opacity: 0.9;
+}
