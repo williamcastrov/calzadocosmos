@@ -71,10 +71,13 @@ function ConsultarPresupuesto(props) {
     const [selectedAno, setSelectedAno] = useState([]);
     const [selectedMes, setSelectedMes] = useState([]);
 
-    const [vtasAno, setVtasAno] = useState(ventasDiariasMes.anos_vtasdiarias);
-    const [vtasMes, setVtasMes] = useState(ventasDiariasMes.meses_vtasdiarias);
+    const [vtasAno, setVtasAno] = useState([]);
+    const [vtasMes, setVtasMes] = useState([]);
 
-    console.log("VTAS DIAS : ", ventasDiariasMes.anos_vtasdiarias)
+    //const [vtasAno, setVtasAno] = useState(ventasDiariasMes.anos_vtasdiarias);
+    //const [vtasMes, setVtasMes] = useState(ventasDiariasMes.meses_vtasdiarias);
+
+    //console.log("VTAS DIAS : ", ventasDiariasMes.anos_vtasdiarias)
 
     useEffect(() => {
         let newDetAnos = [];
