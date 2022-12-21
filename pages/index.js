@@ -30,6 +30,7 @@ export default function Home() {
   const dispatch = useDispatch();
   const [ok, setOk] = useState(false)
   const [movimientoscompras, setMovimientoscompras] = useState(null)
+  const [datosImagenes, setDatosImagenes] = useState(null)
 
   useEffect(() => {
     onAuthStateChanged(auth, (usuarioCosmos) => {
@@ -121,6 +122,35 @@ export default function Home() {
           })
           .catch((error) =>
             alert("Error Inesperado 3")
+          )
+
+          // lee datos filtros genear informes ventas
+        axios({
+          method: "post",
+          url: `${URL_SERVICE}/21`,
+          headers: {
+            "Content-type": "application/json",
+          },
+        })
+          .then((res) => {
+            //res.json()
+            if (res.status == 200) {
+              //console.log("RETORNA DATOS FILTROS VENTAS: ", "OK")
+              if (res.data) {
+                localStorage.setItem("bancoimagenes", JSON.stringify(res.data)
+                );
+                //console.log("DATOS FILTROS VENTAS : ", res.data)
+                setOk(true)
+              } else {
+                console.log("DATOS BANCO DE IMAGENES: ", "ERROR")
+              }
+
+            } else {
+              console.log("ERROR LEYENDO DATOS BANCO DE IMAGENES: ", "ERROR")
+            }
+          })
+          .catch((error) =>
+            alert("Error Inesperado 4")
           )
 
       } else {

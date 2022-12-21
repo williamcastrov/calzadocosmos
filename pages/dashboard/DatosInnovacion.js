@@ -27,11 +27,10 @@ function DatosInnovacion(props) {
   useEffect(() => {
 
     tipousuario = JSON.parse(localStorage.getItem("tipousuario"));
-    //console.log("TIPO DE USUARIO : ", tipousuario)
 
     let filtrosventas = null;
     filtrosventas = JSON.parse(localStorage.getItem("filtrosventas"));
-    console.log("FILTROS VENTAS : ", filtrosventas)
+
     setFiltrosVentas(filtrosventas);
 
     // Debemos validar el tipo de usuario y cargar datos iniciales al state

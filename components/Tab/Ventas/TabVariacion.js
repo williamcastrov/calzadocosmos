@@ -1404,7 +1404,6 @@ function TabVariacion(props) {
                             ))}
                         </nav>
                     </div>
-
                     {
                         selectedAno.length > 0 && selectedMes.length == 0 ?
                             (

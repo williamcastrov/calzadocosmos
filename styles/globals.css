@@ -210,3 +210,8 @@
 .ant-table-thead .ant-table-cell {
   opacity: 0.9;
 }
+
+.tamañoimagen {
+  width: 70px !important;
+  height: 70px !important;
+}
