@@ -7,6 +7,7 @@ import axios from "axios";
 import NavBar from "../../components/NavBar/NavBar";
 const URL_SERVICE = "https://api.aal-cloud.com/api/cosmos";
 import Spinner from "../../components/Spinner/Spinner";
+import Moment from "moment";
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
@@ -20,6 +21,7 @@ function LoadReference(props) {
     const [selectedArchives, setSelectedArchives] = useState([]);
     const [productos, setProductos] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [saveImage, setSaveImage] = useState(false);
 
     const [baseArchives, setBaseArchives] = useState([]);
     const [valorReferencia, setValorReferencia] = useState(null);
@@ -45,6 +47,7 @@ function LoadReference(props) {
     const [imagenDieciOcho, setImagenDieciOcho] = useState(null);
     const [imagenDieciNueve, setImagenDieciNueve] = useState(null);
     const [imagenVeinte, setImagenVeinte] = useState(null);
+    const fechaactual = Moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
 
     useEffect(() => {
         // Lee imaganes
@@ -67,7 +70,7 @@ function LoadReference(props) {
             setLoading(false);
         }
         setLongitudArray(longitud);
-        console.log("IMAGENES : ", newDet);
+        //console.log("IMAGENES : ", newDet);
         //SubLinea: "CALZADO"
     }, []);
 
@@ -327,7 +330,7 @@ function LoadReference(props) {
     }
 
     const generabase64 = async () => {
-
+        setSaveImage(true);
         if (!baseArchives) {
             swal({
                 title: "Tablero Cosmos",
@@ -337,9 +340,9 @@ function LoadReference(props) {
             return
         }
 
-
         //Recorre arreglo de imagenes y extrae el nombre del archivo
         let newDetName = [];
+        let newDetPrd = [];
         selectedArchives &&
             selectedArchives.map((items, index) => {
                 let row = {
@@ -347,12 +350,13 @@ function LoadReference(props) {
                     imagen: items
                 }
                 newDetName.push(row);
+                newDetPrd.push(row);
             });
-
-
+        //console.log("PRODUCTOS : ", productos)
+        /*
 
         // Crear el array de nombre y variables a granar en tabla referencia imagenes
-        let newDetPrd = [];
+        
         newDetName &&
             newDetName.map((img, index) => {
                 productos &&
@@ -371,15 +375,12 @@ function LoadReference(props) {
                         }
                     });
             });
-
-        //console.log("BASE : ", newDetPrd)
-        //return
-
+*/
         if (newDetPrd.length > 0) {
-
             const recorreImagen = async () => {
                 let longitud = baseArchives.length;
                 let arreglofotos = [];
+                let contador = 0;
                 let extension = "";
 
                 await Array.from(baseArchives).forEach((archivo, index) => {
@@ -400,14 +401,14 @@ function LoadReference(props) {
 
                         const datosReferencia = async () => {
 
-                            console.log("NOMBRES : ", newDetPrd[index]);
-
+                            //console.log("NOMBRES : ", newDetPrd[index]);
                             let params = {
                                 referencia: newDetPrd[index].referencia,
                                 imagen: newDetPrd[index].imagen,
-                                sublinea: newDetPrd[index].sublinea,
-                                grupo: newDetPrd[index].grupo,
-                                referenciaproveedor: newDetPrd[index].referencia_proveedor
+                                sublinea: "",
+                                grupo: "",
+                                referenciaproveedor: "",
+                                fecha: fechaactual
                             };
 
                             await axios({
@@ -418,6 +419,7 @@ function LoadReference(props) {
                                 .then((res) => {
                                     if (res.data) {
                                         grabarDatosReferencia(arreglofotos[index], newDetPrd[index].referencia)
+                                        contador = contador + 1;
                                     } else {
                                         console.log("GRABA DATOS PRODUCTOS")
                                     }
@@ -426,6 +428,9 @@ function LoadReference(props) {
                                     console.log("PRODUCTO EXISTE NO  EN SIIGO")
                                     //grabarDatosBD(datos)
                                 });
+                            if (contador == longitud) {
+                                setSaveImage(false);
+                            }
                         };
                         datosReferencia();
                     };
@@ -499,7 +504,7 @@ function LoadReference(props) {
 
     const header_test = [
         {
-            title: "Imagen", dataIndex: "Imagen", key: "Imagen", width: 70, fixed: true,
+            title: "Imagen", dataIndex: "Imagen", key: "Imagen", width: 100, fixed: true,
             render: (text, row, index) => {
                 return (
                     <img
@@ -513,11 +518,13 @@ function LoadReference(props) {
                 );
             }
         },
-        { title: "Referencia", dataIndex: "Referencia", key: "Referencia", width: 50, align: "left" },
-        { title: "Sublínea", dataIndex: "SubLinea", key: "SubLinea", width: 50, align: "left" },
-        { title: "Grupo", dataIndex: "Grupo", key: "Grupo", width: 50, align: "left" },
-        { title: "Fecha", dataIndex: "Fecha", key: "Fecha", width: 50, align: "left",  
-        sorter: (a, b) => a.Fecha - b.Fecha, },
+        { title: "Referencia", dataIndex: "Referencia", key: "Referencia", width: 80, align: "left" },
+        //{ title: "Sublínea", dataIndex: "SubLinea", key: "SubLinea", width: 50, align: "left" },
+        //{ title: "Grupo", dataIndex: "Grupo", key: "Grupo", width: 50, align: "left" },
+        {
+            title: "Fecha", dataIndex: "Fecha", key: "Fecha", width: 80, align: "left",
+            sorter: (a, b) => a.Fecha - b.Fecha,
+        },
     ]
 
     return (
@@ -530,21 +537,21 @@ function LoadReference(props) {
                 <h1 className="text-center text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Banco de Imagenes Cosmos</h1>
 
                 <div className="min-w-full  margenizaquierdanegativo px-4 sm:px-6 lg:px-8">
-                   
-                        {
-                            loading ?
-                                (
-                                    <div >
-                                    <Spinner className="w-9 h-9"/>
+
+                    {
+                        loading ?
+                            (
+                                <div >
+                                    <Spinner className="w-9 h-9" />
                                     <h1 className="text-center text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
                                         Cargando datos ...
                                     </h1>
-                                    </div>
-                                )
-                                :
-                                null
-                        }
-                   
+                                </div>
+                            )
+                            :
+                            null
+                    }
+
                     <div className="min-w-full  mt-8 flex flex-col">
                         <div className="min-w-full  -my-2 -mx-4 sm:-mx-6 lg:-mx-8">
                             <div className="min-w-full py-2 align-middle md:px-6 lg:px-8">
@@ -574,7 +581,7 @@ function LoadReference(props) {
                             </dl>
                             <p className="mt-1 text-base font-medium text-center text-gray-700">Subir imagen</p>
                         </div>
-                        
+
                         {/*
                         <div class="mb-4">
                             <label class="block text-gray-700 text-sm font-bold mb-2" for="idreferencia">
@@ -614,6 +621,15 @@ function LoadReference(props) {
 
                                 </label>
                                 <div className="mt-5 ">
+                                    {
+                                        saveImage ?
+                                            <h1 className="text-center text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+                                                Grabando imagenes ...
+                                            </h1>
+                                            :
+                                            null
+                                    }
+
                                     <p className="text-center text-lg" for="file-input">
                                         Imagenes a cargar - maximo veinte
                                     </p>
