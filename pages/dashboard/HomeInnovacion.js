@@ -17,6 +17,7 @@ import { setDatosUser } from "../../components/store/slices/users";
 //Componentes detalle movimientos
 import TabInformeVtas from "../../components/Tab/Innovacion/TabInformeVtas";
 import TabMesesInventario from "../../components/Tab/Innovacion/TabMesesInventario";
+import TabProductosMenorVtas from "../../components/Tab/Innovacion/TabProductosMenorVtas";
 
 //Anibal
 import TileIcon from "../../components/TileIcon";
@@ -58,10 +59,9 @@ export default function HomeInnovacion(props) {
     const [tabFiltros, setTabFiltros] = useState(false);
     const [tabVtasLinea, setTabVtasLinea] = useState(true);
     const [tabCostosVtas, setTabCostosVtas] = useState(false);
+    const [tabMenorVtas, setTabMenorVtas] = useState(false);
 
-    const [tabParticipacionVtas, setTabParticipacionVtas] = useState(false);
     const [tabCrecimientoVtas, setTabCrecimientoVtas] = useState(false);
-    const [tabPendientesProveedor, setTabPendientesProveedor] = useState(false);
     const [tabMargen, setTabMargen] = useState(false);
 
     let totalingresoxlinea = [];
@@ -72,6 +72,7 @@ export default function HomeInnovacion(props) {
     const tabs = [
         { name: 'Informe de Ventas', href: '#', current: tabVtasLinea },
         { name: 'Meses de Inventario', href: '#', current: tabCostosVtas },
+        { name: 'Productos Menor Venta', href: '#', current: tabMenorVtas },
 
     ]
 
@@ -85,7 +86,7 @@ export default function HomeInnovacion(props) {
         if (seleccion == 0) {
             setTabVtasLinea(true);
             setTabCostosVtas(false);
-            setTabParticipacionVtas(false);
+            setTabMenorVtas(false);
             setTabCrecimientoVtas(false);
             setTabFiltros(false);
             setTabMargen(false);
@@ -93,52 +94,25 @@ export default function HomeInnovacion(props) {
             if (seleccion == 1) {
                 setTabVtasLinea(false);
                 setTabCostosVtas(true);
-                setTabParticipacionVtas(false);
+                setTabMenorVtas(false);
                 setTabCrecimientoVtas(false);
                 setTabFiltros(false);
                 setTabMargen(false);
-            }
-            else
+            } else
                 if (seleccion == 2) {
                     setTabVtasLinea(false);
                     setTabCostosVtas(false);
-                    setTabParticipacionVtas(true);
+                    setTabMenorVtas(true);
                     setTabCrecimientoVtas(false);
                     setTabFiltros(false);
                     setTabMargen(false);
+                } else {
+                    setTabVtasLinea(true);
+                    setTabCostosVtas(false);
+                    setTabMenorVtas(false);
+                    setTabFiltros(false);
+                    setTabMargen(false);
                 }
-                else
-                    if (seleccion == 3) {
-                        setTabVtasLinea(false);
-                        setTabCostosVtas(false);
-                        setTabParticipacionVtas(false);
-                        setTabCrecimientoVtas(true);
-                        setTabFiltros(false);
-                        setTabMargen(false);
-                    }
-                    else
-                        if (seleccion == 4) {
-                            setTabVtasLinea(false);
-                            setTabCostosVtas(false);
-                            setTabParticipacionVtas(false);
-                            setTabFiltros(true)
-                            setTabMargen(false);
-                        }
-                        else
-                            if (seleccion == 3) {
-                                setTabVtasLinea(false);
-                                setTabCostosVtas(false);
-                                setTabParticipacionVtas(false);
-                                setTabFiltros(false);
-                                setTabMargen(true);
-                            }
-                            else {
-                                setTabVtasLinea(true);
-                                setTabCostosVtas(false);
-                                setTabParticipacionVtas(false);
-                                setTabFiltros(false);
-                                setTabMargen(false);
-                            }
     }
 
     return (
@@ -252,8 +226,8 @@ export default function HomeInnovacion(props) {
                         </div>
                     </Dialog>
                 </Transition.Root>
-                <NavBar/>
-                
+                <NavBar />
+
                 <div className="lg:pl-64 flex flex-col flex-1">
                     <div className="relative z-10 flex-shrink-0 flex h-16 bg-white border-b border-gray-200 lg:border-none">
                         <button
@@ -501,8 +475,15 @@ export default function HomeInnovacion(props) {
                                                             existencias={existencias}
                                                             parametrosVtas={parametrosVtas}
                                                         />
-                                                    ) :
-                                                    null
+                                                    ) : tabMenorVtas ?
+                                                        (
+                                                            <TabProductosMenorVtas tipo={tipo} setTipo={setTipo}
+                                                                ventasDiariasMes={ventasDiariasMes}
+                                                                existencias={existencias}
+                                                                parametrosVtas={parametrosVtas}
+                                                            />
+                                                        ) :
+                                                        null
                                         }
                                     </div>
                                 </h2>

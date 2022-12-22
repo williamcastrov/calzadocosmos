@@ -13,7 +13,7 @@ function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
 }
 
-function TabInformeVtas(props) {
+function TabProductosMenorVtas(props) {
     const { Title } = Typography;
     const { tipo, setTipo, ventasDiariasMes, existencias, grupos, sublineas, marcas, vtasReferencias } = props;
     const [isLoading, setIsLoading] = useState(false)
@@ -2117,7 +2117,7 @@ function TabInformeVtas(props) {
             <h2 className="mx-auto mt-1 px-4 text-lg leading-6 font-medium text-gray-900 sm:px-6 lg:px-8">
                 <div className="col-start-1 row-start-1 py-3">
                     <div className="ml-30 mx-auto flex max-w-7xl justify-center px-4 sm:px-6 lg:px-8">
-                        {/* justify-end */}
+                        {/* justify-end 
                         <div className="flex">
                             <Menu as="div" className="relative inline-block">
                                 <MultiSelect
@@ -2137,6 +2137,7 @@ function TabInformeVtas(props) {
                                 />
                             </Menu>
                         </div>
+                        */}
                         <div className="flex">
                             <Menu as="div" className="relative inline-block">
                                 <MultiSelect
@@ -2373,4 +2374,4 @@ function TabInformeVtas(props) {
     );
 }
 
-export default TabInformeVtas;
+export default TabProductosMenorVtas;

@@ -452,6 +452,7 @@ function LoadReference(props) {
         const formdata = new FormData();
         formdata.append("imagen", foto);
         formdata.append("nombreimagen", referencia);
+        formdata.append("extension", "jpg");
 
         let url = "https://api.aal-cloud.com/api/cosmos";
 
@@ -518,7 +519,16 @@ function LoadReference(props) {
                 );
             }
         },
-        { title: "Referencia", dataIndex: "Referencia", key: "Referencia", width: 80, align: "left" },
+        { title: "Referencia", dataIndex: "Referencia", key: "Referencia", width: 80, align: "left",
+        sorter: (a, b) => moment(a.Referencia) - moment(b.Referencia),
+        render: (text, row, index) => {
+            return (
+                <Title level={4} style={{ fontSize: 15, }}>
+                    {row.Referencia}
+                </Title>
+            );
+        }
+        },
         //{ title: "Sublínea", dataIndex: "SubLinea", key: "SubLinea", width: 50, align: "left" },
         //{ title: "Grupo", dataIndex: "Grupo", key: "Grupo", width: 50, align: "left" },
         {
@@ -556,12 +566,14 @@ function LoadReference(props) {
                         <div className="min-w-full  -my-2 -mx-4 sm:-mx-6 lg:-mx-8">
                             <div className="min-w-full py-2 align-middle md:px-6 lg:px-8">
                                 <div className="min-w-full shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                                    {/*
                                     <Table columns={header_test} dataSource={listaImagenes} pagination={false}
                                         scroll={{
                                             x: 1000,
                                             y: 500,
                                         }}
                                         bordered />
+                                    */}
                                 </div>
                             </div>
                         </div>
