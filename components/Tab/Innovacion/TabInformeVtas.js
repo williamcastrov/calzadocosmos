@@ -30,6 +30,8 @@ function TabInformeVtas(props) {
     const [labeldias, setLabeldias] = useState([]);
     const [consultar, setConsultar] = useState(false);
 
+    const [generar, setGenerar] = useState(false);
+
     const [selectedGrupo, setSelectedGrupo] = useState([]);
     const [selectedSublinea, setSelectedSublinea] = useState([]);
     const [selectedMarca, setSelectedMarca] = useState([]);
@@ -62,8 +64,6 @@ function TabInformeVtas(props) {
         { label: "Todos los registros", value: 2 }
     ];
 
-
-    console.log("CUANTOS: ", registros);
     //console.log("LABEL DIAS: ", labelVentas);
     const tabsdos = [
         { name: 'Referencia', href: '#', current: entMes }
@@ -118,7 +118,7 @@ function TabInformeVtas(props) {
 
     const selVentas = (seleccion) => {
         setOpcion(seleccion)
-        console.log("SEL OPCION: ", seleccion);
+
         if (seleccion == 0)
             setTextoTipo("CENTROS_DE_OPERACIÓN")
         else
@@ -136,6 +136,7 @@ function TabInformeVtas(props) {
     }
 
     const generarConsulta = () => {
+
         if (selectedAno.length == 0 || selectedMes.length == 0) {
             swal({
                 title: "Tablero Cosmos",
@@ -144,21 +145,23 @@ function TabInformeVtas(props) {
             });
             return
         }
-
+        setGenerar(true);
         GenerarDatos();
         setConsultar(true)
     }
 
     useEffect(() => {
-        setIsLoading(true);
-    }, [consultar]);
+        if (generar) {
+            setIsLoading(true);
+        }
+    }, [generar]);
 
     const GenerarDatos = () => {
 
         //if (selectedAno.length > 0) {
 
         let periodo = "";
-
+       
         if (selectedMes[0].value < 10)
             periodo = "" + selectedAno[0].value + "0" + selectedMes[0].value;
         else
@@ -190,8 +193,24 @@ function TabInformeVtas(props) {
         let vtasperiodo = ventasDiariasMes.ventasreferenciaperiodo;
         let referenciacolorvta = vtasReferencias.referenciasvta;
 
-        //console.log("VENTAS DIAS : ", referenciacolorvta)
-        //return
+        let datomes = [];
+
+        vtasperiodo &&
+            vtasperiodo.map((vta, index) => {
+                if (vta.Periodo == periodo) {
+                    datomes.push(vta);
+                }
+            });
+
+        let referenciacolorvtames = [];
+
+        referenciacolorvta &&
+            referenciacolorvta.map((ref, index) => {
+                if (ref.Periodo == periodo) {
+                    referenciacolorvtames.push(ref);
+                }
+            });
+
         if (tipoConsulta.length == 0) {
             swal({
                 title: "Tablero Cosmos",
@@ -210,8 +229,8 @@ function TabInformeVtas(props) {
         if (selectedAno.length > 0 && selectedMes.length > 0 && selectedGrupo.length == 0 &&
             selectedSublinea.length == 0 && selectedMarca.length == 0) {
 
-            referenciacolorvta &&
-                referenciacolorvta.map((ref, index) => {
+            referenciacolorvtames &&
+                referenciacolorvtames.map((ref, index) => {
                     if (ref.Periodo == periodo) {
                         let ventaund = 0;
                         let ventapesos = 0;
@@ -224,16 +243,10 @@ function TabInformeVtas(props) {
 
                         contador = contador + 1;
 
-                        if (contador > cantidad) {
-                            setConsultar(true)
-                            setConsultar(false);
-                        }
-
-
                         if (contador < cantidad) {
 
-                            vtasperiodo &&
-                                vtasperiodo.map((vta, index) => {
+                            datomes &&
+                                datomes.map((vta, index) => {
                                     if (vta.Periodo == periodo && vta.Referencia_Item == ref.Referencia &&
                                         vta.Color == ref.Color) {
 
@@ -267,9 +280,6 @@ function TabInformeVtas(props) {
                     }
 
                 });
-
-            //console.log("VENTAS DIAS : ", vtasreferenciaperiodo)
-            //return
 
             referenciacolor &&
                 referenciacolor.map((ref, index) => {
@@ -319,8 +329,6 @@ function TabInformeVtas(props) {
 
                 });
 
-            //console.log("EXISTENCIAS: ", existenciareferenciacolor)
-            //return
             let longitudexistencias = existenciareferenciacolor.length;
 
             vtasreferenciaperiodo &&
@@ -345,9 +353,6 @@ function TabInformeVtas(props) {
                     }
 
                 });
-
-            //console.log("INVENTARIO : ", referencias)
-            //return
 
             let refe;
             let colo;
@@ -393,21 +398,18 @@ function TabInformeVtas(props) {
                         imageSrc: imagencosmos
                     }
                     vtasreferencia.push(item);
-                    //}
-                    //refe = vta.Referencia;
-                    //colo = vta.Color;
-
                 });
-            console.log("REFERENCIAS : ", vtasreferencia)
+
+            if (vtasReferencias.length > 0)
+                setIsLoading(false);
+
             setmovimientos(vtasreferencia);
         } else
             if (selectedAno.length > 0 && selectedMes.length > 0 && selectedGrupo.length > 0 &&
                 selectedSublinea.length == 0 && selectedMarca.length == 0) {
 
-                let vtasperiodo = ventasDiariasMes.ventasreferenciaperiodo;
-
-                referenciacolorvta &&
-                    referenciacolorvta.map((ref, index) => {
+                referenciacolorvtames &&
+                    referenciacolorvtames.map((ref, index) => {
                         if (ref.Periodo == periodo) {
                             let ventaund = 0;
                             let ventapesos = 0;
@@ -421,8 +423,8 @@ function TabInformeVtas(props) {
                             contador = contador + 1;
                             if (contador < 500) {
 
-                                vtasperiodo &&
-                                    vtasperiodo.map((vta, index) => {
+                                datomes &&
+                                    datomes.map((vta, index) => {
                                         if (vta.Periodo == periodo && vta.Referencia_Item == ref.Referencia &&
                                             vta.Color == ref.Color) {
 
@@ -504,9 +506,6 @@ function TabInformeVtas(props) {
 
                 let longitudexistencias = existenciareferenciacolor.length;
 
-                //console.log("INVENTARIO : ", existenciareferenciacolor)
-                //return
-
                 selectedGrupo &&
                     selectedGrupo.map((grp, index) => {
                         vtasreferenciaperiodo &&
@@ -532,9 +531,6 @@ function TabInformeVtas(props) {
                                 }
                             });
                     });
-
-                //console.log("INVENTARIO : ", vtasmasexistencia)
-                //return
 
                 if (vtasmasexistencia.length == 0) {
                     swal({
@@ -595,19 +591,19 @@ function TabInformeVtas(props) {
                             vtasreferencia.push(item);
                         }
                         refe = vta.Referencia;
-                        //setIsLoading(false);
+
                     });
-                //console.log("REFERENCIAS : ", vtasreferencia)
+
+                if (vtasReferencias.length > 0)
+                    setIsLoading(false);
                 setmovimientos(vtasreferencia);
 
             } else
                 if (selectedAno.length > 0 && selectedMes.length > 0 && selectedGrupo.length == 0 &&
                     selectedSublinea.length > 0 && selectedMarca.length == 0) {
 
-                    let vtasperiodo = ventasDiariasMes.ventasreferenciaperiodo;
-
-                    referenciacolorvta &&
-                        referenciacolorvta.map((ref, index) => {
+                    referenciacolorvtames &&
+                        referenciacolorvtames.map((ref, index) => {
                             if (ref.Periodo == periodo) {
                                 let ventaund = 0;
                                 let ventapesos = 0;
@@ -621,8 +617,8 @@ function TabInformeVtas(props) {
                                 contador = contador + 1;
                                 if (contador < 500) {
 
-                                    vtasperiodo &&
-                                        vtasperiodo.map((vta, index) => {
+                                    datomes &&
+                                        datomes.map((vta, index) => {
                                             if (vta.Periodo == periodo && vta.Referencia_Item == ref.Referencia &&
                                                 vta.Color == ref.Color) {
 
@@ -704,8 +700,6 @@ function TabInformeVtas(props) {
 
                     let longitudexistencias = existenciareferenciacolor.length;
 
-                    //console.log("SUBLINEA : ", vtasreferenciaperiodo)
-                    //return
                     selectedSublinea &&
                         selectedSublinea.map((grp, index) => {
                             vtasreferenciaperiodo &&
@@ -789,19 +783,19 @@ function TabInformeVtas(props) {
                                 vtasreferencia.push(item);
                             }
                             refe = vta.Referencia;
-                            //setIsLoading(false);
+
                         });
-                    //console.log("REFERENCIAS : ", vtasreferencia)
+
+                    if (vtasReferencias.length > 0)
+                        setIsLoading(false);
+
                     setmovimientos(vtasreferencia);
                 } else
                     if (selectedAno.length > 0 && selectedMes.length > 0 && selectedGrupo.length == 0 &&
                         selectedSublinea.length == 0 && selectedMarca.length > 0) {
-                        setIsLoading(true);
 
-                        let vtasperiodo = ventasDiariasMes.ventasreferenciaperiodo;
-
-                        referenciacolorvta &&
-                            referenciacolorvta.map((ref, index) => {
+                        referenciacolorvtames &&
+                            referenciacolorvtames.map((ref, index) => {
                                 if (ref.Periodo == periodo) {
                                     let ventaund = 0;
                                     let ventapesos = 0;
@@ -815,8 +809,8 @@ function TabInformeVtas(props) {
                                     contador = contador + 1;
                                     if (contador < 500) {
 
-                                        vtasperiodo &&
-                                            vtasperiodo.map((vta, index) => {
+                                        datomes &&
+                                            datomes.map((vta, index) => {
                                                 if (vta.Periodo == periodo && vta.Referencia_Item == ref.Referencia &&
                                                     vta.Color == ref.Color) {
 
@@ -851,8 +845,6 @@ function TabInformeVtas(props) {
 
                             });
 
-                        //console.log("INVENTARIO : ", vtasreferenciaperiodo)
-                        //return
                         referenciacolor &&
                             referenciacolor.map((ref, index) => {
                                 let cantidad = 0;
@@ -899,9 +891,6 @@ function TabInformeVtas(props) {
                                 }
                             });
 
-                        //console.log("INVENTARIO : ",  existenciareferenciacolor)
-                        //return
-
                         let longitudexistencias = existenciareferenciacolor.length;
 
                         selectedMarca &&
@@ -929,9 +918,6 @@ function TabInformeVtas(props) {
                                         }
                                     });
                             });
-
-                        //console.log("INVENTARIO : ",  vtasmasexistencia)
-                        //return
 
                         if (vtasmasexistencia.length == 0) {
                             swal({
@@ -989,22 +975,23 @@ function TabInformeVtas(props) {
                                         imageSrc: imagencosmos
                                     }
                                     vtasreferencia.push(item);
-                                    //setIsLoading(false);
+
                                 }
                                 refe = vta.Referencia;
 
                             });
-                        //console.log("REFERENCIAS : ", vtasreferencia)
+
+                        if (vtasReferencias.length > 0)
+                            setIsLoading(false);
+
                         setmovimientos(vtasreferencia);
 
                     } else
                         if (selectedAno.length > 0 && selectedMes.length > 0 && selectedGrupo.length > 0 &&
                             selectedSublinea.length > 0 && selectedMarca.length == 0) {
 
-                            let vtasperiodo = ventasDiariasMes.ventasreferenciaperiodo;
-
-                            referenciacolorvta &&
-                                referenciacolorvta.map((ref, index) => {
+                            referenciacolorvtames &&
+                                referenciacolorvtames.map((ref, index) => {
                                     if (ref.Periodo == periodo) {
                                         let ventaund = 0;
                                         let ventapesos = 0;
@@ -1018,8 +1005,8 @@ function TabInformeVtas(props) {
                                         contador = contador + 1;
                                         if (contador < 500) {
 
-                                            vtasperiodo &&
-                                                vtasperiodo.map((vta, index) => {
+                                            datomes &&
+                                                datomes.map((vta, index) => {
                                                     if (vta.Periodo == periodo && vta.Referencia_Item == ref.Referencia &&
                                                         vta.Color == ref.Color) {
 
@@ -1100,9 +1087,6 @@ function TabInformeVtas(props) {
 
 
                             let longitudexistencias = existenciareferenciacolor.length;
-
-                            //console.log("INVENTARIO : ", existenciareferenciacolor)
-                            //return
 
                             selectedSublinea &&
                                 selectedSublinea.map((grp, index) => {
@@ -1220,18 +1204,18 @@ function TabInformeVtas(props) {
                                         vtasreferencia.push(item);
                                     }
                                     refe = vta.Referencia;
-                                    //setIsLoading(false);
+
                                 });
-                            //console.log("REFERENCIAS : ", vtasreferencia)
+
+                            if (vtasReferencias.length > 0)
+                                setIsLoading(false);
                             setmovimientos(vtasreferencia);
                         } else
                             if (selectedAno.length > 0 && selectedMes.length > 0 && selectedGrupo.length == 0 &&
                                 selectedSublinea.length > 0 && selectedMarca.length > 0) {
 
-                                let vtasperiodo = ventasDiariasMes.ventasreferenciaperiodo;
-
-                                referenciacolorvta &&
-                                    referenciacolorvta.map((ref, index) => {
+                                referenciacolorvtames &&
+                                    referenciacolorvtames.map((ref, index) => {
                                         if (ref.Periodo == periodo) {
                                             let ventaund = 0;
                                             let ventapesos = 0;
@@ -1245,8 +1229,8 @@ function TabInformeVtas(props) {
                                             contador = contador + 1;
                                             if (contador < 500) {
 
-                                                vtasperiodo &&
-                                                    vtasperiodo.map((vta, index) => {
+                                                datomes &&
+                                                    datomes.map((vta, index) => {
                                                         if (vta.Periodo == periodo && vta.Referencia_Item == ref.Referencia &&
                                                             vta.Color == ref.Color) {
 
@@ -1455,18 +1439,16 @@ function TabInformeVtas(props) {
                                             vtasreferencia.push(item);
                                         }
                                         refe = vta.Referencia;
-                                        //(false);
+
                                     });
-                                //console.log("REFERENCIAS : ", vtasreferencia)
+
                                 setmovimientos(vtasreferencia);
                             } else
                                 if (selectedAno.length > 0 && selectedMes.length > 0 && selectedGrupo.length > 0 &&
                                     selectedSublinea.length == 0 && selectedMarca.length > 0) {
 
-                                    let vtasperiodo = ventasDiariasMes.ventasreferenciaperiodo;
-
-                                    referenciacolorvta &&
-                                        referenciacolorvta.map((ref, index) => {
+                                    referenciacolorvtames &&
+                                        referenciacolorvtames.map((ref, index) => {
                                             if (ref.Periodo == periodo) {
                                                 let ventaund = 0;
                                                 let ventapesos = 0;
@@ -1480,8 +1462,8 @@ function TabInformeVtas(props) {
                                                 contador = contador + 1;
                                                 if (contador < 500) {
 
-                                                    vtasperiodo &&
-                                                        vtasperiodo.map((vta, index) => {
+                                                    datomes &&
+                                                        datomes.map((vta, index) => {
                                                             if (vta.Periodo == periodo && vta.Referencia_Item == ref.Referencia &&
                                                                 vta.Color == ref.Color) {
 
@@ -1685,18 +1667,18 @@ function TabInformeVtas(props) {
                                                 vtasreferencia.push(item);
                                             }
                                             refe = vta.Referencia;
-                                            //setIsLoading(false);
+
                                         });
-                                    //console.log("REFERENCIAS : ", vtasreferencia)
+
+                                    if (vtasReferencias.length > 0)
+                                        setIsLoading(false);
                                     setmovimientos(vtasreferencia);
                                 } else
                                     if (selectedAno.length > 0 && selectedMes.length > 0 && selectedGrupo.length > 0 &&
                                         selectedSublinea.length > 0 && selectedMarca.length > 0) {
 
-                                        let vtasperiodo = ventasDiariasMes.ventasreferenciaperiodo;
-
-                                        referenciacolorvta &&
-                                            referenciacolorvta.map((ref, index) => {
+                                        referenciacolorvtames &&
+                                            referenciacolorvtames.map((ref, index) => {
                                                 if (ref.Periodo == periodo) {
                                                     let ventaund = 0;
                                                     let ventapesos = 0;
@@ -1710,8 +1692,8 @@ function TabInformeVtas(props) {
                                                     contador = contador + 1;
                                                     if (contador < 500) {
 
-                                                        vtasperiodo &&
-                                                            vtasperiodo.map((vta, index) => {
+                                                        datomes &&
+                                                            datomes.map((vta, index) => {
                                                                 if (vta.Periodo == periodo && vta.Referencia_Item == ref.Referencia &&
                                                                     vta.Color == ref.Color) {
 
@@ -1948,12 +1930,14 @@ function TabInformeVtas(props) {
                                                     vtasreferencia.push(item);
                                                 }
                                                 refe = vta.Referencia;
-                                                //setIsLoading(false);
+
                                             });
-                                        //console.log("REFERENCIAS : ", vtasreferencia)
+
+                                        if (vtasReferencias.length > 0)
+                                            setIsLoading(false);
                                         setmovimientos(vtasreferencia);
                                     }
-        //setConsultar(false);
+
     }
 
     useEffect(() => {
@@ -2059,7 +2043,7 @@ function TabInformeVtas(props) {
             title: "Foto", dataIndex: "imageSrc", key: "imageSrc", width: 220, align: "left", render: (text, row, index) => {
                 return (
                     <img
-                        src={row.imageSrc+'?v=15454'}
+                        src={row.imageSrc + '?v=15454'}
                         alt={row.imageAlt}
                         className="ml-3 h-23 w-23 rounded-md object-cover object-center  sm:h-18 sm:w-18"
                     />
@@ -2306,9 +2290,7 @@ function TabInformeVtas(props) {
                     </div>
 
                 </div>
-                <div>
-
-                </div>
+                
                 <div className="sm:hidden">
                     <label htmlFor="tabs" className="sr-only">
                         Select a tab
@@ -2349,6 +2331,24 @@ function TabInformeVtas(props) {
                         </nav>
                     </div>
                     <div className="ml-6 px-4 sm:px-6 lg:px-0">
+                    <div>
+                    {
+                        /*
+                        isLoading ?
+                            (
+                                <div >
+                                    <Spinner className="w-9 h-9" />
+                                    <h1 className="text-center text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+                                        Cargando datos ...
+                                    </h1>
+                                </div>
+                            )
+                            :
+                            null
+                            */
+                    }
+
+                </div>
                         <div className="mt-8 flex flex-col">
                             <div className="-my-2 -mx-4 sm:-mx-6 lg:-mx-8">
                                 <div className=" min-w-full py-0 align-middle md:px-6 lg:px-1">

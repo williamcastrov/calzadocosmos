@@ -55,15 +55,11 @@ function TabProductosMenorVtas(props) {
     const [ordenaGrupo, setOrdenaGrupo] = useState(true);
     const [ordenaColor, setOrdenaColor] = useState(true);
 
-    const [tipoConsulta, setTipoConsulta] = useState([]);
-
     let registros = [
         { label: "100 Primeros", value: 1 },
         { label: "Todos los registros", value: 2 }
     ];
 
-
-    console.log("CUANTOS: ", registros);
     //console.log("LABEL DIAS: ", labelVentas);
     const tabsdos = [
         { name: 'Referencia', href: '#', current: entMes }
@@ -136,6 +132,7 @@ function TabProductosMenorVtas(props) {
     }
 
     const generarConsulta = () => {
+
         if (selectedAno.length == 0 || selectedMes.length == 0) {
             swal({
                 title: "Tablero Cosmos",
@@ -150,15 +147,12 @@ function TabProductosMenorVtas(props) {
     }
 
     useEffect(() => {
-        setIsLoading(true);
+        //setIsLoading(true);
     }, [consultar]);
 
     const GenerarDatos = () => {
 
-        //if (selectedAno.length > 0) {
-
         let periodo = "";
-
         if (selectedMes[0].value < 10)
             periodo = "" + selectedAno[0].value + "0" + selectedMes[0].value;
         else
@@ -190,28 +184,29 @@ function TabProductosMenorVtas(props) {
         let vtasperiodo = ventasDiariasMes.ventasreferenciaperiodo;
         let referenciacolorvta = vtasReferencias.referenciasvta;
 
-        //console.log("VENTAS DIAS : ", referenciacolorvta)
-        //return
-        if (tipoConsulta.length == 0) {
-            swal({
-                title: "Tablero Cosmos",
-                text: "Selecciona tipo de consulta!",
-                icon: "warning",
-            });
-            return
-        }
+        let datomes = [];
 
-        let cantidad = 0;
-        if (tipoConsulta[0].value == 1)
-            cantidad = 500;
-        else
-            cantidad = 10000;
+        vtasperiodo &&
+            vtasperiodo.map((vta, index) => {
+                if (vta.Periodo == periodo) {
+                    datomes.push(vta);
+                }
+            });
+
+        let referenciacolorvtames = [];
+
+        referenciacolorvta &&
+            referenciacolorvta.map((ref, index) => {
+                if (ref.Periodo == periodo) {
+                    referenciacolorvtames.push(ref);
+                }
+            });
 
         if (selectedAno.length > 0 && selectedMes.length > 0 && selectedGrupo.length == 0 &&
             selectedSublinea.length == 0 && selectedMarca.length == 0) {
 
-            referenciacolorvta &&
-                referenciacolorvta.map((ref, index) => {
+            referenciacolorvtames &&
+                referenciacolorvtames.map((ref, index) => {
                     if (ref.Periodo == periodo) {
                         let ventaund = 0;
                         let ventapesos = 0;
@@ -222,48 +217,38 @@ function TabProductosMenorVtas(props) {
                         let sublinea = "";
                         let talla = "";
 
-                        contador = contador + 1;
+                        datomes &&
+                            datomes.map((vta, index) => {
+                                if (vta.Periodo == periodo && vta.Referencia_Item == ref.Referencia &&
+                                    vta.Color == ref.Color) {
 
-                        if (contador > cantidad) {
-                            setConsultar(true)
-                            setConsultar(false);
-                        }
-
-
-                        if (contador < cantidad) {
-
-                            vtasperiodo &&
-                                vtasperiodo.map((vta, index) => {
-                                    if (vta.Periodo == periodo && vta.Referencia_Item == ref.Referencia &&
-                                        vta.Color == ref.Color) {
-
-                                        ventaund = parseInt(ventaund) + parseInt(vta.Cantidad);
-                                        ventapesos = parseInt(ventapesos) + parseInt(vta.Vlr_Neto);
-                                        talla = talla + "," + vta.Talla;
-                                        color = vta.Color;
-                                        grupo = vta.Grupo;
-                                        marca = vta.Marca;
-                                        referencia = vta.Referencia_Item;
-                                        sublinea = vta.Sublinea;
-                                    }
-                                });
-
-                            if (ventaund > 0) {
-                                let item = {
-                                    Cantidad: ventaund,
-                                    Color: color,
-                                    Grupo: grupo,
-                                    Marca: marca,
-                                    Periodo: periodo,
-                                    Referencia_Item: referencia,
-                                    Sublinea: sublinea,
-                                    Talla: talla,
-                                    Vlr_Neto: ventapesos
+                                    ventaund = parseInt(ventaund) + parseInt(vta.Cantidad);
+                                    ventapesos = parseInt(ventapesos) + parseInt(vta.Vlr_Neto);
+                                    talla = talla + "," + vta.Talla;
+                                    color = vta.Color;
+                                    grupo = vta.Grupo;
+                                    marca = vta.Marca;
+                                    referencia = vta.Referencia_Item;
+                                    sublinea = vta.Sublinea;
                                 }
-                                vtasreferenciaperiodo.push(item);
+                            });
 
+                        if (ventaund >= 0 && ventaund <= 10) {
+                            let item = {
+                                Cantidad: ventaund,
+                                Color: color,
+                                Grupo: grupo,
+                                Marca: marca,
+                                Periodo: periodo,
+                                Referencia_Item: referencia,
+                                Sublinea: sublinea,
+                                Talla: talla,
+                                Vlr_Neto: ventapesos
                             }
+                            vtasreferenciaperiodo.push(item);
+
                         }
+
                     }
 
                 });
@@ -404,10 +389,8 @@ function TabProductosMenorVtas(props) {
             if (selectedAno.length > 0 && selectedMes.length > 0 && selectedGrupo.length > 0 &&
                 selectedSublinea.length == 0 && selectedMarca.length == 0) {
 
-                let vtasperiodo = ventasDiariasMes.ventasreferenciaperiodo;
-
-                referenciacolorvta &&
-                    referenciacolorvta.map((ref, index) => {
+                referenciacolorvtames &&
+                    referenciacolorvtames.map((ref, index) => {
                         if (ref.Periodo == periodo) {
                             let ventaund = 0;
                             let ventapesos = 0;
@@ -418,41 +401,38 @@ function TabProductosMenorVtas(props) {
                             let sublinea = "";
                             let talla = "";
 
-                            contador = contador + 1;
-                            if (contador < 500) {
+                            datomes &&
+                                datomes.map((vta, index) => {
+                                    if (vta.Periodo == periodo && vta.Referencia_Item == ref.Referencia &&
+                                        vta.Color == ref.Color) {
 
-                                vtasperiodo &&
-                                    vtasperiodo.map((vta, index) => {
-                                        if (vta.Periodo == periodo && vta.Referencia_Item == ref.Referencia &&
-                                            vta.Color == ref.Color) {
-
-                                            ventaund = parseInt(ventaund) + parseInt(vta.Cantidad);
-                                            ventapesos = parseInt(ventapesos) + parseInt(vta.Vlr_Neto);
-                                            talla = talla + "," + vta.Talla;
-                                            color = vta.Color;
-                                            grupo = vta.Grupo;
-                                            marca = vta.Marca;
-                                            referencia = vta.Referencia_Item;
-                                            sublinea = vta.Sublinea;
-                                        }
-                                    });
-
-                                if (ventaund > 0) {
-                                    let item = {
-                                        Cantidad: ventaund,
-                                        Color: color,
-                                        Grupo: grupo,
-                                        Marca: marca,
-                                        Periodo: periodo,
-                                        Referencia_Item: referencia,
-                                        Sublinea: sublinea,
-                                        Talla: talla,
-                                        Vlr_Neto: ventapesos
+                                        ventaund = parseInt(ventaund) + parseInt(vta.Cantidad);
+                                        ventapesos = parseInt(ventapesos) + parseInt(vta.Vlr_Neto);
+                                        talla = talla + "," + vta.Talla;
+                                        color = vta.Color;
+                                        grupo = vta.Grupo;
+                                        marca = vta.Marca;
+                                        referencia = vta.Referencia_Item;
+                                        sublinea = vta.Sublinea;
                                     }
-                                    vtasreferenciaperiodo.push(item);
+                                });
 
+                            if (ventaund >= 0 && ventaund <= 10) {
+                                let item = {
+                                    Cantidad: ventaund,
+                                    Color: color,
+                                    Grupo: grupo,
+                                    Marca: marca,
+                                    Periodo: periodo,
+                                    Referencia_Item: referencia,
+                                    Sublinea: sublinea,
+                                    Talla: talla,
+                                    Vlr_Neto: ventapesos
                                 }
+                                vtasreferenciaperiodo.push(item);
+
                             }
+
                         }
 
                     });
@@ -604,10 +584,8 @@ function TabProductosMenorVtas(props) {
                 if (selectedAno.length > 0 && selectedMes.length > 0 && selectedGrupo.length == 0 &&
                     selectedSublinea.length > 0 && selectedMarca.length == 0) {
 
-                    let vtasperiodo = ventasDiariasMes.ventasreferenciaperiodo;
-
-                    referenciacolorvta &&
-                        referenciacolorvta.map((ref, index) => {
+                    referenciacolorvtames &&
+                        referenciacolorvtames.map((ref, index) => {
                             if (ref.Periodo == periodo) {
                                 let ventaund = 0;
                                 let ventapesos = 0;
@@ -618,41 +596,38 @@ function TabProductosMenorVtas(props) {
                                 let sublinea = "";
                                 let talla = "";
 
-                                contador = contador + 1;
-                                if (contador < 500) {
+                                datomes &&
+                                    datomes.map((vta, index) => {
+                                        if (vta.Periodo == periodo && vta.Referencia_Item == ref.Referencia &&
+                                            vta.Color == ref.Color) {
 
-                                    vtasperiodo &&
-                                        vtasperiodo.map((vta, index) => {
-                                            if (vta.Periodo == periodo && vta.Referencia_Item == ref.Referencia &&
-                                                vta.Color == ref.Color) {
-
-                                                ventaund = parseInt(ventaund) + parseInt(vta.Cantidad);
-                                                ventapesos = parseInt(ventapesos) + parseInt(vta.Vlr_Neto);
-                                                talla = talla + "," + vta.Talla;
-                                                color = vta.Color;
-                                                grupo = vta.Grupo;
-                                                marca = vta.Marca;
-                                                referencia = vta.Referencia_Item;
-                                                sublinea = vta.Sublinea;
-                                            }
-                                        });
-
-                                    if (ventaund > 0) {
-                                        let item = {
-                                            Cantidad: ventaund,
-                                            Color: color,
-                                            Grupo: grupo,
-                                            Marca: marca,
-                                            Periodo: periodo,
-                                            Referencia_Item: referencia,
-                                            Sublinea: sublinea,
-                                            Talla: talla,
-                                            Vlr_Neto: ventapesos
+                                            ventaund = parseInt(ventaund) + parseInt(vta.Cantidad);
+                                            ventapesos = parseInt(ventapesos) + parseInt(vta.Vlr_Neto);
+                                            talla = talla + "," + vta.Talla;
+                                            color = vta.Color;
+                                            grupo = vta.Grupo;
+                                            marca = vta.Marca;
+                                            referencia = vta.Referencia_Item;
+                                            sublinea = vta.Sublinea;
                                         }
-                                        vtasreferenciaperiodo.push(item);
+                                    });
 
+                                if (ventaund >= 0 && ventaund <= 10) {
+                                    let item = {
+                                        Cantidad: ventaund,
+                                        Color: color,
+                                        Grupo: grupo,
+                                        Marca: marca,
+                                        Periodo: periodo,
+                                        Referencia_Item: referencia,
+                                        Sublinea: sublinea,
+                                        Talla: talla,
+                                        Vlr_Neto: ventapesos
                                     }
+                                    vtasreferenciaperiodo.push(item);
+
                                 }
+
                             }
 
                         });
@@ -798,10 +773,8 @@ function TabProductosMenorVtas(props) {
                         selectedSublinea.length == 0 && selectedMarca.length > 0) {
                         setIsLoading(true);
 
-                        let vtasperiodo = ventasDiariasMes.ventasreferenciaperiodo;
-
-                        referenciacolorvta &&
-                            referenciacolorvta.map((ref, index) => {
+                        referenciacolorvtames &&
+                            referenciacolorvtames.map((ref, index) => {
                                 if (ref.Periodo == periodo) {
                                     let ventaund = 0;
                                     let ventapesos = 0;
@@ -812,41 +785,38 @@ function TabProductosMenorVtas(props) {
                                     let sublinea = "";
                                     let talla = "";
 
-                                    contador = contador + 1;
-                                    if (contador < 500) {
+                                    datomes &&
+                                        datomes.map((vta, index) => {
+                                            if (vta.Periodo == periodo && vta.Referencia_Item == ref.Referencia &&
+                                                vta.Color == ref.Color) {
 
-                                        vtasperiodo &&
-                                            vtasperiodo.map((vta, index) => {
-                                                if (vta.Periodo == periodo && vta.Referencia_Item == ref.Referencia &&
-                                                    vta.Color == ref.Color) {
-
-                                                    ventaund = parseInt(ventaund) + parseInt(vta.Cantidad);
-                                                    ventapesos = parseInt(ventapesos) + parseInt(vta.Vlr_Neto);
-                                                    talla = talla + "," + vta.Talla;
-                                                    color = vta.Color;
-                                                    grupo = vta.Grupo;
-                                                    marca = vta.Marca;
-                                                    referencia = vta.Referencia_Item;
-                                                    sublinea = vta.Sublinea;
-                                                }
-                                            });
-
-                                        if (ventaund > 0) {
-                                            let item = {
-                                                Cantidad: ventaund,
-                                                Color: color,
-                                                Grupo: grupo,
-                                                Marca: marca,
-                                                Periodo: periodo,
-                                                Referencia_Item: referencia,
-                                                Sublinea: sublinea,
-                                                Talla: talla,
-                                                Vlr_Neto: ventapesos
+                                                ventaund = parseInt(ventaund) + parseInt(vta.Cantidad);
+                                                ventapesos = parseInt(ventapesos) + parseInt(vta.Vlr_Neto);
+                                                talla = talla + "," + vta.Talla;
+                                                color = vta.Color;
+                                                grupo = vta.Grupo;
+                                                marca = vta.Marca;
+                                                referencia = vta.Referencia_Item;
+                                                sublinea = vta.Sublinea;
                                             }
-                                            vtasreferenciaperiodo.push(item);
+                                        });
 
+                                    if (ventaund >= 0 && ventaund <= 10) {
+                                        let item = {
+                                            Cantidad: ventaund,
+                                            Color: color,
+                                            Grupo: grupo,
+                                            Marca: marca,
+                                            Periodo: periodo,
+                                            Referencia_Item: referencia,
+                                            Sublinea: sublinea,
+                                            Talla: talla,
+                                            Vlr_Neto: ventapesos
                                         }
+                                        vtasreferenciaperiodo.push(item);
+
                                     }
+
                                 }
 
                             });
@@ -1001,10 +971,8 @@ function TabProductosMenorVtas(props) {
                         if (selectedAno.length > 0 && selectedMes.length > 0 && selectedGrupo.length > 0 &&
                             selectedSublinea.length > 0 && selectedMarca.length == 0) {
 
-                            let vtasperiodo = ventasDiariasMes.ventasreferenciaperiodo;
-
-                            referenciacolorvta &&
-                                referenciacolorvta.map((ref, index) => {
+                            referenciacolorvtames &&
+                                referenciacolorvtames.map((ref, index) => {
                                     if (ref.Periodo == periodo) {
                                         let ventaund = 0;
                                         let ventapesos = 0;
@@ -1015,41 +983,38 @@ function TabProductosMenorVtas(props) {
                                         let sublinea = "";
                                         let talla = "";
 
-                                        contador = contador + 1;
-                                        if (contador < 500) {
+                                        datomes &&
+                                            datomes.map((vta, index) => {
+                                                if (vta.Periodo == periodo && vta.Referencia_Item == ref.Referencia &&
+                                                    vta.Color == ref.Color) {
 
-                                            vtasperiodo &&
-                                                vtasperiodo.map((vta, index) => {
-                                                    if (vta.Periodo == periodo && vta.Referencia_Item == ref.Referencia &&
-                                                        vta.Color == ref.Color) {
-
-                                                        ventaund = parseInt(ventaund) + parseInt(vta.Cantidad);
-                                                        ventapesos = parseInt(ventapesos) + parseInt(vta.Vlr_Neto);
-                                                        talla = talla + "," + vta.Talla;
-                                                        color = vta.Color;
-                                                        grupo = vta.Grupo;
-                                                        marca = vta.Marca;
-                                                        referencia = vta.Referencia_Item;
-                                                        sublinea = vta.Sublinea;
-                                                    }
-                                                });
-
-                                            if (ventaund > 0) {
-                                                let item = {
-                                                    Cantidad: ventaund,
-                                                    Color: color,
-                                                    Grupo: grupo,
-                                                    Marca: marca,
-                                                    Periodo: periodo,
-                                                    Referencia_Item: referencia,
-                                                    Sublinea: sublinea,
-                                                    Talla: talla,
-                                                    Vlr_Neto: ventapesos
+                                                    ventaund = parseInt(ventaund) + parseInt(vta.Cantidad);
+                                                    ventapesos = parseInt(ventapesos) + parseInt(vta.Vlr_Neto);
+                                                    talla = talla + "," + vta.Talla;
+                                                    color = vta.Color;
+                                                    grupo = vta.Grupo;
+                                                    marca = vta.Marca;
+                                                    referencia = vta.Referencia_Item;
+                                                    sublinea = vta.Sublinea;
                                                 }
-                                                vtasreferenciaperiodo.push(item);
+                                            });
 
+                                        if (ventaund >= 0 && ventaund <= 10) {
+                                            let item = {
+                                                Cantidad: ventaund,
+                                                Color: color,
+                                                Grupo: grupo,
+                                                Marca: marca,
+                                                Periodo: periodo,
+                                                Referencia_Item: referencia,
+                                                Sublinea: sublinea,
+                                                Talla: talla,
+                                                Vlr_Neto: ventapesos
                                             }
+                                            vtasreferenciaperiodo.push(item);
+
                                         }
+
                                     }
 
                                 });
@@ -1228,10 +1193,8 @@ function TabProductosMenorVtas(props) {
                             if (selectedAno.length > 0 && selectedMes.length > 0 && selectedGrupo.length == 0 &&
                                 selectedSublinea.length > 0 && selectedMarca.length > 0) {
 
-                                let vtasperiodo = ventasDiariasMes.ventasreferenciaperiodo;
-
-                                referenciacolorvta &&
-                                    referenciacolorvta.map((ref, index) => {
+                                referenciacolorvtames &&
+                                    referenciacolorvtames.map((ref, index) => {
                                         if (ref.Periodo == periodo) {
                                             let ventaund = 0;
                                             let ventapesos = 0;
@@ -1242,41 +1205,38 @@ function TabProductosMenorVtas(props) {
                                             let sublinea = "";
                                             let talla = "";
 
-                                            contador = contador + 1;
-                                            if (contador < 500) {
+                                            datomes &&
+                                                datomes.map((vta, index) => {
+                                                    if (vta.Periodo == periodo && vta.Referencia_Item == ref.Referencia &&
+                                                        vta.Color == ref.Color) {
 
-                                                vtasperiodo &&
-                                                    vtasperiodo.map((vta, index) => {
-                                                        if (vta.Periodo == periodo && vta.Referencia_Item == ref.Referencia &&
-                                                            vta.Color == ref.Color) {
-
-                                                            ventaund = parseInt(ventaund) + parseInt(vta.Cantidad);
-                                                            ventapesos = parseInt(ventapesos) + parseInt(vta.Vlr_Neto);
-                                                            talla = talla + "," + vta.Talla;
-                                                            color = vta.Color;
-                                                            grupo = vta.Grupo;
-                                                            marca = vta.Marca;
-                                                            referencia = vta.Referencia_Item;
-                                                            sublinea = vta.Sublinea;
-                                                        }
-                                                    });
-
-                                                if (ventaund > 0) {
-                                                    let item = {
-                                                        Cantidad: ventaund,
-                                                        Color: color,
-                                                        Grupo: grupo,
-                                                        Marca: marca,
-                                                        Periodo: periodo,
-                                                        Referencia_Item: referencia,
-                                                        Sublinea: sublinea,
-                                                        Talla: talla,
-                                                        Vlr_Neto: ventapesos
+                                                        ventaund = parseInt(ventaund) + parseInt(vta.Cantidad);
+                                                        ventapesos = parseInt(ventapesos) + parseInt(vta.Vlr_Neto);
+                                                        talla = talla + "," + vta.Talla;
+                                                        color = vta.Color;
+                                                        grupo = vta.Grupo;
+                                                        marca = vta.Marca;
+                                                        referencia = vta.Referencia_Item;
+                                                        sublinea = vta.Sublinea;
                                                     }
-                                                    vtasreferenciaperiodo.push(item);
+                                                });
 
+                                            if (ventaund > 0) {
+                                                let item = {
+                                                    Cantidad: ventaund,
+                                                    Color: color,
+                                                    Grupo: grupo,
+                                                    Marca: marca,
+                                                    Periodo: periodo,
+                                                    Referencia_Item: referencia,
+                                                    Sublinea: sublinea,
+                                                    Talla: talla,
+                                                    Vlr_Neto: ventapesos
                                                 }
+                                                vtasreferenciaperiodo.push(item);
+
                                             }
+
                                         }
 
                                     });
@@ -1463,10 +1423,8 @@ function TabProductosMenorVtas(props) {
                                 if (selectedAno.length > 0 && selectedMes.length > 0 && selectedGrupo.length > 0 &&
                                     selectedSublinea.length == 0 && selectedMarca.length > 0) {
 
-                                    let vtasperiodo = ventasDiariasMes.ventasreferenciaperiodo;
-
-                                    referenciacolorvta &&
-                                        referenciacolorvta.map((ref, index) => {
+                                    referenciacolorvtames &&
+                                        referenciacolorvtames.map((ref, index) => {
                                             if (ref.Periodo == periodo) {
                                                 let ventaund = 0;
                                                 let ventapesos = 0;
@@ -1477,41 +1435,38 @@ function TabProductosMenorVtas(props) {
                                                 let sublinea = "";
                                                 let talla = "";
 
-                                                contador = contador + 1;
-                                                if (contador < 500) {
+                                                datomes &&
+                                                    datomes.map((vta, index) => {
+                                                        if (vta.Periodo == periodo && vta.Referencia_Item == ref.Referencia &&
+                                                            vta.Color == ref.Color) {
 
-                                                    vtasperiodo &&
-                                                        vtasperiodo.map((vta, index) => {
-                                                            if (vta.Periodo == periodo && vta.Referencia_Item == ref.Referencia &&
-                                                                vta.Color == ref.Color) {
-
-                                                                ventaund = parseInt(ventaund) + parseInt(vta.Cantidad);
-                                                                ventapesos = parseInt(ventapesos) + parseInt(vta.Vlr_Neto);
-                                                                talla = talla + "," + vta.Talla;
-                                                                color = vta.Color;
-                                                                grupo = vta.Grupo;
-                                                                marca = vta.Marca;
-                                                                referencia = vta.Referencia_Item;
-                                                                sublinea = vta.Sublinea;
-                                                            }
-                                                        });
-
-                                                    if (ventaund > 0) {
-                                                        let item = {
-                                                            Cantidad: ventaund,
-                                                            Color: color,
-                                                            Grupo: grupo,
-                                                            Marca: marca,
-                                                            Periodo: periodo,
-                                                            Referencia_Item: referencia,
-                                                            Sublinea: sublinea,
-                                                            Talla: talla,
-                                                            Vlr_Neto: ventapesos
+                                                            ventaund = parseInt(ventaund) + parseInt(vta.Cantidad);
+                                                            ventapesos = parseInt(ventapesos) + parseInt(vta.Vlr_Neto);
+                                                            talla = talla + "," + vta.Talla;
+                                                            color = vta.Color;
+                                                            grupo = vta.Grupo;
+                                                            marca = vta.Marca;
+                                                            referencia = vta.Referencia_Item;
+                                                            sublinea = vta.Sublinea;
                                                         }
-                                                        vtasreferenciaperiodo.push(item);
+                                                    });
 
+                                                if (ventaund >= 0 && ventaund <= 10) {
+                                                    let item = {
+                                                        Cantidad: ventaund,
+                                                        Color: color,
+                                                        Grupo: grupo,
+                                                        Marca: marca,
+                                                        Periodo: periodo,
+                                                        Referencia_Item: referencia,
+                                                        Sublinea: sublinea,
+                                                        Talla: talla,
+                                                        Vlr_Neto: ventapesos
                                                     }
+                                                    vtasreferenciaperiodo.push(item);
+
                                                 }
+
                                             }
 
                                         });
@@ -1693,10 +1648,8 @@ function TabProductosMenorVtas(props) {
                                     if (selectedAno.length > 0 && selectedMes.length > 0 && selectedGrupo.length > 0 &&
                                         selectedSublinea.length > 0 && selectedMarca.length > 0) {
 
-                                        let vtasperiodo = ventasDiariasMes.ventasreferenciaperiodo;
-
-                                        referenciacolorvta &&
-                                            referenciacolorvta.map((ref, index) => {
+                                        referenciacolorvtames &&
+                                            referenciacolorvtames.map((ref, index) => {
                                                 if (ref.Periodo == periodo) {
                                                     let ventaund = 0;
                                                     let ventapesos = 0;
@@ -1707,41 +1660,38 @@ function TabProductosMenorVtas(props) {
                                                     let sublinea = "";
                                                     let talla = "";
 
-                                                    contador = contador + 1;
-                                                    if (contador < 500) {
+                                                    datomes &&
+                                                        datomes.map((vta, index) => {
+                                                            if (vta.Periodo == periodo && vta.Referencia_Item == ref.Referencia &&
+                                                                vta.Color == ref.Color) {
 
-                                                        vtasperiodo &&
-                                                            vtasperiodo.map((vta, index) => {
-                                                                if (vta.Periodo == periodo && vta.Referencia_Item == ref.Referencia &&
-                                                                    vta.Color == ref.Color) {
-
-                                                                    ventaund = parseInt(ventaund) + parseInt(vta.Cantidad);
-                                                                    ventapesos = parseInt(ventapesos) + parseInt(vta.Vlr_Neto);
-                                                                    talla = talla + "," + vta.Talla;
-                                                                    color = vta.Color;
-                                                                    grupo = vta.Grupo;
-                                                                    marca = vta.Marca;
-                                                                    referencia = vta.Referencia_Item;
-                                                                    sublinea = vta.Sublinea;
-                                                                }
-                                                            });
-
-                                                        if (ventaund > 0) {
-                                                            let item = {
-                                                                Cantidad: ventaund,
-                                                                Color: color,
-                                                                Grupo: grupo,
-                                                                Marca: marca,
-                                                                Periodo: periodo,
-                                                                Referencia_Item: referencia,
-                                                                Sublinea: sublinea,
-                                                                Talla: talla,
-                                                                Vlr_Neto: ventapesos
+                                                                ventaund = parseInt(ventaund) + parseInt(vta.Cantidad);
+                                                                ventapesos = parseInt(ventapesos) + parseInt(vta.Vlr_Neto);
+                                                                talla = talla + "," + vta.Talla;
+                                                                color = vta.Color;
+                                                                grupo = vta.Grupo;
+                                                                marca = vta.Marca;
+                                                                referencia = vta.Referencia_Item;
+                                                                sublinea = vta.Sublinea;
                                                             }
-                                                            vtasreferenciaperiodo.push(item);
+                                                        });
 
+                                                    if (ventaund >= 0 && ventaund <= 10) {
+                                                        let item = {
+                                                            Cantidad: ventaund,
+                                                            Color: color,
+                                                            Grupo: grupo,
+                                                            Marca: marca,
+                                                            Periodo: periodo,
+                                                            Referencia_Item: referencia,
+                                                            Sublinea: sublinea,
+                                                            Talla: talla,
+                                                            Vlr_Neto: ventapesos
                                                         }
+                                                        vtasreferenciaperiodo.push(item);
+
                                                     }
+
                                                 }
 
                                             });
@@ -1973,7 +1923,7 @@ function TabProductosMenorVtas(props) {
                 setEntMes(true)
                 setEntAcumuladas(false)
             }
-        setConsultar(true);
+        //setConsultar(true);
     }, [opcion]);
 
     const sortTotalStock = (item) => {
@@ -2059,7 +2009,7 @@ function TabProductosMenorVtas(props) {
             title: "Foto", dataIndex: "imageSrc", key: "imageSrc", width: 220, align: "left", render: (text, row, index) => {
                 return (
                     <img
-                        src={row.imageSrc+'?v=15454'}
+                        src={row.imageSrc + '?v=15454'}
                         alt={row.imageAlt}
                         className="ml-3 h-23 w-23 rounded-md object-cover object-center  sm:h-18 sm:w-18"
                     />
@@ -2117,27 +2067,7 @@ function TabProductosMenorVtas(props) {
             <h2 className="mx-auto mt-1 px-4 text-lg leading-6 font-medium text-gray-900 sm:px-6 lg:px-8">
                 <div className="col-start-1 row-start-1 py-3">
                     <div className="ml-30 mx-auto flex max-w-7xl justify-center px-4 sm:px-6 lg:px-8">
-                        {/* justify-end 
-                        <div className="flex">
-                            <Menu as="div" className="relative inline-block">
-                                <MultiSelect
-                                    options={registros}
-                                    value={tipoConsulta}
-                                    onChange={setTipoConsulta}
-                                    disableSearch="false"
-                                    labelledBy="Registros"
-                                    className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                                    overrideStrings={{
-                                        search: "Buscar",
-                                        selectSomeItems: "Tipo consulta.",
-                                        allItemsAreSelected:
-                                            "Todos los años",
-                                        selectAll: "Todos"
-                                    }}
-                                />
-                            </Menu>
-                        </div>
-                        */}
+                        {/* justify-end */}
                         <div className="flex">
                             <Menu as="div" className="relative inline-block">
                                 <MultiSelect
@@ -2159,7 +2089,6 @@ function TabProductosMenorVtas(props) {
                                 />
                             </Menu>
                         </div>
-
                         <div className="flex">
                             <Menu as="div" className="relative inline-block" >
                                 <MultiSelect
@@ -2220,6 +2149,7 @@ function TabProductosMenorVtas(props) {
                                 />
                             </Menu>
                         </div>
+
                         <div className="flex">
                             <Menu as="div" className="relative inline-block" >
                                 <MultiSelect
@@ -2353,6 +2283,7 @@ function TabProductosMenorVtas(props) {
                         <div className="mt-8 flex flex-col">
                             <div className="-my-2 -mx-4 sm:-mx-6 lg:-mx-8">
                                 <div className=" min-w-full py-0 align-middle md:px-6 lg:px-1">
+                                    {/*
                                     <div className="shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
                                         <Table
                                             columns={header_test}
@@ -2364,6 +2295,7 @@ function TabProductosMenorVtas(props) {
                                             }}
                                             bordered />
                                     </div>
+                                        */}
                                 </div>
                             </div>
                         </div>
@@ -2371,6 +2303,7 @@ function TabProductosMenorVtas(props) {
                 </div>
             </h2>
         </div>
+
     );
 }
 

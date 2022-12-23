@@ -477,10 +477,14 @@ export default function HomeInnovacion(props) {
                                                         />
                                                     ) : tabMenorVtas ?
                                                         (
-                                                            <TabProductosMenorVtas tipo={tipo} setTipo={setTipo}
+                                                            <TabProductosMenorVtas
+                                                                tipo={tipo} setTipo={setTipo}
                                                                 ventasDiariasMes={ventasDiariasMes}
                                                                 existencias={existencias}
-                                                                parametrosVtas={parametrosVtas}
+                                                                grupos={grupos}
+                                                                sublineas={sublineas}
+                                                                marcas={marcas}
+                                                                vtasReferencias={vtasReferencias}
                                                             />
                                                         ) :
                                                         null
