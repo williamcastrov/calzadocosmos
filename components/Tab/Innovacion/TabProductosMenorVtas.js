@@ -2067,7 +2067,7 @@ function TabProductosMenorVtas(props) {
             <h2 className="mx-auto mt-1 px-4 text-lg leading-6 font-medium text-gray-900 sm:px-6 lg:px-8">
                 <div className="col-start-1 row-start-1 py-3">
                     <div className="ml-30 mx-auto flex max-w-7xl justify-center px-4 sm:px-6 lg:px-8">
-                        {/* justify-end */}
+                      
                         <div className="flex">
                             <Menu as="div" className="relative inline-block">
                                 <MultiSelect
@@ -2089,6 +2089,7 @@ function TabProductosMenorVtas(props) {
                                 />
                             </Menu>
                         </div>
+                        
                         <div className="flex">
                             <Menu as="div" className="relative inline-block" >
                                 <MultiSelect
@@ -2109,6 +2110,7 @@ function TabProductosMenorVtas(props) {
                                 />
                             </Menu>
                         </div>
+                        
                         <div className="flex">
                             <Menu as="div" className="relative inline-block" >
                                 <MultiSelect
@@ -2129,6 +2131,7 @@ function TabProductosMenorVtas(props) {
                                 />
                             </Menu>
                         </div>
+                        
                         <div className="flex">
                             <Menu as="div" className="relative inline-block" >
                                 <MultiSelect
@@ -2149,7 +2152,7 @@ function TabProductosMenorVtas(props) {
                                 />
                             </Menu>
                         </div>
-
+                        
                         <div className="flex">
                             <Menu as="div" className="relative inline-block" >
                                 <MultiSelect
@@ -2190,7 +2193,9 @@ function TabProductosMenorVtas(props) {
                                 />
                             </Menu>
                         </div>
+                        {/* justify-end 
 
+*/}
                         <div className="flex">
                             <Menu as="div" className="relative inline-block" >
                                 <h3 className="ml-4 text-sm font-medium text-gray-700 hover:text-gray-900">

@@ -14,11 +14,6 @@ import { myNumber, nameMonth } from "../../utils/ArrayFunctions";
 
 const auth = getAuth(app);
 
-import axios from "axios";
-const URL_SERVICE = "https://api.aal-cloud.com/api/cosmos";
-import { setDatosDashBoardPeriod } from "../../components/store/slices/datosdashboard";
-import { setDatosUser } from "../../components/store/slices/users";
-
 //Componentes detalle movimientos
 import TabVtasDiarias from "../../components/Tab/Ventas/TabVtasDiarias";
 import TabMargenes from "../../components/Tab/Ventas/TabMargenes";
@@ -33,35 +28,6 @@ import TileIcon from "../../components/TileIcon";
 import CST from '../../utils/CustomSettings';
 //Fin Anibal
 
-const transactions = [
-    {
-        id: 1,
-        name: "Payment to Molly Sanders",
-        href: "#",
-        amount: "$20,000",
-        currency: "USD",
-        status: "success",
-        date: "July 11, 2020",
-        datetime: "2020-07-11",
-    },
-    {
-        id: 1,
-        name: "Payment to Molly Sanders",
-        href: "#",
-        amount: "$20,000",
-        currency: "USD",
-        status: "success",
-        date: "July 11, 2020",
-        datetime: "2020-07-11",
-    },
-    // More transactions...
-];
-const statusStyles = {
-    success: "bg-green-100 text-green-800",
-    processing: "bg-yellow-100 text-yellow-800",
-    failed: "bg-gray-100 text-gray-800",
-};
-
 function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
 }
@@ -73,9 +39,6 @@ export default function HomeVentas(props) {
     //console.log("VENTAS DIARIAS MES: ", ventasDiariasMes.sublineas);
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [tipo, setTipo] = useState(1);
-    const [detalleVentas, setDetalleVentas] = useState(ventasDiariasMes.ventas_diarias); //ventas arupadas por dias
-    const [ventasSubcategorias, setVentasSubcategorias] = useState([]);
-
     const [tabFiltros, setTabFiltros] = useState(false);
 
     const [tabVtasLinea, setTabVtasLinea] = useState(true);
@@ -86,25 +49,20 @@ export default function HomeVentas(props) {
     const [tabPptoVentas, setTabPttoVentas] = useState(false);
     const [tabMaterialEmpaque, setTabMaterialEmpaque] = useState(false);
 
-    const [tabPendientesProveedor, setTabPendientesProveedor] = useState(false);
     const [tabMargen, setTabMargen] = useState(false);
 
-    const [labelVentas, setLabelVentas] = useState([]);
-    const [totvtasmes, setTotvtasmes] = useState(datosCostos.costosvtames[0].MND_ACT);
-    const [totvtasacum, setTotvtasacum] = useState(datosCostos.costosvtaacum[0].MND_TOT);
-    const [mesact, setMesact] = useState(datos.mes_actual);
-    const [anoact, setAnoact] = useState(datos.ano_actual);
-    const [undvtasmesact, setUndvtasmesact] = useState(datos.ventas_res.UND_ACT);
-    const [pesosvtasmesact, setPesosvtasmesact] = useState(datos.ventas_res.MND_ACT);
-    const [undvtasmesant, setUndvtasmesant] = useState(datos.ventas_res.UND_ANT);
-    const [pesosvtasmesant, setPesosvtasmesant] = useState(datos.ventas_res.MND_ANT);
-    const [costovtasmesact, setCostovtasmesact] = useState(datosCostos.costosvtames[0].CSV_ACT);
-    const [valorvtamesaact, setValorvtamesaact] = useState(datosCostos.costosvtames[0].VSIMP_ACT);
-    const [costovtasacum, setCostovtasacum] = useState(datosCostos.costosvtaacum[0].CSV_TOT);
-    const [valorvtasacum, setValorvtasacum] = useState(datosCostos.costosvtaacum[0].VSIMP_TOT);
+    const [mesact, setMesact] = useState(1);
+    const [anoact, setAnoact] = useState(1);
+    const [undvtasmesact, setUndvtasmesact] = useState(1);
+    const [pesosvtasmesact, setPesosvtasmesact] = useState(1);
+    const [undvtasmesant, setUndvtasmesant] = useState(1);
+    const [pesosvtasmesant, setPesosvtasmesant] = useState(1);
+    const [costovtasmesact, setCostovtasmesact] = useState(1);
+    const [valorvtamesaact, setValorvtamesaact] = useState(1);
+    const [costovtasacum, setCostovtasacum] = useState(1);
+    const [valorvtasacum, setValorvtasacum] = useState(1);
 
     let totalingresoxlinea = [];
-
     totalingresoxlinea = useSelector((state) => state.datosdashboard.datosdashboard);
     //datosCostos = useSelector((state) => state.costosventas.datoscostosventas);
 
@@ -122,6 +80,31 @@ export default function HomeVentas(props) {
         signOut(auth);
         router.push("/");
     }
+
+    useEffect(() => {
+        setMesact(datos.mes_actual);
+        setAnoact(datos.ano_actual);
+        setUndvtasmesact(datos.ventas_res.UND_ACT);
+        setPesosvtasmesact(datos.ventas_res.MND_ACT);
+        setUndvtasmesant(datos.ventas_res.UND_ANT);
+        setPesosvtasmesant(datos.ventas_res.MND_ANT);
+        setCostovtasmesact(datosCostos.costosvtames[0].CSV_ACT);
+        setValorvtamesaact(datosCostos.costosvtames[0].VSIMP_ACT);
+        setCostovtasacum(datosCostos.costosvtaacum[0].CSV_TOT);
+        setValorvtasacum(datosCostos.costosvtaacum[0].VSIMP_TOT);
+        /*
+        const [mesact, setMesact] = useState(datos.mes_actual);
+    const [anoact, setAnoact] = useState(datos.ano_actual);
+    const [undvtasmesact, setUndvtasmesact] = useState(datos.ventas_res.UND_ACT);
+    const [pesosvtasmesact, setPesosvtasmesact] = useState(datos.ventas_res.MND_ACT);
+    const [undvtasmesant, setUndvtasmesant] = useState(datos.ventas_res.UND_ANT);
+    const [pesosvtasmesant, setPesosvtasmesant] = useState(datos.ventas_res.MND_ANT);
+    const [costovtasmesact, setCostovtasmesact] = useState(datosCostos.costosvtames[0].CSV_ACT);
+    const [valorvtamesaact, setValorvtamesaact] = useState(datosCostos.costosvtames[0].VSIMP_ACT);
+    const [costovtasacum, setCostovtasacum] = useState(datosCostos.costosvtaacum[0].CSV_TOT);
+    const [valorvtasacum, setValorvtasacum] = useState(datosCostos.costosvtaacum[0].VSIMP_TOT);
+    */
+    }, []);
 
     const seleccionarTab = (seleccion) => {
         console.log("SELECCION : ", seleccion)

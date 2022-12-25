@@ -9,20 +9,10 @@ import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { useRouter } from "next/router";
 const auth = getAuth(app);
 
-import axios from "axios";
-const URL_SERVICE = "https://api.aal-cloud.com/api/cosmos";
-import { setDatosDashBoardPeriod } from "../../components/store/slices/datosdashboard";
-import { setDatosUser } from "../../components/store/slices/users";
-
 //Componentes detalle movimientos
 import TabInformeVtas from "../../components/Tab/Innovacion/TabInformeVtas";
 import TabMesesInventario from "../../components/Tab/Innovacion/TabMesesInventario";
 import TabProductosMenorVtas from "../../components/Tab/Innovacion/TabProductosMenorVtas";
-
-//Anibal
-import TileIcon from "../../components/TileIcon";
-import CST from '../../utils/CustomSettings';
-//Fin Anibal
 
 import {
     BellIcon,
@@ -35,14 +25,6 @@ import {
     OfficeBuildingIcon,
     SearchIcon,
 } from "@heroicons/react/solid";
-
-import {
-    mdiBasketPlusOutline,
-    mdiMargin,
-    mdiDecimalIncrease,
-    mdiTrendingUp,
-    mdiCashCheck
-} from '@mdi/js';
 
 import { myNumber, nameMonth } from "../../utils/ArrayFunctions";
 

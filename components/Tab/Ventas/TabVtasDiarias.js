@@ -36,14 +36,14 @@ function TabVtasDiarias(props) {
     const [selectedMes, setSelectedMes] = useState([]);
     const [selectedDia, setSelectedDia] = useState([]);
 
-    const [vtasAno, setVtasAno] = useState(ventasDiariasMes.anos_vtasdiarias);
-    const [vtasMes, setVtasMes] = useState(ventasDiariasMes.meses_vtasdiarias);
-    const [vtasDia, setVtasDia] = useState(ventasDiariasMes.dias_vtas);
+    const [vtasAno, setVtasAno] = useState([]);
+    const [vtasMes, setVtasMes] = useState([]);
+    const [vtasDia, setVtasDia] = useState([]);
     const [vtasSemestre, setVtasSemestre] = useState([]);
     const [vtasTrimestre, setVtasTrimestre] = useState([]);
 
-    const [centrosoperacion, setCentrosoperacion] = useState(ventasDiariasMes.centrosoperacion);
-    const [subcategorias, setSubcategorias] = useState(ventasDiariasMes.subcategorias);
+    const [centrosoperacion, setCentrosoperacion] = useState([]);
+    const [subcategorias, setSubcategorias] = useState([]);
 
     //console.log("VENTAS DIARIAS MES XXX: ", ventasDiariasMes);
     //console.log("LABEL DIAS: ", labelVentas);
@@ -57,6 +57,9 @@ function TabVtasDiarias(props) {
     }
 
     useEffect(() => {
+        setCentrosoperacion(ventasDiariasMes.centrosoperacion);
+        setSubcategorias(ventasDiariasMes.subcategorias);
+
         let newDetAnos = [];
         setVtasSemestre(ventasDiariasMes.semestre_vtasdiarias);
         setVtasTrimestre(ventasDiariasMes.trimestre_vtasdiarias);

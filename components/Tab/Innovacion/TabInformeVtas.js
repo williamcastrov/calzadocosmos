@@ -40,15 +40,12 @@ function TabInformeVtas(props) {
     const [selectedMes, setSelectedMes] = useState([]);
     const [selectedDia, setSelectedDia] = useState([]);
 
-    const [vtasAno, setVtasAno] = useState(ventasDiariasMes.anos_vtasdiarias);
-    const [vtasMes, setVtasMes] = useState(ventasDiariasMes.meses_vtasdiarias);
-    const [vtasDia, setVtasDia] = useState(ventasDiariasMes.dias_vtas);
-    const [vtasGrupo, setVtasGrupo] = useState(grupos);
-    const [vtasSublinea, setVtasSublinea] = useState(sublineas);
-    const [vtasMarca, setVtasMarca] = useState(marcas);
-
-    const [centrosoperacion, setCentrosoperacion] = useState(ventasDiariasMes.centrosoperacion);
-    const [subcategorias, setSubcategorias] = useState(ventasDiariasMes.subcategorias);
+    const [vtasAno, setVtasAno] = useState([]);
+    const [vtasMes, setVtasMes] = useState([]);
+    const [vtasDia, setVtasDia] = useState([]);
+    const [vtasGrupo, setVtasGrupo] = useState([]);
+    const [vtasSublinea, setVtasSublinea] = useState([]);
+    const [vtasMarca, setVtasMarca] = useState([]);
 
     const [ordenaTotalStock, setOrdenaTotalStock] = useState(true);
     const [ordenaRotacion, setOrdenaRotacion] = useState(true);
@@ -73,6 +70,9 @@ function TabInformeVtas(props) {
         let newDetAnos = [];
         //setVtasSemestre(ventasDiariasMes.semestre_vtasdiarias);
         //setVtasTrimestre(ventasDiariasMes.trimestre_vtasdiarias);
+        setVtasGrupo(grupos);
+        setVtasSublinea(sublineas);
+        setVtasMarca(marcas);
 
         ventasDiariasMes.anos_vtasdiarias &&
             ventasDiariasMes.anos_vtasdiarias.map((anos, index) => {
@@ -2101,7 +2101,7 @@ function TabInformeVtas(props) {
             <h2 className="mx-auto mt-1 px-4 text-lg leading-6 font-medium text-gray-900 sm:px-6 lg:px-8">
                 <div className="col-start-1 row-start-1 py-3">
                     <div className="ml-30 mx-auto flex max-w-7xl justify-center px-4 sm:px-6 lg:px-8">
-                        {/* justify-end */}
+                      {/* justify-end */}
                         <div className="flex">
                             <Menu as="div" className="relative inline-block">
                                 <MultiSelect
@@ -2121,6 +2121,7 @@ function TabInformeVtas(props) {
                                 />
                             </Menu>
                         </div>
+                        
                         <div className="flex">
                             <Menu as="div" className="relative inline-block">
                                 <MultiSelect
@@ -2142,7 +2143,7 @@ function TabInformeVtas(props) {
                                 />
                             </Menu>
                         </div>
-
+                        
                         <div className="flex">
                             <Menu as="div" className="relative inline-block" >
                                 <MultiSelect
@@ -2163,6 +2164,7 @@ function TabInformeVtas(props) {
                                 />
                             </Menu>
                         </div>
+{/*
                         <div className="flex">
                             <Menu as="div" className="relative inline-block" >
                                 <MultiSelect
@@ -2183,6 +2185,7 @@ function TabInformeVtas(props) {
                                 />
                             </Menu>
                         </div>
+                                */ }
                         <div className="flex">
                             <Menu as="div" className="relative inline-block" >
                                 <MultiSelect
@@ -2203,6 +2206,7 @@ function TabInformeVtas(props) {
                                 />
                             </Menu>
                         </div>
+
                         <div className="flex">
                             <Menu as="div" className="relative inline-block" >
                                 <MultiSelect

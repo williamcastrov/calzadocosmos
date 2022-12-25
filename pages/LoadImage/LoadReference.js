@@ -47,6 +47,18 @@ function LoadReference(props) {
     const [imagenDieciOcho, setImagenDieciOcho] = useState(null);
     const [imagenDieciNueve, setImagenDieciNueve] = useState(null);
     const [imagenVeinte, setImagenVeinte] = useState(null);
+    const [imagenVeintiuno, setImagenVeintiuno] = useState(null);
+    const [imagenVeintidos, setImagenVeintidos] = useState(null);
+    const [imagenVeintitres, setImagenVeintitres] = useState(null);
+    const [imagenVeinticuatro, setImagenVeinticuatro] = useState(null);
+    const [imagenVeinticinco, setImagenVeinticinco] = useState(null);
+    const [imagenVeintiseis, setImagenVeintiseis] = useState(null);
+    const [imagenVeintisiete, setImagenVeintisiete] = useState(null);
+    const [imagenVeintiocho, setImagenVeintiocho] = useState(null);
+    const [imagenVeintinueve, setImagenVeintinueve] = useState(null);
+    const [imagenTreinta, setImagenTreinta] = useState(null);
+
+
     const fechaactual = Moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
 
     useEffect(() => {
@@ -325,6 +337,281 @@ function LoadReference(props) {
                                                                                         setImagenDieciOcho(URL.createObjectURL(baseArchives[17]));
                                                                                         setImagenDieciNueve(URL.createObjectURL(baseArchives[18]));
                                                                                         setImagenVeinte(URL.createObjectURL(baseArchives[19]));
+                                                                                    } else
+                                                                                    if (longitud == 21) {
+                                                                                        setImagenUno(URL.createObjectURL(baseArchives[0]));
+                                                                                        setImagenDos(URL.createObjectURL(baseArchives[1]));
+                                                                                        setImagenTres(URL.createObjectURL(baseArchives[2]));
+                                                                                        setImagenCuatro(URL.createObjectURL(baseArchives[3]));
+                                                                                        setImagenCinco(URL.createObjectURL(baseArchives[4]));
+                                                                                        setImagenSeis(URL.createObjectURL(baseArchives[5]));
+                                                                                        setImagenSiete(URL.createObjectURL(baseArchives[6]));
+                                                                                        setImagenOcho(URL.createObjectURL(baseArchives[7]));
+                                                                                        setImagenNueve(URL.createObjectURL(baseArchives[8]));
+                                                                                        setImagenDiez(URL.createObjectURL(baseArchives[9]));
+                                                                                        setImagenOnce(URL.createObjectURL(baseArchives[10]));
+                                                                                        setImagenDoce(URL.createObjectURL(baseArchives[11]));
+                                                                                        setImagenTrece(URL.createObjectURL(baseArchives[12]));
+                                                                                        setImagenCatorce(URL.createObjectURL(baseArchives[13]));
+                                                                                        setImagenQuince(URL.createObjectURL(baseArchives[14]));
+                                                                                        setImagenDieciSeis(URL.createObjectURL(baseArchives[15]));
+                                                                                        setImagenDieciSiete(URL.createObjectURL(baseArchives[16]));
+                                                                                        setImagenDieciOcho(URL.createObjectURL(baseArchives[17]));
+                                                                                        setImagenDieciNueve(URL.createObjectURL(baseArchives[18]));
+                                                                                        setImagenVeinte(URL.createObjectURL(baseArchives[19]));
+                                                                                        setImagenVeintiuno (URL.createObjectURL(baseArchives[20]));
+                                                                                    } else
+                                                                                    if (longitud == 22) {
+                                                                                        setImagenUno(URL.createObjectURL(baseArchives[0]));
+                                                                                        setImagenDos(URL.createObjectURL(baseArchives[1]));
+                                                                                        setImagenTres(URL.createObjectURL(baseArchives[2]));
+                                                                                        setImagenCuatro(URL.createObjectURL(baseArchives[3]));
+                                                                                        setImagenCinco(URL.createObjectURL(baseArchives[4]));
+                                                                                        setImagenSeis(URL.createObjectURL(baseArchives[5]));
+                                                                                        setImagenSiete(URL.createObjectURL(baseArchives[6]));
+                                                                                        setImagenOcho(URL.createObjectURL(baseArchives[7]));
+                                                                                        setImagenNueve(URL.createObjectURL(baseArchives[8]));
+                                                                                        setImagenDiez(URL.createObjectURL(baseArchives[9]));
+                                                                                        setImagenOnce(URL.createObjectURL(baseArchives[10]));
+                                                                                        setImagenDoce(URL.createObjectURL(baseArchives[11]));
+                                                                                        setImagenTrece(URL.createObjectURL(baseArchives[12]));
+                                                                                        setImagenCatorce(URL.createObjectURL(baseArchives[13]));
+                                                                                        setImagenQuince(URL.createObjectURL(baseArchives[14]));
+                                                                                        setImagenDieciSeis(URL.createObjectURL(baseArchives[15]));
+                                                                                        setImagenDieciSiete(URL.createObjectURL(baseArchives[16]));
+                                                                                        setImagenDieciOcho(URL.createObjectURL(baseArchives[17]));
+                                                                                        setImagenDieciNueve(URL.createObjectURL(baseArchives[18]));
+                                                                                        setImagenVeinte(URL.createObjectURL(baseArchives[19]));
+                                                                                        setImagenVeintiuno(URL.createObjectURL(baseArchives[20]));
+                                                                                        setImagenVeintidos(URL.createObjectURL(baseArchives[21]));
+                                                                                    } else
+                                                                                    if (longitud == 23) {
+                                                                                        setImagenUno(URL.createObjectURL(baseArchives[0]));
+                                                                                        setImagenDos(URL.createObjectURL(baseArchives[1]));
+                                                                                        setImagenTres(URL.createObjectURL(baseArchives[2]));
+                                                                                        setImagenCuatro(URL.createObjectURL(baseArchives[3]));
+                                                                                        setImagenCinco(URL.createObjectURL(baseArchives[4]));
+                                                                                        setImagenSeis(URL.createObjectURL(baseArchives[5]));
+                                                                                        setImagenSiete(URL.createObjectURL(baseArchives[6]));
+                                                                                        setImagenOcho(URL.createObjectURL(baseArchives[7]));
+                                                                                        setImagenNueve(URL.createObjectURL(baseArchives[8]));
+                                                                                        setImagenDiez(URL.createObjectURL(baseArchives[9]));
+                                                                                        setImagenOnce(URL.createObjectURL(baseArchives[10]));
+                                                                                        setImagenDoce(URL.createObjectURL(baseArchives[11]));
+                                                                                        setImagenTrece(URL.createObjectURL(baseArchives[12]));
+                                                                                        setImagenCatorce(URL.createObjectURL(baseArchives[13]));
+                                                                                        setImagenQuince(URL.createObjectURL(baseArchives[14]));
+                                                                                        setImagenDieciSeis(URL.createObjectURL(baseArchives[15]));
+                                                                                        setImagenDieciSiete(URL.createObjectURL(baseArchives[16]));
+                                                                                        setImagenDieciOcho(URL.createObjectURL(baseArchives[17]));
+                                                                                        setImagenDieciNueve(URL.createObjectURL(baseArchives[18]));
+                                                                                        setImagenVeinte(URL.createObjectURL(baseArchives[19]));
+                                                                                        setImagenVeintiuno(URL.createObjectURL(baseArchives[20]));
+                                                                                        setImagenVeintidos(URL.createObjectURL(baseArchives[21]));
+                                                                                        setImagenVeintitres(URL.createObjectURL(baseArchives[22]));
+                                                                                    } else
+                                                                                    if (longitud == 24) {
+                                                                                        setImagenUno(URL.createObjectURL(baseArchives[0]));
+                                                                                        setImagenDos(URL.createObjectURL(baseArchives[1]));
+                                                                                        setImagenTres(URL.createObjectURL(baseArchives[2]));
+                                                                                        setImagenCuatro(URL.createObjectURL(baseArchives[3]));
+                                                                                        setImagenCinco(URL.createObjectURL(baseArchives[4]));
+                                                                                        setImagenSeis(URL.createObjectURL(baseArchives[5]));
+                                                                                        setImagenSiete(URL.createObjectURL(baseArchives[6]));
+                                                                                        setImagenOcho(URL.createObjectURL(baseArchives[7]));
+                                                                                        setImagenNueve(URL.createObjectURL(baseArchives[8]));
+                                                                                        setImagenDiez(URL.createObjectURL(baseArchives[9]));
+                                                                                        setImagenOnce(URL.createObjectURL(baseArchives[10]));
+                                                                                        setImagenDoce(URL.createObjectURL(baseArchives[11]));
+                                                                                        setImagenTrece(URL.createObjectURL(baseArchives[12]));
+                                                                                        setImagenCatorce(URL.createObjectURL(baseArchives[13]));
+                                                                                        setImagenQuince(URL.createObjectURL(baseArchives[14]));
+                                                                                        setImagenDieciSeis(URL.createObjectURL(baseArchives[15]));
+                                                                                        setImagenDieciSiete(URL.createObjectURL(baseArchives[16]));
+                                                                                        setImagenDieciOcho(URL.createObjectURL(baseArchives[17]));
+                                                                                        setImagenDieciNueve(URL.createObjectURL(baseArchives[18]));
+                                                                                        setImagenVeinte(URL.createObjectURL(baseArchives[19]));
+                                                                                        setImagenVeintiuno(URL.createObjectURL(baseArchives[20]));
+                                                                                        setImagenVeintidos(URL.createObjectURL(baseArchives[21]));
+                                                                                        setImagenVeintitres(URL.createObjectURL(baseArchives[22]));
+                                                                                        setImagenVeinticuatro(URL.createObjectURL(baseArchives[23]));
+                                                                                    } else
+                                                                                    if (longitud == 25) {
+                                                                                        setImagenUno(URL.createObjectURL(baseArchives[0]));
+                                                                                        setImagenDos(URL.createObjectURL(baseArchives[1]));
+                                                                                        setImagenTres(URL.createObjectURL(baseArchives[2]));
+                                                                                        setImagenCuatro(URL.createObjectURL(baseArchives[3]));
+                                                                                        setImagenCinco(URL.createObjectURL(baseArchives[4]));
+                                                                                        setImagenSeis(URL.createObjectURL(baseArchives[5]));
+                                                                                        setImagenSiete(URL.createObjectURL(baseArchives[6]));
+                                                                                        setImagenOcho(URL.createObjectURL(baseArchives[7]));
+                                                                                        setImagenNueve(URL.createObjectURL(baseArchives[8]));
+                                                                                        setImagenDiez(URL.createObjectURL(baseArchives[9]));
+                                                                                        setImagenOnce(URL.createObjectURL(baseArchives[10]));
+                                                                                        setImagenDoce(URL.createObjectURL(baseArchives[11]));
+                                                                                        setImagenTrece(URL.createObjectURL(baseArchives[12]));
+                                                                                        setImagenCatorce(URL.createObjectURL(baseArchives[13]));
+                                                                                        setImagenQuince(URL.createObjectURL(baseArchives[14]));
+                                                                                        setImagenDieciSeis(URL.createObjectURL(baseArchives[15]));
+                                                                                        setImagenDieciSiete(URL.createObjectURL(baseArchives[16]));
+                                                                                        setImagenDieciOcho(URL.createObjectURL(baseArchives[17]));
+                                                                                        setImagenDieciNueve(URL.createObjectURL(baseArchives[18]));
+                                                                                        setImagenVeinte(URL.createObjectURL(baseArchives[19]));
+                                                                                        setImagenVeintiuno(URL.createObjectURL(baseArchives[20]));
+                                                                                        setImagenVeintidos(URL.createObjectURL(baseArchives[21]));
+                                                                                        setImagenVeintitres(URL.createObjectURL(baseArchives[22]));
+                                                                                        setImagenVeinticuatro(URL.createObjectURL(baseArchives[23]));
+                                                                                        setImagenVeinticinco(URL.createObjectURL(baseArchives[24]));
+                                                                                    } else
+                                                                                    if (longitud == 26) {
+                                                                                        setImagenUno(URL.createObjectURL(baseArchives[0]));
+                                                                                        setImagenDos(URL.createObjectURL(baseArchives[1]));
+                                                                                        setImagenTres(URL.createObjectURL(baseArchives[2]));
+                                                                                        setImagenCuatro(URL.createObjectURL(baseArchives[3]));
+                                                                                        setImagenCinco(URL.createObjectURL(baseArchives[4]));
+                                                                                        setImagenSeis(URL.createObjectURL(baseArchives[5]));
+                                                                                        setImagenSiete(URL.createObjectURL(baseArchives[6]));
+                                                                                        setImagenOcho(URL.createObjectURL(baseArchives[7]));
+                                                                                        setImagenNueve(URL.createObjectURL(baseArchives[8]));
+                                                                                        setImagenDiez(URL.createObjectURL(baseArchives[9]));
+                                                                                        setImagenOnce(URL.createObjectURL(baseArchives[10]));
+                                                                                        setImagenDoce(URL.createObjectURL(baseArchives[11]));
+                                                                                        setImagenTrece(URL.createObjectURL(baseArchives[12]));
+                                                                                        setImagenCatorce(URL.createObjectURL(baseArchives[13]));
+                                                                                        setImagenQuince(URL.createObjectURL(baseArchives[14]));
+                                                                                        setImagenDieciSeis(URL.createObjectURL(baseArchives[15]));
+                                                                                        setImagenDieciSiete(URL.createObjectURL(baseArchives[16]));
+                                                                                        setImagenDieciOcho(URL.createObjectURL(baseArchives[17]));
+                                                                                        setImagenDieciNueve(URL.createObjectURL(baseArchives[18]));
+                                                                                        setImagenVeinte(URL.createObjectURL(baseArchives[19]));
+                                                                                        setImagenVeintiuno(URL.createObjectURL(baseArchives[20]));
+                                                                                        setImagenVeintidos(URL.createObjectURL(baseArchives[21]));
+                                                                                        setImagenVeintitres(URL.createObjectURL(baseArchives[22]));
+                                                                                        setImagenVeinticuatro(URL.createObjectURL(baseArchives[23]));
+                                                                                        setImagenVeinticinco(URL.createObjectURL(baseArchives[24]));
+                                                                                        setImagenVeintiseis(URL.createObjectURL(baseArchives[25]));
+                                                                                    } else
+                                                                                    if (longitud == 27) {
+                                                                                        setImagenUno(URL.createObjectURL(baseArchives[0]));
+                                                                                        setImagenDos(URL.createObjectURL(baseArchives[1]));
+                                                                                        setImagenTres(URL.createObjectURL(baseArchives[2]));
+                                                                                        setImagenCuatro(URL.createObjectURL(baseArchives[3]));
+                                                                                        setImagenCinco(URL.createObjectURL(baseArchives[4]));
+                                                                                        setImagenSeis(URL.createObjectURL(baseArchives[5]));
+                                                                                        setImagenSiete(URL.createObjectURL(baseArchives[6]));
+                                                                                        setImagenOcho(URL.createObjectURL(baseArchives[7]));
+                                                                                        setImagenNueve(URL.createObjectURL(baseArchives[8]));
+                                                                                        setImagenDiez(URL.createObjectURL(baseArchives[9]));
+                                                                                        setImagenOnce(URL.createObjectURL(baseArchives[10]));
+                                                                                        setImagenDoce(URL.createObjectURL(baseArchives[11]));
+                                                                                        setImagenTrece(URL.createObjectURL(baseArchives[12]));
+                                                                                        setImagenCatorce(URL.createObjectURL(baseArchives[13]));
+                                                                                        setImagenQuince(URL.createObjectURL(baseArchives[14]));
+                                                                                        setImagenDieciSeis(URL.createObjectURL(baseArchives[15]));
+                                                                                        setImagenDieciSiete(URL.createObjectURL(baseArchives[16]));
+                                                                                        setImagenDieciOcho(URL.createObjectURL(baseArchives[17]));
+                                                                                        setImagenDieciNueve(URL.createObjectURL(baseArchives[18]));
+                                                                                        setImagenVeinte(URL.createObjectURL(baseArchives[19]));
+                                                                                        setImagenVeintiuno(URL.createObjectURL(baseArchives[20]));
+                                                                                        setImagenVeintidos(URL.createObjectURL(baseArchives[21]));
+                                                                                        setImagenVeintitres(URL.createObjectURL(baseArchives[22]));
+                                                                                        setImagenVeinticuatro(URL.createObjectURL(baseArchives[23]));
+                                                                                        setImagenVeinticinco(URL.createObjectURL(baseArchives[24]));
+                                                                                        setImagenVeintiseis(URL.createObjectURL(baseArchives[25]));
+                                                                                        setImagenVeintisiete(URL.createObjectURL(baseArchives[26]));
+                                                                                    } else
+                                                                                    if (longitud == 28) {
+                                                                                        setImagenUno(URL.createObjectURL(baseArchives[0]));
+                                                                                        setImagenDos(URL.createObjectURL(baseArchives[1]));
+                                                                                        setImagenTres(URL.createObjectURL(baseArchives[2]));
+                                                                                        setImagenCuatro(URL.createObjectURL(baseArchives[3]));
+                                                                                        setImagenCinco(URL.createObjectURL(baseArchives[4]));
+                                                                                        setImagenSeis(URL.createObjectURL(baseArchives[5]));
+                                                                                        setImagenSiete(URL.createObjectURL(baseArchives[6]));
+                                                                                        setImagenOcho(URL.createObjectURL(baseArchives[7]));
+                                                                                        setImagenNueve(URL.createObjectURL(baseArchives[8]));
+                                                                                        setImagenDiez(URL.createObjectURL(baseArchives[9]));
+                                                                                        setImagenOnce(URL.createObjectURL(baseArchives[10]));
+                                                                                        setImagenDoce(URL.createObjectURL(baseArchives[11]));
+                                                                                        setImagenTrece(URL.createObjectURL(baseArchives[12]));
+                                                                                        setImagenCatorce(URL.createObjectURL(baseArchives[13]));
+                                                                                        setImagenQuince(URL.createObjectURL(baseArchives[14]));
+                                                                                        setImagenDieciSeis(URL.createObjectURL(baseArchives[15]));
+                                                                                        setImagenDieciSiete(URL.createObjectURL(baseArchives[16]));
+                                                                                        setImagenDieciOcho(URL.createObjectURL(baseArchives[17]));
+                                                                                        setImagenDieciNueve(URL.createObjectURL(baseArchives[18]));
+                                                                                        setImagenVeinte(URL.createObjectURL(baseArchives[19]));
+                                                                                        setImagenVeintiuno(URL.createObjectURL(baseArchives[20]));
+                                                                                        setImagenVeintidos(URL.createObjectURL(baseArchives[21]));
+                                                                                        setImagenVeintitres(URL.createObjectURL(baseArchives[22]));
+                                                                                        setImagenVeinticuatro(URL.createObjectURL(baseArchives[23]));
+                                                                                        setImagenVeinticinco(URL.createObjectURL(baseArchives[24]));
+                                                                                        setImagenVeintiseis(URL.createObjectURL(baseArchives[25]));
+                                                                                        setImagenVeintisiete(URL.createObjectURL(baseArchives[26]));
+                                                                                        setImagenVeintiocho(URL.createObjectURL(baseArchives[27]));
+                                                                                    } else
+                                                                                    if (longitud == 29) {
+                                                                                        setImagenUno(URL.createObjectURL(baseArchives[0]));
+                                                                                        setImagenDos(URL.createObjectURL(baseArchives[1]));
+                                                                                        setImagenTres(URL.createObjectURL(baseArchives[2]));
+                                                                                        setImagenCuatro(URL.createObjectURL(baseArchives[3]));
+                                                                                        setImagenCinco(URL.createObjectURL(baseArchives[4]));
+                                                                                        setImagenSeis(URL.createObjectURL(baseArchives[5]));
+                                                                                        setImagenSiete(URL.createObjectURL(baseArchives[6]));
+                                                                                        setImagenOcho(URL.createObjectURL(baseArchives[7]));
+                                                                                        setImagenNueve(URL.createObjectURL(baseArchives[8]));
+                                                                                        setImagenDiez(URL.createObjectURL(baseArchives[9]));
+                                                                                        setImagenOnce(URL.createObjectURL(baseArchives[10]));
+                                                                                        setImagenDoce(URL.createObjectURL(baseArchives[11]));
+                                                                                        setImagenTrece(URL.createObjectURL(baseArchives[12]));
+                                                                                        setImagenCatorce(URL.createObjectURL(baseArchives[13]));
+                                                                                        setImagenQuince(URL.createObjectURL(baseArchives[14]));
+                                                                                        setImagenDieciSeis(URL.createObjectURL(baseArchives[15]));
+                                                                                        setImagenDieciSiete(URL.createObjectURL(baseArchives[16]));
+                                                                                        setImagenDieciOcho(URL.createObjectURL(baseArchives[17]));
+                                                                                        setImagenDieciNueve(URL.createObjectURL(baseArchives[18]));
+                                                                                        setImagenVeinte(URL.createObjectURL(baseArchives[19]));
+                                                                                        setImagenVeintiuno(URL.createObjectURL(baseArchives[20]));
+                                                                                        setImagenVeintidos(URL.createObjectURL(baseArchives[21]));
+                                                                                        setImagenVeintitres(URL.createObjectURL(baseArchives[22]));
+                                                                                        setImagenVeinticuatro(URL.createObjectURL(baseArchives[23]));
+                                                                                        setImagenVeinticinco(URL.createObjectURL(baseArchives[24]));
+                                                                                        setImagenVeintiseis(URL.createObjectURL(baseArchives[25]));
+                                                                                        setImagenVeintisiete(URL.createObjectURL(baseArchives[26]));
+                                                                                        setImagenVeintiocho(URL.createObjectURL(baseArchives[27]));
+                                                                                        setImagenVeintinueve(URL.createObjectURL(baseArchives[28]));
+                                                                                    } else
+                                                                                    if (longitud == 30) {
+                                                                                        setImagenUno(URL.createObjectURL(baseArchives[0]));
+                                                                                        setImagenDos(URL.createObjectURL(baseArchives[1]));
+                                                                                        setImagenTres(URL.createObjectURL(baseArchives[2]));
+                                                                                        setImagenCuatro(URL.createObjectURL(baseArchives[3]));
+                                                                                        setImagenCinco(URL.createObjectURL(baseArchives[4]));
+                                                                                        setImagenSeis(URL.createObjectURL(baseArchives[5]));
+                                                                                        setImagenSiete(URL.createObjectURL(baseArchives[6]));
+                                                                                        setImagenOcho(URL.createObjectURL(baseArchives[7]));
+                                                                                        setImagenNueve(URL.createObjectURL(baseArchives[8]));
+                                                                                        setImagenDiez(URL.createObjectURL(baseArchives[9]));
+                                                                                        setImagenOnce(URL.createObjectURL(baseArchives[10]));
+                                                                                        setImagenDoce(URL.createObjectURL(baseArchives[11]));
+                                                                                        setImagenTrece(URL.createObjectURL(baseArchives[12]));
+                                                                                        setImagenCatorce(URL.createObjectURL(baseArchives[13]));
+                                                                                        setImagenQuince(URL.createObjectURL(baseArchives[14]));
+                                                                                        setImagenDieciSeis(URL.createObjectURL(baseArchives[15]));
+                                                                                        setImagenDieciSiete(URL.createObjectURL(baseArchives[16]));
+                                                                                        setImagenDieciOcho(URL.createObjectURL(baseArchives[17]));
+                                                                                        setImagenDieciNueve(URL.createObjectURL(baseArchives[18]));
+                                                                                        setImagenVeinte(URL.createObjectURL(baseArchives[19]));
+                                                                                        setImagenVeintiuno(URL.createObjectURL(baseArchives[20]));
+                                                                                        setImagenVeintidos(URL.createObjectURL(baseArchives[21]));
+                                                                                        setImagenVeintitres(URL.createObjectURL(baseArchives[22]));
+                                                                                        setImagenVeinticuatro(URL.createObjectURL(baseArchives[23]));
+                                                                                        setImagenVeinticinco(URL.createObjectURL(baseArchives[24]));
+                                                                                        setImagenVeintiseis(URL.createObjectURL(baseArchives[25]));
+                                                                                        setImagenVeintisiete(URL.createObjectURL(baseArchives[26]));
+                                                                                        setImagenVeintiocho(URL.createObjectURL(baseArchives[27]));
+                                                                                        setImagenVeintinueve(URL.createObjectURL(baseArchives[28]));
+                                                                                        setImagenTreinta(URL.createObjectURL(baseArchives[29]));
                                                                                     }
 
     }
@@ -543,7 +830,7 @@ function LoadReference(props) {
                 <NavBar />
             </div>
 
-            <div className="ml-80 max-w-7xl py-16 px-6 sm:py-4 sm:px-6 lg:px-0">
+            <div className="ml-80 max-w-6xl py-16 px-6 sm:py-4 sm:px-6 lg:px-0">
                 <h1 className="text-center text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Banco de Imagenes Cosmos</h1>
 
                 <div className="min-w-full  margenizaquierdanegativo px-4 sm:px-6 lg:px-8">
@@ -643,7 +930,7 @@ function LoadReference(props) {
                                     }
 
                                     <p className="text-center text-lg" for="file-input">
-                                        Imagenes a cargar - maximo veinte
+                                        Imagenes a cargar - maximo treinta.
                                     </p>
                                     <div className="grid grid-cols-10 gap-4">
                                         <img
@@ -725,6 +1012,46 @@ function LoadReference(props) {
                                         <img
                                             className="rounded tamañoimagen"
                                             src={imagenVeinte}
+                                        />
+                                        <img
+                                            className="rounded tamañoimagen"
+                                            src={imagenVeintiuno}
+                                        />
+                                        <img
+                                            className="rounded tamañoimagen"
+                                            src={imagenVeintidos}
+                                        />
+                                        <img
+                                            className="rounded tamañoimagen"
+                                            src={imagenVeintitres}
+                                        />
+                                        <img
+                                            className="rounded tamañoimagen"
+                                            src={imagenVeinticuatro}
+                                        />
+                                        <img
+                                            className="rounded tamañoimagen"
+                                            src={imagenVeinticinco}
+                                        />
+                                        <img
+                                            className="rounded tamañoimagen"
+                                            src={imagenVeintiseis}
+                                        />
+                                        <img
+                                            className="rounded tamañoimagen"
+                                            src={imagenVeintisiete}
+                                        />
+                                        <img
+                                            className="rounded tamañoimagen"
+                                            src={imagenVeintiocho}
+                                        />
+                                        <img
+                                            className="rounded tamañoimagen"
+                                            src={imagenVeintinueve}
+                                        />
+                                        <img
+                                            className="rounded tamañoimagen"
+                                            src={imagenTreinta}
                                         />
                                     </div>
                                 </div>
