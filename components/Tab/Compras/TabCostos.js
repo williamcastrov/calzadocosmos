@@ -542,16 +542,16 @@ function TabCostos(props) {
                                 if (items.ano == selectedAno[0].value && prov.Nombreproveedor == items.Nombreproveedor &&
                                     items.mes == mes) {
 
-                                    valcomprasprov = valcomprasprov + items.MND;
-                                    undcomprasprov = undcomprasprov + items.UND;
+                                    valcomprasprov = parseInt(valcomprasprov) + parseInt(items.MND);
+                                    undcomprasprov = parseInt(undcomprasprov) + parseInt(items.UND);
                                 }
 
                                 if (longitudmes == 2) {
                                     mesdos = selectedMes[1].value;
                                     if (items.ano == selectedAno[0].value && prov.Nombreproveedor == items.Nombreproveedor &&
                                         items.mes == mesdos) {
-                                        valcomprasprovdos = valcomprasprovdos + items.MND;
-                                        undcomprasprovdos = undcomprasprovdos + items.UND;
+                                        valcomprasprovdos = parseInt(valcomprasprovdos) + parseInt(items.MND);
+                                        undcomprasprovdos = parseInt(undcomprasprovdos) + parseInt(items.UND);
                                     }
 
                                 }
@@ -563,15 +563,15 @@ function TabCostos(props) {
 
                                     if (items.ano == selectedAno[0].value && prov.Nombreproveedor == items.Nombreproveedor &&
                                         items.mes == mes) {
-                                        valcomprasprov = valcomprasprov + items.MND;
-                                        undcomprasprov = undcomprasprov + items.UND;
+                                        valcomprasprov = parseInt(valcomprasprov) + parseInt(items.MND);
+                                        undcomprasprov = parseInt(undcomprasprov) + parseInt(items.UND);
                                     }
 
                                     if (longitudano == 2) {
                                         if (items.ano == selectedAno[1].value && prov.Nombreproveedor == items.Nombreproveedor &&
                                             items.mes == mes) {
-                                            valcomprasprovdos = valcomprasprovdos + items.MND;
-                                            undcomprasprovdos = undcomprasprovdos + items.UND;
+                                            valcomprasprovdos = parseInt(valcomprasprovdos) + parseInt(items.MND);
+                                            undcomprasprovdos = parseInt(undcomprasprovdos) + parseInt(items.UND);
                                         }
                                     }
                                 })
@@ -657,16 +657,16 @@ function TabCostos(props) {
                                 if (items.ano == selectedAno[0].value && prov.Sublinea == items.Sublinea &&
                                     items.mes == mes) {
 
-                                    valcomprasprov = valcomprasprov + items.MND;
-                                    undcomprasprov = undcomprasprov + items.UND;
+                                    valcomprasprov = parseInt(valcomprasprov) + parseInt(items.MND);
+                                    undcomprasprov = parseInt(undcomprasprov) + parseInt(items.UND);
                                 }
 
                                 if (longitudmes == 2) {
                                     mesdos = selectedMes[1].value;
                                     if (items.ano == selectedAno[0].value && prov.Sublinea == items.Sublinea &&
                                         items.mes == mesdos) {
-                                        valcomprasprovdos = valcomprasprovdos + items.MND;
-                                        undcomprasprovdos = undcomprasprovdos + items.UND;
+                                        valcomprasprovdos = parseInt(valcomprasprovdos) + parseInt(items.MND);
+                                        undcomprasprovdos = parseInt(undcomprasprovdos) + parseInt(items.UND);
                                     }
                                 }
                             })
@@ -707,16 +707,16 @@ function TabCostos(props) {
                                     if (items.ano == selectedAno[0].value && prov.Familia == items.Grupo &&
                                         items.mes == mes) {
 
-                                        valcomprasprov = valcomprasprov + items.MND;
-                                        undcomprasprov = undcomprasprov + items.UND;
+                                        valcomprasprov = parseInt(valcomprasprov) + parseInt(items.MND);
+                                        undcomprasprov = parseInt(undcomprasprov) + parseInt(items.UND);
                                     }
 
                                     if (longitudmes == 2) {
                                         mesdos = selectedMes[1].value;
                                         if (items.ano == selectedAno[0].value && prov.Familia == items.Grupo &&
                                             items.mes == mesdos) {
-                                            valcomprasprovdos = valcomprasprovdos + items.MND;
-                                            undcomprasprovdos = undcomprasprovdos + items.UND;
+                                            valcomprasprovdos = parseInt(valcomprasprovdos) + parseInt(items.MND);
+                                            undcomprasprovdos = parseInt(undcomprasprovdos) + parseInt(items.UND);
                                         }
                                     }
                                 })

@@ -21,12 +21,12 @@ function TabVariacion(props) {
     const [tituloTipo, setTituloTipo] = useState("CENTROS_DE_OPERACIÓN");
     const [datosVariacion, setDatosVariacion] = useState([]);
 
-    const [vtasAno, setVtasAno] = useState(ventasDiariasMes.anos_vtasdiarias);
-    const [vtasMes, setVtasMes] = useState(ventasDiariasMes.meses_vtasdiarias);
-    const [vtasDia, setVtasDia] = useState(ventasDiariasMes.dias_vtas);
-    const [centrosoperacion, setCentrosoperacion] = useState(ventasDiariasMes.centrosoperacion);
-    const [subcategorias, setSubcategorias] = useState(ventasDiariasMes.subcategorias);
-    const [proveedores, setProveedores] = useState(ventasDiariasMes.proveedores);
+    const [vtasAno, setVtasAno] = useState([]);
+    const [vtasMes, setVtasMes] = useState([]);
+    const [vtasDia, setVtasDia] = useState([]);
+    const [centrosoperacion, setCentrosoperacion] = useState([]);
+    const [subcategorias, setSubcategorias] = useState([]);
+    const [proveedores, setProveedores] = useState([]);
 
     const [filtroAno, setFiltroAno] = useState([]);
     const [filtroMes, setFiltroMes] = useState([]);
@@ -48,6 +48,13 @@ function TabVariacion(props) {
     ]
 
     useEffect(() => {
+        setVtasAno(ventasDiariasMes.anos_vtasdiarias);
+        setVtasMes(ventasDiariasMes.meses_vtasdiarias);
+        setVtasDia(ventasDiariasMes.dias_vtas);
+        setCentrosoperacion(ventasDiariasMes.centrosoperacion);
+        setSubcategorias(ventasDiariasMes.subcategorias);
+        setProveedores(ventasDiariasMes.proveedores);
+
         let newDetAnos = [];
         ventasDiariasMes.anos_vtasdiarias &&
             ventasDiariasMes.anos_vtasdiarias.map((anos, index) => {
@@ -191,26 +198,26 @@ function TabVariacion(props) {
 
                             if (i == 0)
                                 if (vtas.ano == selectedAno[i].value) {
-                                    ventastotalanouno = ventastotalanouno + vtas.Vlr_Total
+                                    ventastotalanouno = parseInt(ventastotalanouno) + parseInt(vtas.Vlr_Total)
                                     setLabelUno("Ventas año" + selectedAno[i].label)
                                 }
 
                             if (i == 1)
                                 if (vtas.ano == selectedAno[i].value) {
-                                    ventastotalanodos = ventastotalanodos + vtas.Vlr_Total
+                                    ventastotalanodos = parseInt(ventastotalanodos) + parseInt(vtas.Vlr_Total)
                                     setLabelDos("Ventas año" + selectedAno[i].label)
                                 }
 
                             if (i == 2) {
                                 if (vtas.ano == selectedAno[i].value) {
-                                    ventastotalanotres = ventastotalanotres + vtas.Vlr_Total
+                                    ventastotalanotres = parseInt(ventastotalanotres) + parseInt(vtas.Vlr_Total)
                                     setLabelTres("Ventas año" + selectedAno[i].label)
                                 }
                             }
 
                             if (i == 3)
                                 if (vtas.ano == selectedAno[i].value) {
-                                    ventastotalanocuatro = ventastotalanocuatro + vtas.Vlr_Total
+                                    ventastotalanocuatro = parseInt(ventastotalanocuatro) + parseInt(vtas.Vlr_Total)
                                 }
                         });
                 }
@@ -228,7 +235,7 @@ function TabVariacion(props) {
 
                                         if (vtas.ano == selectedAno[i].value
                                             && vtas.Descripcion == centros.Centros_Operacion) {
-                                            valorventa = valorventa + vtas.Vlr_Total;
+                                            valorventa = parseInt(valorventa) + parseInt(vtas.Vlr_Total);
                                         }
                                     });
                                 let vtauno = {
@@ -273,7 +280,7 @@ function TabVariacion(props) {
                                     datosCostos.costosvtacentro.map((vtas, index) => {
                                         if (vtas.ano == selectedAno[i].value
                                             && vtas.Descripcion == centros.Centros_Operacion) {
-                                            valorventa = valorventa + vtas.Vlr_Total;
+                                            valorventa = parseInt(valorventa) + parseInt(vtas.Vlr_Total);
                                         }
                                     });
                                 let vtatres = {
@@ -380,26 +387,26 @@ function TabVariacion(props) {
 
                                 if (i == 0)
                                     if (vtas.ano == selectedAno[i].value) {
-                                        ventastotalanouno = ventastotalanouno + vtas.Vlr_Total
+                                        ventastotalanouno = parseInt(ventastotalanouno) + parseInt(vtas.Vlr_Total)
                                         setLabelUno(selectedAno[i].label)
                                     }
 
                                 if (i == 1)
                                     if (vtas.ano == selectedAno[i].value) {
-                                        ventastotalanodos = ventastotalanodos + vtas.Vlr_Total
+                                        ventastotalanodos = parseInt(ventastotalanodos) + parseInt(vtas.Vlr_Total)
                                         setLabelDos(selectedAno[i].label)
                                     }
 
                                 if (i == 2) {
                                     if (vtas.ano == selectedAno[i].value) {
-                                        ventastotalanotres = ventastotalanotres + vtas.Vlr_Total
+                                        ventastotalanotres = parseInt(ventastotalanotres) + parseInt(vtas.Vlr_Total)
                                         setLabelTres(selectedAno[i].label)
                                     }
                                 }
 
                                 if (i == 3)
                                     if (vtas.ano == selectedAno[i].value) {
-                                        ventastotalanocuatro = ventastotalanocuatro + vtas.Vlr_Total
+                                        ventastotalanocuatro = parseInt(ventastotalanocuatro) + parseInt(vtas.Vlr_Total)
                                     }
                             });
                     }
@@ -414,7 +421,7 @@ function TabVariacion(props) {
                                         datosCostos.costosvtasubcategoria.map((vtas, index) => {
                                             if (vtas.ano == selectedAno[i].value
                                                 && vtas.Descripcion == centros.Subcategorias) {
-                                                valorventa = valorventa + vtas.Vlr_Total;
+                                                valorventa = parseInt(valorventa) + parseInt(vtas.Vlr_Total);
                                             }
                                         });
                                     let vtauno = {
@@ -436,7 +443,7 @@ function TabVariacion(props) {
                                         datosCostos.costosvtasubcategoria.map((vtas, index) => {
                                             if (vtas.ano == selectedAno[i].value
                                                 && vtas.Descripcion == centros.Subcategorias) {
-                                                valorventa = valorventa + vtas.Vlr_Total;
+                                                valorventa = parseInt(valorventa) + parseInt(vtas.Vlr_Total);
                                             }
                                         });
                                     let vtados = {
@@ -458,7 +465,7 @@ function TabVariacion(props) {
                                         datosCostos.costosvtasubcategoria.map((vtas, index) => {
                                             if (vtas.ano == selectedAno[i].value
                                                 && vtas.Descripcion == centros.Subcategorias) {
-                                                valorventa = valorventa + vtas.Vlr_Total;
+                                                valorventa = parseInt(valorventa) + parseInt(vtas.Vlr_Total);
                                             }
                                         });
                                     let vtatres = {
@@ -480,7 +487,7 @@ function TabVariacion(props) {
                                         datosCostos.costosvtasubcategoria.map((vtas, index) => {
                                             if (vtas.ano == selectedAno[i].value
                                                 && vtas.Descripcion == centros.Subcategorias) {
-                                                valorventa = valorventa + vtas.Vlr_Total;
+                                                valorventa = parseInt(valorventa) + parseInt(vtas.Vlr_Total);
                                             }
                                         });
                                     let vtacuatro = {
@@ -527,8 +534,8 @@ function TabVariacion(props) {
 
                     newDetVtasCompara &&
                         newDetVtasCompara.map((mes, index) => {
-                            ventauno = ventauno + mes.Vlr_VentaAnoUno;
-                            ventados = ventados + mes.Vlr_VentaAnoDos;
+                            ventauno = parseInt(ventauno) + parseInt(mes.Vlr_VentaAnoUno);
+                            ventados = parseInt(ventados) + parseInt(mes.Vlr_VentaAnoDos);
                             per = mes.Periodo;
                         });
 
@@ -566,26 +573,26 @@ function TabVariacion(props) {
 
                                     if (i == 0)
                                         if (vtas.ano == selectedAno[i].value) {
-                                            ventastotalanouno = ventastotalanouno + vtas.Vlr_Total
+                                            ventastotalanouno = parseInt(ventastotalanouno) + parseInt(vtas.Vlr_Total)
                                             setLabelUno(selectedAno[i].label)
                                         }
 
                                     if (i == 1)
                                         if (vtas.ano == selectedAno[i].value) {
-                                            ventastotalanodos = ventastotalanodos + vtas.Vlr_Total
+                                            ventastotalanodos = parseInt(ventastotalanodos) + parseInt(vtas.Vlr_Total)
                                             setLabelDos(selectedAno[i].label)
                                         }
 
                                     if (i == 2) {
                                         if (vtas.ano == selectedAno[i].value) {
-                                            ventastotalanotres = ventastotalanotres + vtas.Vlr_Total
+                                            ventastotalanotres = parseInt(ventastotalanotres) + parseInt(vtas.Vlr_Total)
                                             setLabelTres(selectedAno[i].label)
                                         }
                                     }
 
                                     if (i == 3)
                                         if (vtas.ano == selectedAno[i].value) {
-                                            ventastotalanocuatro = ventastotalanocuatro + vtas.Vlr_Total
+                                            ventastotalanocuatro = parseInt(ventastotalanocuatro) + parseInt(vtas.Vlr_Total)
                                         }
                                 });
                         }
@@ -600,7 +607,7 @@ function TabVariacion(props) {
                                             datosCostos.costosproveedor.map((vtas, index) => {
                                                 if (vtas.ano == selectedAno[i].value
                                                     && vtas.Descripcion == centros.Nombre_Proveedor) {
-                                                    valorventa = valorventa + vtas.Vlr_Total;
+                                                    valorventa = (valorventa) + (vtas.Vlr_Total);
                                                 }
                                             });
 
@@ -625,7 +632,7 @@ function TabVariacion(props) {
                                             datosCostos.costosproveedor.map((vtas, index) => {
                                                 if (vtas.ano == selectedAno[i].value
                                                     && vtas.Descripcion == centros.Nombre_Proveedor) {
-                                                    valorventa = valorventa + vtas.Vlr_Total;
+                                                    valorventa = parseInt(valorventa) + parseInt(vtas.Vlr_Total);
                                                 }
                                             });
                                         let vtados = {
@@ -647,7 +654,7 @@ function TabVariacion(props) {
                                             datosCostos.costosproveedor.map((vtas, index) => {
                                                 if (vtas.ano == selectedAno[i].value
                                                     && vtas.Descripcion == centros.Nombre_Proveedor) {
-                                                    valorventa = valorventa + vtas.Vlr_Total;
+                                                    valorventa = parseInt(valorventa) + parseInt(vtas.Vlr_Total);
                                                 }
                                             });
                                         let vtatres = {
@@ -669,7 +676,7 @@ function TabVariacion(props) {
                                             datosCostos.costosproveedor.map((vtas, index) => {
                                                 if (vtas.ano == selectedAno[i].value
                                                     && vtas.Descripcion == centros.Nombre_Proveedor) {
-                                                    valorventa = valorventa + vtas.Vlr_Total;
+                                                    valorventa = parseInt(valorventa) + parseInt(vtas.Vlr_Total);
                                                 }
                                             });
                                         let vtacuatro = {
@@ -716,8 +723,8 @@ function TabVariacion(props) {
 
                         newDetVtasCompara &&
                             newDetVtasCompara.map((mes, index) => {
-                                ventauno = ventauno + mes.Vlr_VentaAnoUno;
-                                ventados = ventados + mes.Vlr_VentaAnoDos;
+                                ventauno = parseInt(ventauno) + parseInt(mes.Vlr_VentaAnoUno);
+                                ventados = parseInt(ventados) + parseInt(mes.Vlr_VentaAnoDos);
                                 per = mes.Periodo;
                             });
 
@@ -762,13 +769,13 @@ function TabVariacion(props) {
 
                                 if (i == 0)
                                     if (vtas.ano == selectedAno[0].value && vtas.mes == selectedMes[i].value) {
-                                        ventastotalanouno = ventastotalanouno + vtas.Vlr_Total;
+                                        ventastotalanouno = parseInt(ventastotalanouno) + parseInt(vtas.Vlr_Total);
                                         setLabelUno("Periodo-" + selectedMes[i].label + "-" + selectedAno[i].label)
                                     }
 
                                 if (i == 1)
                                     if (vtas.ano == selectedAno[0].value && vtas.mes == selectedMes[i].value) {
-                                        ventastotalanodos = ventastotalanodos + vtas.Vlr_Total;
+                                        ventastotalanodos = parseInt(ventastotalanodos) + parseInt(vtas.Vlr_Total);
                                         setLabelDos("Periodo-" + selectedMes[i].label + "-" + selectedAno[0].label)
                                     }
 
@@ -814,7 +821,7 @@ function TabVariacion(props) {
                                                 && vtas.Descripcion == centros.Centros_Operacion
                                                 && vtas.mes == selectedMes[i].value
                                             ) {
-                                                valorventa = valorventa + vtas.Vlr_Total;
+                                                valorventa = parseInt(valorventa) + parseInt(vtas.Vlr_Total);
                                             }
 
                                         });
@@ -1178,7 +1185,428 @@ function TabVariacion(props) {
 
                             setDatosVariacion(newDetVtasCompara);
                         }
-            }
+            } else
+                if (selectedAno.length == 2 && selectedMes.length < 2) {
+
+                    if (opcion == 0) {
+
+                        let ventastotalanouno = 0;
+                        let ventastotalanodos = 0;
+                        let ventastotalanotres = 0;
+                        let ventastotalanocuatro = 0;
+
+                        let newDetVtasAcumAnoUno = [];
+                        let newDetVtasAcumAnoDos = [];
+                        let newDetVtasAcumAnoTres = [];
+                        let newDetVtasAcumAnoCuatro = [];
+                        let longitud = selectedAno.length;
+
+                        setLabelDos([]);
+                        setLabelTres([]);
+
+                        for (var i = 0; i < longitud; i++) {
+
+                            datosCostos.costosvtacentro &&
+                                datosCostos.costosvtacentro.map((vtas, index) => {
+
+                                    if (i == 0)
+                                        if (vtas.ano == selectedAno[0].value && vtas.mes == selectedMes[0].value) {
+                                            ventastotalanouno = parseInt(ventastotalanouno) + parseInt(vtas.Vlr_Total);
+                                            setLabelUno("Periodo-" + selectedMes[0].label + "-" + selectedAno[0].label)
+                                        }
+
+                                    if (i == 1)
+                                        if (vtas.ano == selectedAno[1].value && vtas.mes == selectedMes[0].value) {
+                                            ventastotalanodos = parseInt(ventastotalanodos) + parseInt(vtas.Vlr_Total);
+                                            setLabelDos("Periodo-" + selectedMes[0].label + "-" + selectedAno[1].label)
+                                        }
+
+                                });
+                        }
+
+                        centrosoperacion &&
+                            centrosoperacion.map((centros, index) => {
+                                let valorventa = 0;
+                                let participacion = 0;
+                                datosCostos.costosvtacentro &&
+                                    datosCostos.costosvtacentro.map((vtas, index) => {
+
+                                        if (vtas.ano == selectedAno[0].value
+                                            && vtas.Descripcion == centros.Centros_Operacion
+                                            && vtas.mes == selectedMes[0].value
+                                        ) {
+                                            valorventa = valorventa + vtas.Vlr_Total;
+                                        }
+                                    });
+                                let vtauno = {
+                                    Descripcion: centros.Centros_Operacion,
+                                    ano: selectedAno[0].value,
+                                    VentaAcumulada: valorventa,
+                                    ParticipacionAcum: valorventa / ventastotalanouno
+                                };
+                                newDetVtasAcumAnoUno.push(vtauno);
+                            });
+
+                        centrosoperacion &&
+                            centrosoperacion.map((centros, index) => {
+                                let valorventa = 0;
+                                let participacion = 0;
+                                datosCostos.costosvtacentro &&
+                                    datosCostos.costosvtacentro.map((vtas, index) => {
+
+                                        if (vtas.ano == selectedAno[1].value
+                                            && vtas.Descripcion == centros.Centros_Operacion
+                                            && vtas.mes == selectedMes[0].value
+                                        ) {
+                                            valorventa = parseInt(valorventa) + parseInt(vtas.Vlr_Total);
+                                        }
+
+                                    });
+
+                                let vtados = {
+                                    Descripcion: centros.Centros_Operacion,
+                                    ano: selectedAno[1].value,
+                                    VentaAcumulada: valorventa,
+                                    ParticipacionAcum: valorventa / ventastotalanodos
+                                };
+                                newDetVtasAcumAnoDos.push(vtados);
+
+                            });
+
+
+                        let newDetVtasCompara = [];
+
+                        if (longitud == 2) {
+                            newDetVtasAcumAnoUno &&
+                                newDetVtasAcumAnoUno.map((acumula, index) => {
+                                    newDetVtasAcumAnoDos &&
+                                        newDetVtasAcumAnoDos.map((meses, index) => {
+                                            let variacion = 0;
+                                            variacion = ((1 - (acumula.VentaAcumulada / meses.VentaAcumulada)) * 100).toFixed(2);
+
+                                            if (isNaN(variacion))
+                                                variacion = 0;
+
+                                            if (acumula.Descripcion == meses.Descripcion) {
+                                                let vta = {
+                                                    Descripcion: acumula.Descripcion,
+                                                    Periodo: acumula.ano + " - " + meses.ano,
+                                                    Vlr_VentaAnoUno: acumula.VentaAcumulada,
+                                                    Vlr_VentaAnoDos: meses.VentaAcumulada,
+                                                    Variacion: variacion
+                                                };
+                                                newDetVtasCompara.push(vta);
+                                            }
+                                        });
+                                });
+                        }
+
+                        let ventauno = 0;
+                        let ventados = 0;
+                        let per = 0;
+
+                        newDetVtasCompara &&
+                            newDetVtasCompara.map((mes, index) => {
+                                ventauno = ventauno + mes.Vlr_VentaAnoUno;
+                                ventados = ventados + mes.Vlr_VentaAnoDos;
+                                per = mes.Periodo;
+                            });
+
+                        let varia = ((1 - (ventauno / ventados)) * 100).toFixed(2);
+
+                        let mvto = {
+                            Descripcion: "TOTAL",
+                            Periodo: per,
+                            Variacion: varia,
+                            Vlr_VentaAnoDos: ventauno,
+                            Vlr_VentaAnoUno: ventados
+                        };
+
+                        newDetVtasCompara.push(mvto);
+
+                        setDatosVariacion(newDetVtasCompara);
+                    } else
+                        if (opcion == 1) {
+
+                            let ventastotalanouno = 0;
+                            let ventastotalanodos = 0;
+                            let ventastotalanotres = 0;
+                            let ventastotalanocuatro = 0;
+
+                            let newDetVtasAcumAnoUno = [];
+                            let newDetVtasAcumAnoDos = [];
+                            let newDetVtasAcumAnoTres = [];
+                            let newDetVtasAcumAnoCuatro = [];
+                            let longitud = selectedAno.length;
+
+                            setLabelDos([]);
+                            setLabelTres([]);
+
+                            for (var i = 0; i < longitud; i++) {
+
+                                datosCostos.costosvtasubcategoria &&
+                                    datosCostos.costosvtasubcategoria.map((vtas, index) => {
+
+                                        if (i == 0)
+                                            if (vtas.ano == selectedAno[0].value && vtas.mes == selectedMes[0].value) {
+                                                ventastotalanouno = ventastotalanouno + vtas.Vlr_Total;
+                                                setLabelUno("Periodo-" + selectedMes[0].label + "-" + selectedAno[0].label)
+                                            }
+
+                                        if (i == 1)
+                                            if (vtas.ano == selectedAno[1].value && vtas.mes == selectedMes[0].value) {
+                                                ventastotalanodos = ventastotalanodos + vtas.Vlr_Total;
+                                                setLabelDos("Periodo-" + selectedMes[0].label + "-" + selectedAno[1].label)
+                                            }
+
+                                    });
+                            }
+
+                            subcategorias &&
+                                subcategorias.map((centros, index) => {
+                                    let valorventa = 0;
+                                    let participacion = 0;
+                                    datosCostos.costosvtasubcategoria &&
+                                        datosCostos.costosvtasubcategoria.map((vtas, index) => {
+
+                                            if (vtas.ano == selectedAno[0].value
+                                                && vtas.Descripcion == centros.Subcategorias
+                                                && vtas.mes == selectedMes[0].value
+                                            ) {
+                                                valorventa = valorventa + vtas.Vlr_Total;
+                                            }
+                                        });
+                                    let vtauno = {
+                                        Descripcion: centros.Subcategorias,
+                                        ano: selectedAno[0].value,
+                                        VentaAcumulada: valorventa,
+                                        ParticipacionAcum: valorventa / ventastotalanouno
+                                    };
+                                    newDetVtasAcumAnoUno.push(vtauno);
+                                });
+
+                            subcategorias &&
+                                subcategorias.map((centros, index) => {
+                                    let valorventa = 0;
+                                    let participacion = 0;
+                                    datosCostos.costosvtasubcategoria &&
+                                        datosCostos.costosvtasubcategoria.map((vtas, index) => {
+
+                                            if (vtas.ano == selectedAno[1].value
+                                                && vtas.Descripcion == centros.Subcategorias
+                                                && vtas.mes == selectedMes[0].value
+                                            ) {
+                                                valorventa = valorventa + vtas.Vlr_Total;
+                                            }
+
+                                        });
+
+                                    let vtados = {
+                                        Descripcion: centros.Subcategorias,
+                                        ano: selectedAno[1].value,
+                                        VentaAcumulada: valorventa,
+                                        ParticipacionAcum: valorventa / ventastotalanouno
+                                    };
+                                    newDetVtasAcumAnoDos.push(vtados);
+                                });
+
+                            let newDetVtasCompara = [];
+
+                            if (longitud == 2) {
+                                newDetVtasAcumAnoUno &&
+                                    newDetVtasAcumAnoUno.map((acumula, index) => {
+                                        newDetVtasAcumAnoDos &&
+                                            newDetVtasAcumAnoDos.map((meses, index) => {
+                                                let variacion = 0;
+                                                variacion = ((1 - (acumula.VentaAcumulada / meses.VentaAcumulada)) * 100).toFixed(2);
+
+                                                if (isNaN(variacion))
+                                                    variacion = 0;
+
+                                                if (acumula.Descripcion == meses.Descripcion) {
+                                                    let vta = {
+                                                        Descripcion: acumula.Descripcion,
+                                                        Periodo: acumula.ano + " - " + meses.ano,
+                                                        Vlr_VentaAnoUno: acumula.VentaAcumulada,
+                                                        Vlr_VentaAnoDos: meses.VentaAcumulada,
+                                                        Variacion: variacion
+                                                    };
+                                                    newDetVtasCompara.push(vta);
+                                                }
+                                            });
+                                    });
+                            }
+
+                            let ventauno = 0;
+                            let ventados = 0;
+                            let per = 0;
+
+                            newDetVtasCompara &&
+                                newDetVtasCompara.map((mes, index) => {
+                                    ventauno = ventauno + mes.Vlr_VentaAnoUno;
+                                    ventados = ventados + mes.Vlr_VentaAnoDos;
+                                    per = mes.Periodo;
+                                });
+
+                            let varia = ((1 - (ventauno / ventados)) * 100).toFixed(2);
+
+                            let mvto = {
+                                Descripcion: "TOTAL",
+                                Periodo: per,
+                                Variacion: varia,
+                                Vlr_VentaAnoDos: ventauno,
+                                Vlr_VentaAnoUno: ventados
+                            };
+
+                            newDetVtasCompara.push(mvto);
+                            setDatosVariacion(newDetVtasCompara);
+                        } else
+                            if (opcion == 2) {
+
+                                let ventastotalanouno = 0;
+                                let ventastotalanodos = 0;
+                                let ventastotalanotres = 0;
+                                let ventastotalanocuatro = 0;
+
+                                let newDetVtasAcumAnoUno = [];
+                                let newDetVtasAcumAnoDos = [];
+                                let newDetVtasAcumAnoTres = [];
+                                let newDetVtasAcumAnoCuatro = [];
+                                let longitud = selectedAno.length;
+
+                                setLabelDos([]);
+                                setLabelTres([]);
+
+                                for (var i = 0; i < longitud; i++) {
+
+                                    datosCostos.costosproveedor &&
+                                        datosCostos.costosproveedor.map((vtas, index) => {
+
+                                            if (i == 0)
+                                                if (vtas.ano == selectedAno[0].value && vtas.mes == selectedMes[0].value) {
+                                                    ventastotalanouno = ventastotalanouno + vtas.Vlr_Total;
+                                                    setLabelUno("Periodo-" + selectedMes[0].label + "-" + selectedAno[0].label)
+                                                }
+
+                                            if (i == 1)
+                                                if (vtas.ano == selectedAno[1].value && vtas.mes == selectedMes[0].value) {
+                                                    ventastotalanodos = ventastotalanodos + vtas.Vlr_Total;
+                                                    setLabelDos("Periodo-" + selectedMes[0].label + "-" + selectedAno[1].label)
+                                                }
+
+                                        });
+                                }
+
+
+                                proveedores &&
+                                    proveedores.map((prov, index) => {
+                                        let valorventa = 0;
+                                        let participacion = 0;
+                                        datosCostos.costosproveedor &&
+                                            datosCostos.costosproveedor.map((vtas, index) => {
+
+                                                if (vtas.ano == selectedAno[0].value
+                                                    && vtas.Descripcion == prov.Nombre_Proveedor
+                                                    && vtas.mes == selectedMes[0].value
+                                                ) {
+                                                    valorventa = valorventa + vtas.Vlr_Total;
+                                                }
+                                            });
+                                        let vtauno = {
+                                            Descripcion: prov.Nombre_Proveedor,
+                                            ano: selectedAno[0].value,
+                                            VentaAcumulada: valorventa,
+                                            ParticipacionAcum: valorventa / ventastotalanouno
+                                        };
+                                        newDetVtasAcumAnoUno.push(vtauno);
+                                    });
+
+                                proveedores &&
+                                    proveedores.map((prov, index) => {
+                                        let valorventa = 0;
+                                        let participacion = 0;
+                                        datosCostos.costosproveedor &&
+                                            datosCostos.costosproveedor.map((vtas, index) => {
+
+                                                if (vtas.ano == selectedAno[1].value
+                                                    && vtas.Descripcion == prov.Nombre_Proveedor
+                                                    && vtas.mes == selectedMes[0].value
+                                                ) {
+                                                    valorventa = valorventa + vtas.Vlr_Total;
+                                                }
+
+                                            });
+
+                                        let vtados = {
+                                            Descripcion: prov.Nombre_Proveedor,
+                                            ano: selectedAno[1].value,
+                                            VentaAcumulada: valorventa,
+                                            ParticipacionAcum: valorventa / ventastotalanouno
+                                        };
+                                        newDetVtasAcumAnoDos.push(vtados);
+
+                                    });
+
+                                let newDetVtasCompara = [];
+
+                                if (longitud == 2) {
+                                    newDetVtasAcumAnoUno &&
+                                        newDetVtasAcumAnoUno.map((acumula, index) => {
+                                            newDetVtasAcumAnoDos &&
+                                                newDetVtasAcumAnoDos.map((meses, index) => {
+                                                    let variacion = 0;
+                                                    variacion = ((1 - (acumula.VentaAcumulada / meses.VentaAcumulada)) * 100).toFixed(2);
+
+                                                    if (isNaN(variacion))
+                                                        variacion = 0;
+
+                                                    if (acumula.Descripcion == meses.Descripcion) {
+                                                        let vta = {
+                                                            Descripcion: acumula.Descripcion,
+                                                            Periodo: acumula.ano + " - " + meses.ano,
+                                                            Vlr_VentaAnoUno: acumula.VentaAcumulada,
+                                                            Vlr_VentaAnoDos: meses.VentaAcumulada,
+                                                            Variacion: variacion
+                                                        };
+                                                        newDetVtasCompara.push(vta);
+                                                    }
+                                                });
+                                        });
+                                }
+
+                                let ventauno = 0;
+                                let ventados = 0;
+                                let per = 0;
+
+                                newDetVtasCompara &&
+                                    newDetVtasCompara.map((mes, index) => {
+                                        ventauno = ventauno + mes.Vlr_VentaAnoUno;
+                                        ventados = ventados + mes.Vlr_VentaAnoDos;
+                                        per = mes.Periodo;
+                                    });
+
+                                let varia = ((1 - (ventauno / ventados)) * 100).toFixed(2);
+
+                                let mvto = {
+                                    Descripcion: "TOTAL",
+                                    Periodo: per,
+                                    Variacion: varia,
+                                    Vlr_VentaAnoDos: ventauno,
+                                    Vlr_VentaAnoUno: ventados
+                                };
+
+                                newDetVtasCompara.push(mvto);
+
+                                setDatosVariacion(newDetVtasCompara);
+                            }
+                } else {
+                    swal({
+                        title: "Tablero Cosmos",
+                        text: "Combinación de año y mes no valida, corregir!",
+                        icon: "warning",
+                    });
+                    return
+                }
 
         setConsultarAno(false);
     }
@@ -1190,7 +1618,44 @@ function TabVariacion(props) {
     }, [opcion]);
 
     const header_test = [
-        { title: tituloTipo, dataIndex: "Descripcion", key: "Descripcion", width: 80, fixed: true },
+        { title: tituloTipo, dataIndex: "Descripcion", key: "Descripcion", width: 90, fixed: true },
+        {
+            title: labelUno, dataIndex: "labelUno", key: "labelUno", width: 80, align: "right",
+            sorter: (a, b) => a.Vlr_VentaAnoUno - b.Vlr_VentaAnoUno,
+            render: (text, row, index) => {
+                return (
+                    <Title level={4} style={{ fontSize: 15, }}>
+                        {myNumber(1, row.Vlr_VentaAnoUno, 2)}
+                    </Title>
+                );
+            }
+        },
+        {
+            title: labelDos, dataIndex: "labelDos", key: "labelDos", width: 80, align: "right",
+            sorter: (a, b) => a.Vlr_VentaAnoUno - b.Vlr_VentaAnoUno,
+            render: (text, row, index) => {
+                return (
+                    <Title level={4} style={{ fontSize: 15, }}>
+                        {myNumber(1, row.Vlr_VentaAnoDos, 2)}
+                    </Title>
+                );
+            }
+        },
+        {
+            title: "Variación %", dataIndex: "variacion", key: "variacion", width: 80, align: "right",
+            sorter: (a, b) => a.Variacion - b.Variacion,
+            render: (text, row, index) => {
+                return (
+                    <Title level={4} style={{ fontSize: 15, }}>
+                        {myNumber(1, row.Variacion, 2)}%
+                    </Title>
+                );
+            }
+        }
+    ]
+
+    const header_testmes = [
+        { title: tituloTipo, dataIndex: "Descripcion", key: "Descripcion", width: 90, fixed: true },
         {
             title: labelUno, dataIndex: "labelUno", key: "labelUno", width: 100, align: "right",
             sorter: (a, b) => a.Vlr_VentaAnoUno - b.Vlr_VentaAnoUno,
@@ -1226,43 +1691,6 @@ function TabVariacion(props) {
         }
     ]
 
-    const header_testmes = [
-        { title: tituloTipo, dataIndex: "Descripcion", key: "Descripcion", width: 80, fixed: true },
-        {
-            title: labelUno, dataIndex: "labelUno", key: "labelUno", width: 150, align: "right",
-            sorter: (a, b) => a.Vlr_VentaAnoUno - b.Vlr_VentaAnoUno,
-            render: (text, row, index) => {
-                return (
-                    <Title level={4} style={{ fontSize: 15, }}>
-                        {myNumber(1, row.Vlr_VentaAnoUno, 2)}
-                    </Title>
-                );
-            }
-        },
-        {
-            title: labelDos, dataIndex: "labelDos", key: "labelDos", width: 150, align: "right",
-            sorter: (a, b) => a.Vlr_VentaAnoUno - b.Vlr_VentaAnoUno,
-            render: (text, row, index) => {
-                return (
-                    <Title level={4} style={{ fontSize: 15, }}>
-                        {myNumber(1, row.Vlr_VentaAnoDos, 2)}
-                    </Title>
-                );
-            }
-        },
-        {
-            title: "Variación %", dataIndex: "variacion", key: "variacion", width: 150, align: "right",
-            sorter: (a, b) => a.Variacion - b.Variacion,
-            render: (text, row, index) => {
-                return (
-                    <Title level={4} style={{ fontSize: 15, }}>
-                        {myNumber(1, row.Variacion, 2)}%
-                    </Title>
-                );
-            }
-        }
-    ]
-
     return (
         <div className="mlanegativo">
             <h2 className="mx-auto mt-1 px-4 text-lg leading-6 font-medium text-gray-900 sm:px-6 lg:px-8">
@@ -1271,7 +1699,7 @@ function TabVariacion(props) {
                     <div className="mx-auto flex max-w-7xl justify-center px-4 sm:px-6 lg:px-8">
                         {/* justify-end */}
 
-                        <div className="flex">
+                        <div className="ml-20 flex">
                             <Menu as="div" className="relative inline-block" >
                                 <MultiSelect
                                     options={vtasAno}
@@ -1308,6 +1736,7 @@ function TabVariacion(props) {
                         </div>
 
                         <div className="flex">
+                            {/**/}
                             <Menu as="div" className="ml-4 relative inline-block" >
                                 <MultiSelect
                                     options={vtasMes}
@@ -1341,9 +1770,10 @@ function TabVariacion(props) {
                                     </table>
                                 </h3>
                             </Menu>
+
                         </div>
 
-                        <Menu as="div" className="relative inline-block" >
+                        <Menu as="div" className="ml-3 relative inline-block" >
                             <div className="flex">
 
                                 <div className="mx-auto flex max-w-4xl h-10 space-x-6 divide-x bg-violet rounded divide-gray-200 px-4 text-sm sm:px-6 lg:px-8">
@@ -1353,7 +1783,7 @@ function TabVariacion(props) {
                                         Consultar
                                     </button>
                                 </div>
-                                <div className="ml-6 mx-auto flex max-w-4xl h-10 space-x-6 divide-x bg-cosmocolor rounded divide-gray-200 px-4 text-sm sm:px-6 lg:px-8">
+                                <div className="ml-3 mx-auto flex max-w-4xl h-10 space-x-6 divide-x bg-cosmocolor rounded divide-gray-200 px-4 text-sm sm:px-6 lg:px-8">
                                     <div >
                                         <button
                                             type="button"
@@ -1407,12 +1837,13 @@ function TabVariacion(props) {
                     {
                         selectedAno.length > 0 && selectedMes.length == 0 ?
                             (
-                                <div className="margenizaquierdanegativo px-4 sm:px-6 lg:px-8">
+                                <div className="ml-10 px-4 sm:px-6 lg:px-4">
                                     <div className="mt-8 flex flex-col">
-                                        <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                                            <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-                                                <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                                        <div className="-my-2 -mx-4 sm:-mx-6 lg:-mx-16">
+                                            <div className=" min-w-full py-0 align-middle md:px-6 lg:px-1">
+                                                <div className="shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
                                                     <Table columns={header_test} dataSource={datosVariacion} pagination={false}
+                                                        className="opacity-70"
                                                         scroll={{
                                                             x: 1200,
                                                             y: 500,
@@ -1427,12 +1858,16 @@ function TabVariacion(props) {
                             )
                             :
                             (
-                                <div className="margenizaquierdanegativo px-4 sm:px-6 lg:px-8">
+                                <div className="ml-10 px-4 sm:px-6 lg:px-4">
                                     <div className="mt-8 flex flex-col">
-                                        <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                                            <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-                                                <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-                                                    <Table columns={header_testmes} dataSource={datosVariacion} pagination={false}
+                                        <div className="-my-2 -mx-4 sm:-mx-6 lg:-mx-16">
+                                            <div className=" min-w-full py-0 align-middle md:px-6 lg:px-1">
+                                                <div className="shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                                                    <Table
+                                                        columns={header_testmes}
+                                                        dataSource={datosVariacion}
+                                                        pagination={false}
+                                                        className="opacity-70"
                                                         scroll={{
                                                             x: 1200,
                                                             y: 500,

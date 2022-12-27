@@ -161,7 +161,7 @@ function TabInformeVtas(props) {
         //if (selectedAno.length > 0) {
 
         let periodo = "";
-       
+
         if (selectedMes[0].value < 10)
             periodo = "" + selectedAno[0].value + "0" + selectedMes[0].value;
         else
@@ -2040,7 +2040,8 @@ function TabInformeVtas(props) {
 
     const header_test = [
         {
-            title: "Foto", dataIndex: "imageSrc", key: "imageSrc", width: 220, align: "left", render: (text, row, index) => {
+            title: "Foto", dataIndex: "imageSrc", key: "imageSrc", width: 220, align: "left", fixed: true,
+            render: (text, row, index) => {
                 return (
                     <img
                         src={row.imageSrc + '?v=15454'}
@@ -2101,7 +2102,7 @@ function TabInformeVtas(props) {
             <h2 className="mx-auto mt-1 px-4 text-lg leading-6 font-medium text-gray-900 sm:px-6 lg:px-8">
                 <div className="col-start-1 row-start-1 py-3">
                     <div className="ml-30 mx-auto flex max-w-7xl justify-center px-4 sm:px-6 lg:px-8">
-                      {/* justify-end */}
+                        {/* justify-end */}
                         <div className="flex">
                             <Menu as="div" className="relative inline-block">
                                 <MultiSelect
@@ -2121,7 +2122,7 @@ function TabInformeVtas(props) {
                                 />
                             </Menu>
                         </div>
-                        
+
                         <div className="flex">
                             <Menu as="div" className="relative inline-block">
                                 <MultiSelect
@@ -2143,7 +2144,7 @@ function TabInformeVtas(props) {
                                 />
                             </Menu>
                         </div>
-                        
+
                         <div className="flex">
                             <Menu as="div" className="relative inline-block" >
                                 <MultiSelect
@@ -2164,7 +2165,7 @@ function TabInformeVtas(props) {
                                 />
                             </Menu>
                         </div>
-{/*
+                        {/*
                         <div className="flex">
                             <Menu as="div" className="relative inline-block" >
                                 <MultiSelect
@@ -2268,7 +2269,7 @@ function TabInformeVtas(props) {
                             </Menu>
                         </div>
                     </div>
-                    <div className="mt-3 ml-10 mx-auto flex max-w-7xl justify-center px-4 sm:px-6 lg:px-8">
+                    <div className="mt-5 ml-10 mx-auto flex max-w-7xl justify-center px-4 sm:px-6 lg:px-8">
                         <Menu as="div" className="ml-1 relative inline-block" >
                             <div className="flex">
 
@@ -2294,7 +2295,7 @@ function TabInformeVtas(props) {
                     </div>
 
                 </div>
-                
+
                 <div className="sm:hidden">
                     <label htmlFor="tabs" className="sr-only">
                         Select a tab
@@ -2311,7 +2312,7 @@ function TabInformeVtas(props) {
                         ))}
                     </select>
                 </div>
-                <div className="-mt-4 hidden sm:block ml-12">
+                <div className="-mt-2 hidden sm:block ml-12">
 
                     <div className="border-b border-gray-200">
                         <nav className="ml-1 -mb-px flex space-x-8" aria-label="Tabs">
@@ -2335,24 +2336,24 @@ function TabInformeVtas(props) {
                         </nav>
                     </div>
                     <div className="ml-6 px-4 sm:px-6 lg:px-0">
-                    <div>
-                    {
-                        /*
-                        isLoading ?
-                            (
-                                <div >
-                                    <Spinner className="w-9 h-9" />
-                                    <h1 className="text-center text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-                                        Cargando datos ...
-                                    </h1>
-                                </div>
-                            )
-                            :
-                            null
-                            */
-                    }
+                        <div>
+                            {
+                                /*
+                                isLoading ?
+                                    (
+                                        <div >
+                                            <Spinner className="w-9 h-9" />
+                                            <h1 className="text-center text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+                                                Cargando datos ...
+                                            </h1>
+                                        </div>
+                                    )
+                                    :
+                                    null
+                                    */
+                            }
 
-                </div>
+                        </div>
                         <div className="mt-8 flex flex-col">
                             <div className="-my-2 -mx-4 sm:-mx-6 lg:-mx-8">
                                 <div className=" min-w-full py-0 align-middle md:px-6 lg:px-1">

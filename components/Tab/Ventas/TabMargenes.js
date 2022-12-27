@@ -751,7 +751,11 @@ function TabMargenes(props) {
             render: (text, row, index) => {
                 return (
                     <Title level={4} style={{ fontSize: 15, }}>
-                        {myNumber(1, (1 - (row.Vlr_CostoAcum / row.Vlr_NetoAcum)) * 100) + " % "}
+                        {isNaN(parseInt((1 - (row.Vlr_CostoAcum / row.Vlr_NetoAcum)) * 100)) ?
+                            0+" %"
+                            :
+                            myNumber(1, (1 - (row.Vlr_CostoAcum / row.Vlr_NetoAcum)) * 100) + " % "
+                        }
                     </Title>
                 );
             }
@@ -760,7 +764,7 @@ function TabMargenes(props) {
     ]
 
     const header_testmes = [
-        { title: tituloTipo, dataIndex: "Descripcion", key: "Descripcion", width: 100, fixed: true },
+        { title: tituloTipo, dataIndex: "Descripcion", key: "Descripcion", width: 120, fixed: true },
         {
             title: "COSTO PROM MES.", dataIndex: "Vlr_Costo", key: "Vlr_Costo", width: 80, align: "right",
             sorter: (a, b) => a.Vlr_Costo - b.Vlr_Costo,
@@ -854,7 +858,7 @@ function TabMargenes(props) {
                             row.CSV_TOT == 0 ?
                                 0 + " % "
                                 :
-                            myNumber(1, ((1 - (row.Vlr_CostoAcum / row.Vlr_NetoAcum)) * 75), 2) + " % "
+                                myNumber(1, ((1 - (row.Vlr_CostoAcum / row.Vlr_NetoAcum)) * 75), 2) + " % "
                         }
                     </Title>
                 );
@@ -1030,12 +1034,12 @@ function TabMargenes(props) {
                         filtroAno && filtroMes ?
                             (
 
-                                <div className="margenizaquierdanegativo px-4 sm:px-6 lg:px-8">
+                                <div className="ml-10 px-4 sm:px-6 lg:px-8">
                                     <div className="mt-8 flex flex-col">
-                                        <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                                            <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-                                                <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-                                                <Table columns={header_testmes} dataSource={detalleCostos} pagination={false}
+                                        <div className="-my-2 -mx-4 sm:-mx-6 lg:-mx-16">
+                                            <div className=" min-w-full py-0 align-middle md:px-6 lg:px-1">
+                                                <div className="shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                                                    <Table columns={header_testmes} dataSource={detalleCostos} pagination={false}
                                                         scroll={{
                                                             x: 1200,
                                                             y: 500,
@@ -1050,11 +1054,11 @@ function TabMargenes(props) {
                             )
                             :
                             (
-                                <div className="margenizaquierdanegativo px-4 sm:px-6 lg:px-8">
+                                <div className="ml-10 px-4 sm:px-6 lg:px-8">
                                     <div className="mt-8 flex flex-col">
-                                        <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                                            <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-                                                <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                                        <div className="-my-2 -mx-4 sm:-mx-6 lg:-mx-16">
+                                            <div className=" min-w-full py-0 align-middle md:px-6 lg:px-1">
+                                                <div className="shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
                                                     <Table columns={header_test} dataSource={detalleCostos} pagination={false}
                                                         scroll={{
                                                             x: 1200,
