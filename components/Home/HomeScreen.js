@@ -111,10 +111,10 @@ export default function HomeScreen(props) {
     filtrosVentas = useSelector((state) => state.datosfiltros.datosfiltros);
 
     const tabs = [
-        { name: 'Ingresos x linea', href: '#', current: tabIngresoslinea },
-        { name: 'Variación', href: '#', current: tabCostosingreso },
-        { name: 'Ingresos Proveedor', href: '#', current: tabIngresoProveedor },
-        { name: 'Conciliación Inventarios', href: '#', current: tabInventarios },
+        { name: '19.1. Ingresos x linea', href: '#', current: tabIngresoslinea },
+        { name: '19.2. Variación', href: '#', current: tabCostosingreso },
+        { name: '153. Ingresos Proveedor', href: '#', current: tabIngresoProveedor },
+        { name: '42. Conciliación Inventarios', href: '#', current: tabInventarios },
         { name: 'Presupuestos', href: '#', current: tabPresupuestos },
     ]
 

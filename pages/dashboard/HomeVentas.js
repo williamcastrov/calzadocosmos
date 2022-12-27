@@ -67,13 +67,13 @@ export default function HomeVentas(props) {
     //datosCostos = useSelector((state) => state.costosventas.datoscostosventas);
 
     const tabs = [
-        { name: 'Ventas mes dia', href: '#', current: tabVtasLinea },
-        { name: 'Margen', href: '#', current: tabCostosVtas },
-        { name: 'Participación', href: '#', current: tabParticipacionVtas },
-        { name: 'Variación', href: '#', current: tabVariacionVtas },
-        { name: 'Listas de precio', href: '#', current: tabListasPrecios },
+        { name: '7.1. Ventas mes dia', href: '#', current: tabVtasLinea },
+        { name: '7.2. Margen', href: '#', current: tabCostosVtas },
+        { name: '7.3. Participación', href: '#', current: tabParticipacionVtas },
+        { name: '7.4. Variación', href: '#', current: tabVariacionVtas },
+        { name: '40. Listas de precio', href: '#', current: tabListasPrecios },
         { name: 'Presupuestos de vtas', href: '#', current: tabPptoVentas },
-        { name: 'Material empaque', href: '#', current: tabMaterialEmpaque },
+        { name: '123. Material empaque', href: '#', current: tabMaterialEmpaque },
     ]
 
     const salirApp = () => {
@@ -537,12 +537,13 @@ export default function HomeVentas(props) {
                             <div>
                                 <h2 className="mx-auto mt-2 px-4 text-lg leading-6 font-medium text-gray-900 sm:px-6 lg:px-8">
                                     <div>{/* className="sm:hidden" */}
+                                        {/*
                                         <label htmlFor="tabs"
                                             className="mx-auto mt-4 px-4 text-lg leading-6 font-medium text-gray-900 sm:px-6 lg:px-3"
                                         >
                                             Indicador 19
                                         </label>
-                                        {/* Use an "onChange" listener to redirect the user to the selected tab URL. */}
+                                         Use an "onChange" listener to redirect the user to the selected tab URL. */}
                                         <select
                                             id="tabs"
                                             name="tabs"

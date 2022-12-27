@@ -7,7 +7,7 @@ import { Table, Tag, Typography, Button } from 'antd';
 import Loading from "../../../components/Loading";
 import { BeakerIcon, ArrowDownIcon, ArrowUpIcon } from "@heroicons/react/solid";
 import Spinner from "../../Spinner/Spinner";
-import ReactHTMLTableToExcel from "react-html-table-to-excel";
+import ReactHTMLTableToExcel from "react-html-table-to-excel";  
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
@@ -2099,6 +2099,12 @@ function TabInformeVtas(props) {
 
     return (
         <div className="mlanegativo">
+            {
+                isLoading ?
+                   console.log("PRUEBA")
+                    :
+                    null
+            }
             <h2 className="mx-auto mt-1 px-4 text-lg leading-6 font-medium text-gray-900 sm:px-6 lg:px-8">
                 <div className="col-start-1 row-start-1 py-3">
                     <div className="ml-30 mx-auto flex max-w-7xl justify-center px-4 sm:px-6 lg:px-8">

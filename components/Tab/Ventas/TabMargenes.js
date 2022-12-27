@@ -819,7 +819,7 @@ function TabMargenes(props) {
                             row.Vlr_Costo == 0 ?
                                 0 + " % "
                                 :
-                                myNumber(1, ((1 - (row.Vlr_Costo / row.Vlr_Neto)) * 80), 2) + " % "
+                                myNumber(1, ((1 - (row.Vlr_Costo / row.Vlr_Neto)) * 100), 2) + " % "
                         }
                     </Title>
                 );
@@ -858,7 +858,7 @@ function TabMargenes(props) {
                             row.CSV_TOT == 0 ?
                                 0 + " % "
                                 :
-                                myNumber(1, ((1 - (row.Vlr_CostoAcum / row.Vlr_NetoAcum)) * 75), 2) + " % "
+                                myNumber(1, ((1 - (row.Vlr_CostoAcum / row.Vlr_NetoAcum)) * 100), 2) + " % "
                         }
                     </Title>
                 );
